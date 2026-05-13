@@ -1,0 +1,10 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const raw = fs.readFileSync(path.join(__dirname, '../playlist_2450460821_plus.m3u'), 'utf8');
+const groups = new Set();
+const re = /group-title="([^"]+)"/g;
+let m;
+while ((m = re.exec(raw)) !== null) groups.add(m[1]);
+[...groups].sort().forEach((g) => console.log(g));

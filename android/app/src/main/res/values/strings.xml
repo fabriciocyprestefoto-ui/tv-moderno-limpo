@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RED X TV</string>
+    <string name="title_activity_main">RED X TV</string>
+    <string name="package_name">com.redx.tvbox.novo</string>
+    <string name="custom_url_scheme">com.redx.tvbox.novo</string>
+</resources>

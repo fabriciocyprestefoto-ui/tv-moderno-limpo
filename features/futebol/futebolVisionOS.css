@@ -1,0 +1,487 @@
+/* visionOS glass — Futebol (cards, chips, painéis) */
+
+.fut-vision-panel {
+  background: rgba(10, 5, 28, 0.52);
+  backdrop-filter: blur(20px) saturate(200%) brightness(1.04);
+  -webkit-backdrop-filter: blur(20px) saturate(200%) brightness(1.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.05),
+    0 24px 64px rgba(0, 0, 0, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.fut-vision-card {
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 1.5rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+    0 4px 20px rgba(0, 0, 0, 0.28),
+    0 1px 4px rgba(0, 0, 0, 0.16);
+  position: relative;
+  isolation: isolate;
+}
+
+.fut-vision-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(ellipse at 50% 0%, rgba(168, 85, 247, 0.14) 0%, transparent 65%);
+  opacity: 0;
+  transition: opacity 350ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.fut-vision-card:hover::before,
+.fut-vision-card:focus-within::before {
+  opacity: 1;
+}
+
+.fut-vision-card:hover,
+.fut-vision-card:focus-within {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(168, 85, 247, 0.42);
+  transform: translateY(-4px) scale(1.018);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 20px 56px rgba(0, 0, 0, 0.45),
+    0 8px 20px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(168, 85, 247, 0.22),
+    0 0 40px rgba(168, 85, 247, 0.1);
+}
+
+.fut-team-logo-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 4px 16px rgba(0, 0, 0, 0.28);
+  transition: all 250ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fut-team-logo-chip:hover {
+  background: rgba(255, 255, 255, 0.13);
+  transform: translateY(-2px) scale(1.04);
+  border-color: rgba(168, 85, 247, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 12px rgba(168, 85, 247, 0.2);
+}
+
+.fut-team-shield {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+}
+
+.fut-banner-logo {
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.2));
+}
+
+.fut-hero-team-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.35);
+  transition: all 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fut-hero-team-chip:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(168, 85, 247, 0.4);
+  transform: scale(1.06);
+}
+
+.fut-hero-team-chip:focus-visible {
+  outline: 0.5px solid #ffffff;
+  outline-offset: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.06);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Eventos do Dia — cards visionOS / Vision Pro 3D translúcido
+   ═══════════════════════════════════════════════════════════════ */
+
+.evt-grid {
+  perspective: 900px;
+}
+
+.evt-card {
+  position: relative;
+  isolation: isolate;
+  border-radius: 1.75rem;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(0, 0, 0, 0.06) 100%
+  );
+  backdrop-filter: blur(28px) saturate(210%) brightness(1.06);
+  -webkit-backdrop-filter: blur(28px) saturate(210%) brightness(1.06);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06),
+    0 6px 30px rgba(0, 0, 0, 0.36),
+    0 2px 6px rgba(0, 0, 0, 0.18);
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateX(0deg) translateY(0px);
+  transition:
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 280ms ease,
+    background 280ms ease;
+  will-change: transform;
+  overflow: hidden;
+}
+
+/* prisma superior — luz especular */
+.evt-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.04) 28%,
+    transparent 50%
+  );
+  opacity: 1;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* brilho roxo interno ao hover */
+.evt-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(ellipse at 50% -10%, rgba(168, 85, 247, 0.22) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 350ms ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.evt-card:hover,
+.evt-card:focus-within {
+  transform: perspective(900px) rotateX(-3deg) translateY(-7px) scale(1.015);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.13) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(0, 0, 0, 0.04) 100%
+  );
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.28),
+    0 0 0 0.5px #ffffff;
+}
+
+.evt-card:hover::after,
+.evt-card:focus-within::after {
+  opacity: 1;
+}
+
+/* Chip de horário */
+.evt-time-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.7rem;
+  border-radius: 99px;
+  background: rgba(168, 85, 247, 0.18);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  color: #d8b4fe;
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* Chip do broadcaster */
+.evt-broadcaster-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition:
+    background 250ms ease,
+    border-color 250ms ease;
+}
+
+/* Separador VS */
+.evt-vs {
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.28);
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+/* Escudo do time */
+.evt-team-logo {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.28);
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  flex-shrink: 0;
+}
+
+.evt-card:hover .evt-team-logo {
+  transform: scale(1.07);
+}
+
+/* Botão Play */
+.evt-play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 99px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.75) 0%, rgba(139, 92, 246, 0.65) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.55);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 4px 14px rgba(168, 85, 247, 0.35);
+  transition: all 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: nowrap;
+}
+
+.evt-play-btn:hover,
+.evt-play-btn:focus-visible {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.95) 0%, rgba(139, 92, 246, 0.85) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    0 6px 20px rgba(168, 85, 247, 0.5);
+  transform: translateY(-1px) scale(1.04);
+}
+
+.evt-play-btn:active {
+  transform: scale(0.97);
+}
+
+/* Variante stream alternativo */
+.evt-play-btn-alt {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.evt-play-btn-alt:hover,
+.evt-play-btn-alt:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 4px 14px rgba(168, 85, 247, 0.2);
+}
+
+/* Linha divisória interna */
+.evt-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 30%,
+    rgba(168, 85, 247, 0.18) 50%,
+    rgba(255, 255, 255, 0.1) 70%,
+    transparent 100%
+  );
+  margin: 0 -0.25rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Match Card Premium — partículas e efeitos
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes fut-particle-float {
+  0% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.15);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.35;
+  }
+}
+
+@keyframes fut-particle-drift {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.25;
+  }
+  33% {
+    transform: translate(6px, -8px) scale(1.1);
+    opacity: 0.55;
+  }
+  66% {
+    transform: translate(-4px, -14px) scale(0.9);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.25;
+  }
+}
+
+@keyframes fut-flare-pulse {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.32;
+    transform: scale(1.08);
+  }
+}
+
+.fut-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: fut-particle-drift 4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.fut-flare {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(24px);
+  animation: fut-flare-pulse 5s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+.fut-match-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  box-shadow:
+    0 20px 56px rgba(0, 0, 0, 0.7),
+    0 6px 18px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  min-height: 200px;
+}
+
+.fut-match-card:hover {
+  transform: translateY(-6px) scale(1.015);
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.75),
+    0 12px 28px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.fut-vs-glass {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* VS box pulsante */
+@keyframes fut-vs-pulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 0 22px var(--home-neon, rgba(255, 80, 80, 0.7)),
+      0 0 22px var(--away-neon, rgba(80, 255, 80, 0.7));
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 0 36px var(--home-neon, rgba(255, 80, 80, 0.9)),
+      0 0 36px var(--away-neon, rgba(80, 255, 80, 0.9));
+  }
+}
+
+/* Badge LIVE pulsante */
+@keyframes evt-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.evt-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: evt-pulse 1.8s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.7);
+  flex-shrink: 0;
+}

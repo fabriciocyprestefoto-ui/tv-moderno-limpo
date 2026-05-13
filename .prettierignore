@@ -1,0 +1,11 @@
+# Prettier — arquivos ignorados na formatação automática
+# (mesma lista do .gitignore, mais pastas geradas)
+dist/
+node_modules/
+android/
+public/
+*.min.js
+*.min.css
+coverage/
+testsprite_tests/playwright-report/
+test-results/

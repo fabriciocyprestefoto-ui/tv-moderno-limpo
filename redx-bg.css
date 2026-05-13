@@ -1,0 +1,72 @@
+/**
+ * REDX App Background - degrade estatico com a paleta do antigo CSS animator.
+ * Sem animacao, blur ou efeitos pesados para manter compatibilidade com WebView/TV Box.
+ */
+
+:root {
+  --redx-bg-darkest: #020617;
+  --redx-app-gradient: linear-gradient(135deg, #14041f 0%, #2a0b3f 30%, #4c1d95 62%, #020617 100%);
+}
+
+html,
+body {
+  background-color: var(--redx-bg-darkest);
+  background-image: var(--redx-app-gradient);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-size: cover;
+}
+
+html[data-page='player'],
+html[data-page='livetv'],
+html[data-page='adulto'] {
+  background-image: none !important;
+  background-color: #000 !important;
+}
+
+html[data-page='player'] body,
+html[data-page='livetv'] body,
+html[data-page='adulto'] body {
+  background-image: none !important;
+  background-color: #000 !important;
+}
+
+html[data-page='player'] #root,
+html[data-page='livetv'] #root,
+html[data-page='adulto'] #root,
+html[data-page='player'] #app,
+html[data-page='livetv'] #app,
+html[data-page='adulto'] #app {
+  background: transparent !important;
+}
+
+html[data-page='player'] #root::before,
+html[data-page='player'] #app::before,
+html[data-page='livetv'] #root::before,
+html[data-page='livetv'] #app::before,
+html[data-page='adulto'] #root::before,
+html[data-page='adulto'] #app::before {
+  display: none !important;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  color: #fff;
+  min-height: 100vh;
+}
+
+#root {
+  position: relative;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.redx-background,
+.redx-app-surface {
+  background: transparent;
+}

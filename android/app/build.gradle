@@ -1,0 +1,163 @@
+apply plugin: 'com.android.application'
+
+android {
+    // namespace fica com.redx.tvbox (Java packages). applicationId muda pra com.redflix.tvmoderno.
+    namespace = "com.redx.tvbox"
+    compileSdk = rootProject.ext.compileSdkVersion
+    
+    // NDK para biblioteca nativa de segurança
+    ndkVersion "25.1.8937393"
+    
+    // Configurar Java 17 (Estável para AGP 8.1.0)
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+    signingConfigs {
+        release {
+            // Credenciais lidas de local.properties ou variáveis de ambiente (nunca hardcoded)
+            def localProps = new Properties()
+            def localPropsFile = rootProject.file('local.properties')
+            if (localPropsFile.exists()) {
+                localProps.load(new FileInputStream(localPropsFile))
+            }
+            storeFile file('../redx-release.jks')
+            storePassword localProps.getProperty('KEYSTORE_PASSWORD', System.getenv('KEYSTORE_PASSWORD') ?: '')
+            keyAlias localProps.getProperty('KEY_ALIAS', System.getenv('KEY_ALIAS') ?: 'redx-key')
+            keyPassword localProps.getProperty('KEY_PASSWORD', System.getenv('KEY_PASSWORD') ?: '')
+        }
+    }
+    
+    defaultConfig {
+        applicationId "com.redflix.tvmoderno"
+        minSdkVersion 24
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0.0-TVM"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // ExoPlayer 2.19 / Media3 1.2.0 neste projeto não empacotam .so no APK — o “+10 MB” vs builds
+        // antigos vinha sobretudo de assets em `public/` (ex.: futcard-main), não de ABIs nativas.
+
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+
+    // TV / sideload: força extração das libs nativas no install (evita falhas com .so comprimidas / alinhamento).
+    packaging {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+
+    // ═══════════════════════════════════════════════════════════════
+    // Media3 ExoPlayer — único player nativo (minSdk 19, suporta Android 4.4+)
+    // ExoPlayer 2.x removido: conflito de classpath e superfície dupla.
+    // ═══════════════════════════════════════════════════════════════
+    implementation "androidx.media3:media3-exoplayer:$mediaVersion"
+    implementation "androidx.media3:media3-exoplayer-hls:$mediaVersion"
+    implementation "androidx.media3:media3-exoplayer-dash:$mediaVersion"
+    implementation "androidx.media3:media3-common:$mediaVersion"
+    implementation "androidx.media3:media3-ui:$mediaVersion"
+    implementation "androidx.media3:media3-datasource:$mediaVersion"
+
+    // Melhorias de compatibilidade WebKit
+    implementation "androidx.webkit:webkit:$androidxWebkitVersion"
+
+    // JSON parsing para configurações dinâmicas
+    implementation "com.google.code.gson:gson:$gsonVersion"
+}
+
+apply from: 'capacitor.build.gradle'
+
+// Override: força Java 17 após o capacitor.build.gradle definir VERSION_21
+// O JDK instalado é 20 — não suporta source release 21
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}
+
+// Falha cedo com mensagem clara se release não tiver credenciais (evita erro genérico de assinatura)
+afterEvaluate {
+    def validateReleaseSecurity = {
+        def lp = new Properties()
+        def f = rootProject.file('local.properties')
+        if (f.exists()) {
+            lp.load(new FileInputStream(f))
+        }
+
+        def keystorePath = rootProject.file('redx-release.jks')
+        def sp = (lp.getProperty('KEYSTORE_PASSWORD', System.getenv('KEYSTORE_PASSWORD') ?: '') ?: '').trim()
+        def kp = (lp.getProperty('KEY_PASSWORD', System.getenv('KEY_PASSWORD') ?: '') ?: '').trim()
+        if (!keystorePath.exists()) {
+            throw new RuntimeException(
+                'Release APK/AAB: arquivo android/redx-release.jks não encontrado. Gere ou copie o keystore antes do build.'
+            )
+        }
+        if (!sp || !kp) {
+            throw new RuntimeException(
+                'Release APK/AAB: defina KEYSTORE_PASSWORD e KEY_PASSWORD em android/local.properties ' +
+                '(veja local.properties.example) ou exporte KEYSTORE_PASSWORD e KEY_PASSWORD no ambiente.'
+            )
+        }
+
+        // AppValidator removido nesta build (TV Moderno) — pacote diferente, sideload TV.
+    }
+
+    tasks.matching { it.name in ['assembleRelease', 'bundleRelease'] }.configureEach {
+        doFirst {
+            validateReleaseSecurity()
+        }
+    }
+}

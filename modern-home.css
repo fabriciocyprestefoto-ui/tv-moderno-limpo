@@ -1,0 +1,473 @@
+/* ============================================ 
+   MODERN HOME PAGE - REDLIX STREAMING UI 
+   Paleta: Fundo preto (#000), textos brancos, detalhes vermelhos 
+   ============================================ */
+
+/* LOADING STATE */
+.modern-home-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: transparent;
+  color: #fff;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(168, 85, 247, 0.2);
+  border-top-color: #a855f7;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* HOME PAGE CONTAINER */
+.modern-home-page {
+  background: transparent;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ============================================ 
+   CONTENT AREA - Espaçamento entre fileiras 
+   ============================================ */
+.modern-home-content {
+  padding: 0 0 50px 0;
+  margin-top: 0;
+  /* Poster começa abaixo da dobra do banner (estilo Netflix) */
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ============================================ 
+    MODERN CONTENT ROW - Fileiras padrão com zoom 
+    Grid 5.5: width = calc(100% / 5.5 - 12px) 
+    ============================================ */
+.modern-content-row {
+  position: relative;
+  padding: 0 60px;
+}
+
+.modern-content-row-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 20px;
+  border-left: 4px solid #a855f7;
+  padding-left: 12px;
+}
+
+.modern-content-row-container {
+  position: relative;
+}
+
+.modern-content-row-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* scroll-behavior: smooth; — REMOVIDO: causa jank no Chromium/WebView de TV Box
+      (o browser anima o scroll via JS, bloqueando o main thread durante navegação
+      por D-pad; sem smooth o scroll é instantâneo e responsivo) */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+  padding-bottom: 20px;
+}
+
+.modern-content-row-scroll::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari */
+}
+
+/* Card com largura exata para 4.5 por linha - Formato Horizontal 16:9 */
+.modern-content-row-card {
+  position: relative;
+  flex: 0 0 calc(100% / 4.5 - 15px);
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  /* GlassCard handles transitions */
+}
+
+.modern-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modern-card-metadata {
+  display: flex;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.modern-card-rating {
+  color: #ffd700;
+}
+
+.modern-card-year {
+  color: #aaa;
+}
+
+/* Setas de navegação - aparecem apenas no hover da fileira */
+.modern-content-row-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-content-row-arrow:hover,
+.modern-content-row-arrow:focus-visible {
+  background: rgba(168, 85, 247, 0.9);
+  border-color: #a855f7;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.modern-content-row-arrow-left {
+  left: 10px;
+}
+
+.modern-content-row-arrow-right {
+  right: 10px;
+}
+
+/* ============================================ 
+    MORPHING CONTENT ROW - Fileira especial 
+    Cards verticais (2:3) que expandem para horizontal (16:9) 
+    ============================================ */
+.morphing-content-row {
+  position: relative;
+  padding: 0 60px;
+}
+
+.morphing-content-row-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 20px;
+  border-left: 4px solid #a855f7;
+  padding-left: 12px;
+}
+
+.morphing-content-row-container {
+  position: relative;
+}
+
+.morphing-content-row-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* scroll-behavior: smooth; — REMOVIDO (ver .modern-content-row-scroll) */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 20px;
+}
+
+.morphing-content-row-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Card vertical por padrão (2:3) */
+.morphing-content-row-card {
+  position: relative;
+  flex: 0 0 calc(100% / 5.5 - 12px);
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+/* Card expande para horizontal no hover (16:9) */
+.morphing-content-row-card.morphing-card-hovered {
+  flex: 0 0 calc(100% / 3.3 - 12px);
+  aspect-ratio: 16 / 9;
+  z-index: 1000;
+}
+
+/* Imagem vertical (poster) - visível por padrão */
+.morphing-card-image-vertical {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.morphing-card-image-vertical.morphing-image-hidden {
+  opacity: 0;
+}
+
+/* Imagem horizontal (backdrop) - oculta por padrão */
+.morphing-card-image-horizontal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.morphing-card-image-horizontal.morphing-image-visible {
+  opacity: 1;
+}
+
+/* Informações aparecem no hover */
+.morphing-content-row-card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.7) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.morphing-content-row-card-info.morphing-info-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.morphing-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 10px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.morphing-card-metadata {
+  display: flex;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+.morphing-card-rating {
+  color: #ffd700;
+}
+
+.morphing-card-year {
+  color: #aaa;
+}
+
+.morphing-card-overview {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #ddd;
+  margin: 0;
+}
+
+/* Setas de navegação morphing */
+.morphing-content-row-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.morphing-content-row-arrow:hover,
+.morphing-content-row-arrow:focus-visible {
+  background: rgba(168, 85, 247, 0.9);
+  border-color: #a855f7;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.morphing-content-row-arrow-left {
+  left: 10px;
+}
+
+.morphing-content-row-arrow-right {
+  right: 10px;
+}
+
+/* ============================================ 
+    RESPONSIVIDADE (max-width: maior → menor)
+    ============================================ */
+
+@media (max-width: 1600px) {
+  .modern-content-row-card,
+  .morphing-content-row-card {
+    flex: 0 0 calc(100% / 3.5 - 15px);
+  }
+
+  .morphing-content-row-card.morphing-card-hovered {
+    flex: 0 0 calc(100% / 2.8 - 12px);
+  }
+}
+
+/* TV Box 1280x720 — maioria das TV Boxes usa essa resolução */
+@media (max-width: 1280px) and (max-height: 800px) {
+  .modern-home-content {
+    gap: 24px;
+    padding: 0 24px 32px;
+  }
+
+  .modern-content-row,
+  .morphing-content-row {
+    padding: 0 24px;
+  }
+
+  .modern-content-row-title,
+  .morphing-content-row-title {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+  }
+
+  .modern-content-row-card,
+  .morphing-content-row-card {
+    flex: 0 0 calc(100% / 3.5 - 10px);
+  }
+
+  .morphing-content-row-card.morphing-card-hovered {
+    flex: 0 0 calc(100% / 2.5 - 10px);
+  }
+
+  .modern-card-title,
+  .morphing-card-title {
+    font-size: 0.9rem;
+  }
+
+  .modern-card-metadata,
+  .morphing-card-metadata {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .hero-content {
+    padding: 60px 0 0 40px;
+    max-width: 500px;
+  }
+
+  .hero-title {
+    font-size: 2.8rem;
+  }
+
+  .modern-content-row,
+  .morphing-content-row {
+    padding: 0 40px;
+  }
+
+  .modern-content-row-card,
+  .morphing-content-row-card {
+    flex: 0 0 calc(100% / 2.8 - 15px);
+  }
+
+  .morphing-content-row-card.morphing-card-hovered {
+    flex: 0 0 calc(100% / 2.2 - 12px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-banner {
+    height: 60vh;
+  }
+
+  .hero-content {
+    padding: 40px 0 0 20px;
+    max-width: 400px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-overview {
+    font-size: 0.95rem;
+  }
+
+  .modern-content-row,
+  .morphing-content-row {
+    padding: 0 20px;
+  }
+
+  .modern-content-row-card,
+  .morphing-content-row-card {
+    flex: 0 0 calc(100% / 2 - 10px);
+  }
+
+  .morphing-content-row-card.morphing-card-hovered {
+    flex: 0 0 calc(100% / 1.5 - 12px);
+  }
+
+  .modern-content-row-title,
+  .morphing-content-row-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* ============================================ 
+    HEADER CUSTOMIZATION 
+    ============================================ */
+.netflix-header-nav-item {
+  font-size: 1.1rem;
+  /* Aumentar fonte do menu */
+  font-weight: 500;
+}
+
+.netflix-header-logo {
+  height: 48px;
+  /* Logo maior, como a Netflix */
+  margin-right: 20px;
+}

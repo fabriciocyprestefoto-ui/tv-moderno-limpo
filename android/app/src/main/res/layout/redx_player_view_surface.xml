@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Wrapper proprio do app para PlayerView via SurfaceView.
+  Nao usar o nome exo_player_view.xml: esse recurso pertence ao Media3 e
+  sobrescreve-lo faz o PlayerView inflar a si mesmo recursivamente em runtime.
+-->
+<androidx.media3.ui.PlayerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/redx_player_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    app:surface_type="surface_view"
+    app:resize_mode="fit"
+    app:show_buffering="when_playing"
+    app:shutter_background_color="@android:color/transparent"
+    app:auto_show="false"
+    app:hide_on_touch="true" />

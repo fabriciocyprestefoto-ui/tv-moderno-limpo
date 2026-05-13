@@ -1,0 +1,4562 @@
+[
+  {
+    "team": {
+      "cbf_id": "20052",
+      "name": "Athletico Paranaense",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20052/escudo.jpg",
+      "stadium": "Arena da Baixada",
+      "city": "Curitiba",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20052"
+    },
+    "squad": [
+      {
+        "name": "Raul Lô Gonçalves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "João Victor Machado Cruz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Soares Rocha",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonardo Pinheiro da Conceicao",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jadson Alves dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luiz Gustavo Dias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonardo Derik Dias Goncalves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luiz Fernando Moraes dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Juan Camilo Portilla Orozco",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Juan Felipe Aguirre Tabares",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gaston Americo Benavidez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Maksym Voronov",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mycael Pontes Moreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Julimar Silva Oliveira Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Claudio Henrique de Jesus Passos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonardo Caetano Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "John Steven Mendoza Valencia",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Braga Ramos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Eduardo Kogitzki Anastacio",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Zapelli",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Renan Peixoto Nepomuceno",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gilberto Junior Leite dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Antonio Feliphe Costa Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Aderbar Melo dos Santos Neto",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Diogo Riquelme Rivas do Nascimento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kevin Estiben Viveros Rodallega",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Angel Esquivel",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Teran Diaz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Arthur dos Santos Barbosa Dias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Felipe Chiqueti Bandeira",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831916",
+        "competition": "Campeonato Brasileiro",
+        "date": "12/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-12T22:00:00.000Z",
+        "home_team": "Athletico Paranaense",
+        "away_team": "Santos Fc",
+        "home_team_cbf_id": "20052",
+        "away_team_cbf_id": "20008",
+        "home_score": "2",
+        "away_score": "1",
+        "local": "Arena da Baixada - Curitiba - PR"
+      },
+      {
+        "id_jogo": "831906",
+        "competition": "Campeonato Brasileiro",
+        "date": "19/02/2026",
+        "time": "19:30",
+        "datetime_iso": "2026-02-19T22:30:00.000Z",
+        "home_team": "Athletico Paranaense",
+        "away_team": "Corinthians",
+        "home_team_cbf_id": "20052",
+        "away_team_cbf_id": "20001",
+        "home_score": "0",
+        "away_score": "1",
+        "local": "Arena da Baixada - Curitiba - PR"
+      },
+      {
+        "id_jogo": "831895",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-01-28T22:00:00.000Z",
+        "home_team": "Internacional",
+        "away_team": "Athletico Paranaense",
+        "home_team_cbf_id": "20011",
+        "away_team_cbf_id": "20052",
+        "home_score": "0",
+        "away_score": "1",
+        "local": "Beira-Rio - Porto Alegre - RS"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "62194",
+      "name": "Atlético Mineiro",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/62194/escudo.jpg",
+      "stadium": "ARENA MRV",
+      "city": "Belo Horizonte",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/62194"
+    },
+    "squad": [
+      {
+        "name": "Givanildo Vieira de Sousa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ivan Ramiro Roman Hurtado",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Renan Augusto Lodi dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Everson Felipe Marques Pires",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Junior Osmar Ignacio Alonso Mujica",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Angelo Smit Preciado Quiñonez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Caua Campos Soares",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Eduardo Pereira Rodrigues",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Samuel Lima Barros",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Cobra Rodrigues",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luis Gustavo de Oliveira Chaves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Reinier Jesus Carvalho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vitor Fernandes Chaves Teixeira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Natanael Moreira Milouski",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alan Steven Franco Palma",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Delfim Ferreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Henrique Furtado Scarpa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Murillo Cardoso Fernandes dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ruan Tressoldi Netto",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alan Steve Minda Garcia",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Zander Mateo Cassierra Cabezas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kaio de Assis Foreste",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alexsander Cristhian Gomes da Costa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Patrick Roberto da Silva Campos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Hendel dos Santos Nascimento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Antonio dos Santos Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kauã Pascini Resende",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mateus Jose Iseppe",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Tomas Esteban Cuello",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Igor Silveira Gomes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Victor Hugo Gomes Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Maycon de Andrade Barberan",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vitor Hugo Franchescoli de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bernard Anicio Caldeira Duarte",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mamady Cissé",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lyanco Evangelista Silveira Neves Vojnovic",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Tomás Perez",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831914",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-11T23:00:00.000Z",
+        "home_team": "Atlético Mineiro",
+        "away_team": "Remo",
+        "home_team_cbf_id": "62194",
+        "away_team_cbf_id": "20022",
+        "home_score": "3",
+        "away_score": "3",
+        "local": "ARENA MRV - Belo Horizonte - MG"
+      },
+      {
+        "id_jogo": "831903",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-04T22:00:00.000Z",
+        "home_team": "Red Bull Bragantino",
+        "away_team": "Atlético Mineiro",
+        "home_team_cbf_id": "20007",
+        "away_team_cbf_id": "62194",
+        "home_score": "1",
+        "away_score": "0",
+        "local": "Cícero de Souza Marques - Braganca Paulista - SP"
+      },
+      {
+        "id_jogo": "831894",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-01-28T22:00:00.000Z",
+        "home_team": "Atlético Mineiro",
+        "away_team": "Palmeiras",
+        "home_team_cbf_id": "62194",
+        "away_team_cbf_id": "20002",
+        "home_score": "2",
+        "away_score": "2",
+        "local": "ARENA MRV - Belo Horizonte - MG"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "61377",
+      "name": "Bahia",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/61377/escudo.jpg",
+      "stadium": "São Januário",
+      "city": "Rio de Janeiro",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/61377"
+    },
+    "squad": [
+      {
+        "name": "Ademir da Silva Santos Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "David de Duarte Macedo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Nicolas Brian Acevedo Tabarez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kauê Junior Furquim da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Santiago Martin Ramos Mingo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Lheman Xavier",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Roman Agustin Gomez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Erick Luis Conrado Carvalho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Caio Alexandre Sousa E Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jean Lucas de Souza Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Guilherme de Lima Costa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Frederico Lippert Neto Gomes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Iago Amaral Borduchi",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Willian Jose da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gilberto Moraes Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wendeson Wanderley Santos de Melo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mateo Naim Sanabria Doracio",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luiz Gustavo Marinho Ribeiro dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Erick da Costa Farias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Everaldo Stum",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcos Victor Ferreira da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Victor Hugo Soares dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luciano Batista da Silva Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Paulo Silva Martins",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cristian Gonzalo Olivera Ibarra",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rodrigo Nestor Bertalia",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ronaldo de Oliveira Strada",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ruan Pablo Barbosa Sousa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kayky da Silva Chagas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cauly Oliveira Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Michel Daryl Araujo Villar",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Victor dos Santos Nascimento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Julio Cesar de Rezende Miranda",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Everton Augusto de Barros Ribeiro",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831910",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-12T00:30:00.000Z",
+        "home_team": "Vasco da Gama Saf",
+        "away_team": "Bahia",
+        "home_team_cbf_id": "60646",
+        "away_team_cbf_id": "61377",
+        "home_score": "0",
+        "away_score": "1",
+        "local": "São Januário - Rio de Janeiro - RJ"
+      },
+      {
+        "id_jogo": "831907",
+        "competition": "Campeonato Brasileiro",
+        "date": "05/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-05T22:00:00.000Z",
+        "home_team": "Bahia",
+        "away_team": "Fluminense",
+        "home_team_cbf_id": "61377",
+        "away_team_cbf_id": "20014",
+        "home_score": "1",
+        "away_score": "1",
+        "local": "Arena Fonte Nova - Salvador - BA"
+      },
+      {
+        "id_jogo": "831892",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-01-28T23:00:00.000Z",
+        "home_team": "Corinthians",
+        "away_team": "Bahia",
+        "home_team_cbf_id": "20001",
+        "away_team_cbf_id": "61377",
+        "home_score": "1",
+        "away_score": "2",
+        "local": "Vila Belmiro - Santos - SP"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "60175",
+      "name": "Botafogo",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/60175/escudo.jpg",
+      "stadium": "Maracanã",
+      "city": "Rio de Janeiro",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/60175"
+    },
+    "squad": [
+      {
+        "name": "Kauan Almeida Toledo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Arthur Izaque Bendayan de Castro Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Nathan Ribeiro Fernandes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Pereira Justino",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Newton Araujo da Costa Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cristhian Joel Loor Santamaria",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fernando Marcal de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Arthur Mendonça Cabral",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jhoan Hernandez Mejia",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Norberto Murara Neto",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonardo Matias Baiersdorf Linck",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Santiago Mariano Rodriguez Molina",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Kadir Barria Rose",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Joaquin Correa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Allan Marques Loureiro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Christopher Ramos de La Flor",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ythallo Ryckelm Rodrigues de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Arthur Alves Novaes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Victor Alexander da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Eduardo da Silva Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Artur Victor Guimaraes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alexander Nahuel Barboza Ullua",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alex Nicolao Telles",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wallace Davi Nunes da Silva Dias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Raul Jonas Steffens",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Martín Villalba Jaume",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jordan Andres Barrera Herrera",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bartolomeu Jacinto Quissanga",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Martins Silva dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel da Silva Abdias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Danilo dos Santos de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Edenilson Andrade dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mateo Ponte Costa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alvaro Montoro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcos Felipe Vinagre Souza",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831909",
+        "competition": "Campeonato Brasileiro",
+        "date": "12/02/2026",
+        "time": "19:30",
+        "datetime_iso": "2026-02-12T22:30:00.000Z",
+        "home_team": "Fluminense",
+        "away_team": "Botafogo",
+        "home_team_cbf_id": "20014",
+        "away_team_cbf_id": "60175",
+        "home_score": "1",
+        "away_score": "0",
+        "local": "Maracanã - Rio de Janeiro - RJ"
+      },
+      {
+        "id_jogo": "831905",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-05T00:30:00.000Z",
+        "home_team": "Grêmio",
+        "away_team": "Botafogo",
+        "home_team_cbf_id": "20013",
+        "away_team_cbf_id": "60175",
+        "home_score": "5",
+        "away_score": "3",
+        "local": "Arena do Grêmio - Porto Alegre - RS"
+      },
+      {
+        "id_jogo": "831890",
+        "competition": "Campeonato Brasileiro",
+        "date": "29/01/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-01-30T00:30:00.000Z",
+        "home_team": "Botafogo",
+        "away_team": "Cruzeiro",
+        "home_team_cbf_id": "60175",
+        "away_team_cbf_id": "59849",
+        "home_score": "4",
+        "away_score": "0",
+        "local": "Nilton Santos - Rio de Janeiro - RJ"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20086",
+      "name": "Chapecoense",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20086/escudo.jpg",
+      "stadium": "Arena Condá",
+      "city": "Chapeco",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20086"
+    },
+    "squad": [
+      {
+        "name": "Bolasie Yala",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vinicius Balieiro Lourenco de Carvalho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wellington Felipe Pradeiczuk",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno de Jesus Pacheco",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Camilo Reijers de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Matias dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Vitor de Souza Martins",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcio Antonio de Sousa Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Higor Matheus Meritao",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Walter David Clar Fritz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Henrique Perotti",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Everton Souza da Cruz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rafael dos Santos Carvalheira Natividade",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Leonardo dos Santos Covas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Eduardo Vinicius Domachowski",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Italo de Vargas da Rosa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mauricio Garcez de Jesus",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Altemir Cordeiro Pessôa Neto",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rubens Tadeu Hartmann Ricoldi",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vinicius Eduardo de Almeida Gomes da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Robert dos Santos Conceicao",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcos Vinicius da Silva Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Giovanni Augusto Oliveira Cardoso",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Sebastiao Enio Santos de Almeida",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "João Henrique Araújo Bom",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kauan Faria Gomes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Anderson Silva da Paixão",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rafael de Carvalho Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "David Antunes da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mailson Bezerra Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Paulo Silveira dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rafael Thyere de Albuquerque Marques",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jean Carlos Vicente",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kainã Correa Dal Magro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Victor Henrique Carvalho Caetano",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonardo da Silva Vieira",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831918",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-11T22:00:00.000Z",
+        "home_team": "Chapecoense",
+        "away_team": "Coritiba SAF",
+        "home_team_cbf_id": "20086",
+        "away_team_cbf_id": "61590",
+        "home_score": "3",
+        "away_score": "3",
+        "local": "Arena Condá - Chapeco - SC"
+      },
+      {
+        "id_jogo": "831900",
+        "competition": "Campeonato Brasileiro",
+        "date": "05/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-05T23:00:00.000Z",
+        "home_team": "Vasco da Gama Saf",
+        "away_team": "Chapecoense",
+        "home_team_cbf_id": "60646",
+        "away_team_cbf_id": "20086",
+        "home_score": "1",
+        "away_score": "1",
+        "local": "São Januário - Rio de Janeiro - RJ"
+      },
+      {
+        "id_jogo": "831898",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-01-28T23:00:00.000Z",
+        "home_team": "Chapecoense",
+        "away_team": "Santos Fc",
+        "home_team_cbf_id": "20086",
+        "away_team_cbf_id": "20008",
+        "home_score": "4",
+        "away_score": "2",
+        "local": "Arena Condá - Chapeco - SC"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20001",
+      "name": "Corinthians",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20001/escudo.jpg",
+      "stadium": "Neo Química Arena",
+      "city": "Sao Paulo",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20001"
+    },
+    "squad": [
+      {
+        "name": "Diego da Cruz Lopes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Pereira da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kauê Vinicius de Souza Camargo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Hugo Ferreira de Farias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Charles Rigon Matos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Armando de Abreu",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luiz Gustavo Lemos Carvalho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Victor Vinicius Coelho Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Andre Martin Carrillo Diaz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Raul Garay da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Guilherme William Silva Inacio",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Breno de Souza Bidon",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Lima Beltrao Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Memphis Depay",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kayke Ferrari Guimaraes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Felipe Longo Fernandes da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Allan Rodrigues de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Pedro de Sousa Rodrigues",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fabrizio German Angileri",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Franca Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Andre Ramalho Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos de Menezes Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Hugo de Souza Nogueira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Yuri Alberto Monteiro da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "André Luiz Santos Dias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Zakaria Labyad",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Henrique Vernes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rodrigo Garro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Raniele Almeida Melo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Milans Carambula",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831912",
+        "competition": "Campeonato Brasileiro",
+        "date": "12/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-12T23:00:00.000Z",
+        "home_team": "Corinthians",
+        "away_team": "Red Bull Bragantino",
+        "home_team_cbf_id": "20001",
+        "away_team_cbf_id": "20007",
+        "home_score": "2",
+        "away_score": "0",
+        "local": "Neo Química Arena - Sao Paulo - SP"
+      },
+      {
+        "id_jogo": "831906",
+        "competition": "Campeonato Brasileiro",
+        "date": "19/02/2026",
+        "time": "19:30",
+        "datetime_iso": "2026-02-19T22:30:00.000Z",
+        "home_team": "Athletico Paranaense",
+        "away_team": "Corinthians",
+        "home_team_cbf_id": "20052",
+        "away_team_cbf_id": "20001",
+        "home_score": "0",
+        "away_score": "1",
+        "local": "Arena da Baixada - Curitiba - PR"
+      },
+      {
+        "id_jogo": "831892",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-01-28T23:00:00.000Z",
+        "home_team": "Corinthians",
+        "away_team": "Bahia",
+        "home_team_cbf_id": "20001",
+        "away_team_cbf_id": "61377",
+        "home_score": "1",
+        "away_score": "2",
+        "local": "Vila Belmiro - Santos - SP"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "61590",
+      "name": "Coritiba SAF",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/61590/escudo.jpg",
+      "stadium": "Arena Condá",
+      "city": "Chapeco",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/61590"
+    },
+    "squad": [
+      {
+        "name": "Gustavo Silva de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rodrigo Modesto da Silva Moledo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Dalsasso Dias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Felipe de Faria Rangel",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Rocha Neves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Brayan Felipi Pereira Gravelo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Maicon Pereira Roque",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "João Victor Silva Benassi",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Luccas Morisco da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vinicius Romualdo dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jean Gabriel Silveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Sebastian Gomez Londono",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Thiago dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Josue Filipe Soares Pesqueira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Breno Henrique Vasconcelos Lopes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcos da Silva Franca",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jacy Maranhao Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wallisson Luiz Alves Maximo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Tiago Coser",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joaquin Lavega Colzada",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Ronier Vieira Pires",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Felipe Guimarães da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Vitor da Silva Almeida",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fernando Pereira do Nascimento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Christoni Leite",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Ferreira Melo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rodrigo Rodrigues Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Felipe Jonatan Rocha Andrade",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alejandro Ararat Diaz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Enzo Vagner Moraes de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fabio Augusto Luciano da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Willian Osmar de Oliveira Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Guilherme de Jesus da Silva",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831918",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-11T22:00:00.000Z",
+        "home_team": "Chapecoense",
+        "away_team": "Coritiba SAF",
+        "home_team_cbf_id": "20086",
+        "away_team_cbf_id": "61590",
+        "home_score": "3",
+        "away_score": "3",
+        "local": "Arena Condá - Chapeco - SC"
+      },
+      {
+        "id_jogo": "831904",
+        "competition": "Campeonato Brasileiro",
+        "date": "05/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-06T00:30:00.000Z",
+        "home_team": "Cruzeiro",
+        "away_team": "Coritiba SAF",
+        "home_team_cbf_id": "59849",
+        "away_team_cbf_id": "61590",
+        "home_score": "1",
+        "away_score": "2",
+        "local": "Mineirão - Belo Horizonte - MG"
+      },
+      {
+        "id_jogo": "831896",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-01-28T22:00:00.000Z",
+        "home_team": "Coritiba SAF",
+        "away_team": "Red Bull Bragantino",
+        "home_team_cbf_id": "61590",
+        "away_team_cbf_id": "20007",
+        "home_score": "0",
+        "away_score": "1",
+        "local": "Couto Pereira - Curitiba - PR"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "59849",
+      "name": "Cruzeiro",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/59849/escudo.jpg",
+      "stadium": "José Maria de Campos Maia",
+      "city": "Mirassol",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/59849"
+    },
+    "squad": [
+      {
+        "name": "Otavio Eleodoro Rezende Costa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Silva Borges",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Janderson da Silva Marques",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fabricio Bruno Soares de Faria",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Hernan Villalba",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luis Fernando Sinisterra Lucumi",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Wellington Gadelha Melo de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Keny Alexander Arroyo Alvarado",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gerson Santos da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wanderson Maciel Sousa Campos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Marcelo Messias Ferreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rayan Passaglia Lelis",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Francisco da Costa Aragao",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Christian Roberto Alves Cardoso",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kauã Moraes Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kaique Kenji Takamura Correa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Henrique de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kaio Jorge Pinto Ramos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jonathan de Jesus Alves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Cunha Queiroz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Daniel Romero",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kaua Prates de Almeida",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Neiser David Villareal Quinones",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcelo Eraclito de Souza Filho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Rafael Rodrigues do Nascimento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Fellipe Costa Pereira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Ferreira Alves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kaiki Bruno da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "William de Asevedo Furtado",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fagner Conserva Lemos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cassio Ramos",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831913",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-11T22:00:00.000Z",
+        "home_team": "Mirassol",
+        "away_team": "Cruzeiro",
+        "home_team_cbf_id": "20385",
+        "away_team_cbf_id": "59849",
+        "home_score": "2",
+        "away_score": "2",
+        "local": "José Maria de Campos Maia - Mirassol - SP"
+      },
+      {
+        "id_jogo": "831904",
+        "competition": "Campeonato Brasileiro",
+        "date": "05/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-06T00:30:00.000Z",
+        "home_team": "Cruzeiro",
+        "away_team": "Coritiba SAF",
+        "home_team_cbf_id": "59849",
+        "away_team_cbf_id": "61590",
+        "home_score": "1",
+        "away_score": "2",
+        "local": "Mineirão - Belo Horizonte - MG"
+      },
+      {
+        "id_jogo": "831890",
+        "competition": "Campeonato Brasileiro",
+        "date": "29/01/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-01-30T00:30:00.000Z",
+        "home_team": "Botafogo",
+        "away_team": "Cruzeiro",
+        "home_team_cbf_id": "60175",
+        "away_team_cbf_id": "59849",
+        "home_score": "4",
+        "away_score": "0",
+        "local": "Nilton Santos - Rio de Janeiro - RJ"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20016",
+      "name": "Flamengo",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20016/escudo.jpg",
+      "stadium": "Manoel Barradas",
+      "city": "Salvador",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20016"
+    },
+    "squad": [
+      {
+        "name": "Francisco Dyogo Bento Alves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Andrew da Silva Ventura",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Danilo Luiz da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Everton Sousa Soares",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alex Sandro Lobo Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jorge Luiz Frello Filho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Saul Niguez Esclapez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Diego Nicolas de La Cruz Arcosa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonardo Pereira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Tolentino Coelho de Lima",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ayrton Lucas Dantas de Medeiros",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Evertton Gustavo Fernandes Araujo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Daniel dos Santos Sales",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonardo Rech Ortiz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gonzalo Jordy Plata Jimenez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Henrique Pinto",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Emerson Aparecido Leite de Souza Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Samuel Dias Lino",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wallace Yan de Souza Barreto",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Guilherme Abreu dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Guilherme Henrique Bernardineli Gomes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Douglas Costa Telles",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Guillermo Varela Olivera",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jorge Andres Carrascal Guardo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Agustin Daniel Rossi",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pablo Lucio",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Giorgian Daniel de Arrascaeta Benedetti",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vitor Eduardo da Silva Matos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Erick Antonio Pulgar Farfan",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831917",
+        "competition": "Campeonato Brasileiro",
+        "date": "10/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-11T00:30:00.000Z",
+        "home_team": "Vitória",
+        "away_team": "Flamengo",
+        "home_team_cbf_id": "20018",
+        "away_team_cbf_id": "20016",
+        "home_score": "1",
+        "away_score": "2",
+        "local": "Manoel Barradas - Salvador - BA"
+      },
+      {
+        "id_jogo": "831899",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-04T22:00:00.000Z",
+        "home_team": "Flamengo",
+        "away_team": "Internacional",
+        "home_team_cbf_id": "20016",
+        "away_team_cbf_id": "20011",
+        "home_score": "1",
+        "away_score": "1",
+        "local": "Maracanã - Rio de Janeiro - RJ"
+      },
+      {
+        "id_jogo": "831891",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-01-29T00:30:00.000Z",
+        "home_team": "São Paulo",
+        "away_team": "Flamengo",
+        "home_team_cbf_id": "20005",
+        "away_team_cbf_id": "20016",
+        "home_score": "2",
+        "away_score": "1",
+        "local": "Morumbi - Sao Paulo - SP"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20014",
+      "name": "Fluminense",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20014/escudo.jpg",
+      "stadium": "Maracanã",
+      "city": "Rio de Janeiro",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20014"
+    },
+    "squad": [
+      {
+        "name": "Hercules Pereira do Nascimento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Igor Rabello da Costa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Paulo Henrique Chagas de Lima",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Nonato Santana",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wesley Natã de Freitas Prado",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Yeferson Julio Soteldo Martinez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Claudio Rodrigues Gomes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcelo de Araujo Pitaluga Filho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ruben Dario Lezcano Portillo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Juan Pablo Freytes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus dos Reis Francisco",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Otavio Henrique Passos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vinicius Moreira de Lima",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "John Kennedy Batista de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Riquelme Felipe Silva de Almeida",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kevin Steven Serna Jaramillo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ignacio da Silva Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vitor Eudes de Souza Costa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Guilherme Antonio Arana Lopes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luciano Federico Acosta",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Everaldo Stum",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Agustin Canobbio Graviz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jemmes Bruno Ribeiro da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vinicius Moreira de Lima",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fabio Deivson Lopes Maciel",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rene Rodrigues Martins",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Samuel Xavier Brito",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jefferson David Savarino Quintero",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Martinelli Lima",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Santiago Moreno",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Facundo Bernal Cruz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "German Ezequiel Cano",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831909",
+        "competition": "Campeonato Brasileiro",
+        "date": "12/02/2026",
+        "time": "19:30",
+        "datetime_iso": "2026-02-12T22:30:00.000Z",
+        "home_team": "Fluminense",
+        "away_team": "Botafogo",
+        "home_team_cbf_id": "20014",
+        "away_team_cbf_id": "60175",
+        "home_score": "1",
+        "away_score": "0",
+        "local": "Maracanã - Rio de Janeiro - RJ"
+      },
+      {
+        "id_jogo": "831907",
+        "competition": "Campeonato Brasileiro",
+        "date": "05/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-05T22:00:00.000Z",
+        "home_team": "Bahia",
+        "away_team": "Fluminense",
+        "home_team_cbf_id": "61377",
+        "away_team_cbf_id": "20014",
+        "home_score": "1",
+        "away_score": "1",
+        "local": "Arena Fonte Nova - Salvador - BA"
+      },
+      {
+        "id_jogo": "831889",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:30",
+        "datetime_iso": "2026-01-28T22:30:00.000Z",
+        "home_team": "Fluminense",
+        "away_team": "Grêmio",
+        "home_team_cbf_id": "20014",
+        "away_team_cbf_id": "20013",
+        "home_score": "2",
+        "away_score": "1",
+        "local": "Maracanã - Rio de Janeiro - RJ"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20013",
+      "name": "Grêmio",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20013/escudo.jpg",
+      "stadium": "Morumbi",
+      "city": "Sao Paulo",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20013"
+    },
+    "squad": [
+      {
+        "name": "Caio Fernando de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Andre Henrique da Silva Martins",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jeferson Forneck",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose David Enamorado Gomez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wagner Leonardo Calvelo de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Ferreira de Carvalho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Riquelme Freitas dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonel Ulises Perez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mateus Cardoso Lemos Martins",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vitor Ramon Ribeiro de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Francis Apelete Amuzu",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rodrigo Ely",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Weverton Pereira da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cristian David Pavon",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fabian Cornelio Balbuena Gonzalez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luis Eduardo Guedes de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Viery Fernandes Santos Lopes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Douglas Moreira Fagundes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Erick Carlos Noriega Loret de Mola",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Roger Dias Fernandes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alexander Ernesto Aravena Guzman",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Pedro Maturano dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Miguel Angel Monsalve Gonzalez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Leonardo Cuellar Gallego",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Tiago Augusto Goncalves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Walter Kannemann",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marlon Rodrigues Xavier",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Willian Borges da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Arthur Henrique Ramos de Oliveira Melo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Thiago Beltrame Stallbaum",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Otavio Menegon",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Hamester Grando",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Franco Sebastian Cristaldo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Vinicius Alves Morais",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Martins de Souza Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Edenilson Andrade dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcos Luis Rocha Aquino",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831911",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-12T00:30:00.000Z",
+        "home_team": "São Paulo",
+        "away_team": "Grêmio",
+        "home_team_cbf_id": "20005",
+        "away_team_cbf_id": "20013",
+        "home_score": "2",
+        "away_score": "0",
+        "local": "Morumbi - Sao Paulo - SP"
+      },
+      {
+        "id_jogo": "831905",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-05T00:30:00.000Z",
+        "home_team": "Grêmio",
+        "away_team": "Botafogo",
+        "home_team_cbf_id": "20013",
+        "away_team_cbf_id": "60175",
+        "home_score": "5",
+        "away_score": "3",
+        "local": "Arena do Grêmio - Porto Alegre - RS"
+      },
+      {
+        "id_jogo": "831889",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:30",
+        "datetime_iso": "2026-01-28T22:30:00.000Z",
+        "home_team": "Fluminense",
+        "away_team": "Grêmio",
+        "home_team_cbf_id": "20014",
+        "away_team_cbf_id": "20013",
+        "home_score": "2",
+        "away_score": "1",
+        "local": "Maracanã - Rio de Janeiro - RJ"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20011",
+      "name": "Internacional",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20011/escudo.jpg",
+      "stadium": "Beira-Rio",
+      "city": "Porto Alegre",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20011"
+    },
+    "squad": [
+      {
+        "name": "Allex Rodrigues Pereira da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Anthoni Spier Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kauan Jesus Santos Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alisson Rodrigues de Melo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rodrigo Roman Villagra",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Prado Alves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alerrandro Barra Mansa Realino de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rafael Santos Borre Maury",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Braian Nahuel Aguirre",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Ivan Mercado",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Felix Eduardo Torres Caicedo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ronaldo da Silva Souza Guerrero",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Pedro Bezerra de Oliveira Lo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Gomes da Silva Clevelario",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alan Jesus Rodriguez Guaglianoni",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Henrique Corsini",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Raykkonen Pereira Soares",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Victor Gabriel da Conceição Ribeiro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Bahia Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "João Victor Alves de Morais Francisco",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Clayton Sampaio Pereira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Johan Stiven Carbonero Balanta",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Paulo Lucas Santos de Paula",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Sergio Ramon Rochet Alvarez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Vinicius Souza Ramos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Kauã Rodrigues Machado",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alexandro Ezequiel Bernabei",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kayky da Silva Chagas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vitor Hugo Naum dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Diego Esser Pereira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alan Max Benitez Dominguez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Thiago Maia Alencar",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Carlos Ferreira Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alan Patrick Lourenço",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Benjamin Arhin",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831915",
+        "competition": "Campeonato Brasileiro",
+        "date": "12/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-13T00:30:00.000Z",
+        "home_team": "Internacional",
+        "away_team": "Palmeiras",
+        "home_team_cbf_id": "20011",
+        "away_team_cbf_id": "20002",
+        "home_score": "1",
+        "away_score": "3",
+        "local": "Beira-Rio - Porto Alegre - RS"
+      },
+      {
+        "id_jogo": "831899",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-04T22:00:00.000Z",
+        "home_team": "Flamengo",
+        "away_team": "Internacional",
+        "home_team_cbf_id": "20016",
+        "away_team_cbf_id": "20011",
+        "home_score": "1",
+        "away_score": "1",
+        "local": "Maracanã - Rio de Janeiro - RJ"
+      },
+      {
+        "id_jogo": "831895",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-01-28T22:00:00.000Z",
+        "home_team": "Internacional",
+        "away_team": "Athletico Paranaense",
+        "home_team_cbf_id": "20011",
+        "away_team_cbf_id": "20052",
+        "home_score": "0",
+        "away_score": "1",
+        "local": "Beira-Rio - Porto Alegre - RS"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20385",
+      "name": "Mirassol",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20385/escudo.jpg",
+      "stadium": "José Maria de Campos Maia",
+      "city": "Mirassol",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20385"
+    },
+    "squad": [
+      {
+        "name": "Shaylon Kallyson Cardozo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Reinaldo Manoel da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Eduardo de Oliveira Alves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alex Roberto Santana Rafael",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rodrigo Antonio Rodrigues",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Igor Aquino da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Igor Marques Paciencia Cardoso",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Antonio Josenildo Rodrigues de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Eduardo Lecciolle Thomazella",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "João Victor Carroll Santana",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Francisco Hyun Sol Kim",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas da Cruz Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Yuri Lima Lara",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Antonio Francisco Moura Neto",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Willian Estefani Machado",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Andre Luis Silva de Aguiar",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Antonio Javier Galeano Ferreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luiz Otavio da Silva Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luis Henrique Soares Firmino",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Andres Mugni",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Walter Leandro Capeloza Artune",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alesson dos Santos Batista",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Nathan Uiliam Fogaca",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Everton Galdino Moreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Felipe Jonatan Rocha Andrade",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Denilson Alves Borges",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Daniel Fortunato Borges",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Renato Marques de Oliveira Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Aldo Soares de Oliveira Filho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Eduardo Ferreira de Souza",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831913",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-11T22:00:00.000Z",
+        "home_team": "Mirassol",
+        "away_team": "Cruzeiro",
+        "home_team_cbf_id": "20385",
+        "away_team_cbf_id": "59849",
+        "home_score": "2",
+        "away_score": "2",
+        "local": "José Maria de Campos Maia - Mirassol - SP"
+      },
+      {
+        "id_jogo": "831908",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-04T23:00:00.000Z",
+        "home_team": "Remo",
+        "away_team": "Mirassol",
+        "home_team_cbf_id": "20022",
+        "away_team_cbf_id": "20385",
+        "home_score": "2",
+        "away_score": "2",
+        "local": "Mangueirão - Belem - PA"
+      },
+      {
+        "id_jogo": "831893",
+        "competition": "Campeonato Brasileiro",
+        "date": "29/01/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-01-29T23:00:00.000Z",
+        "home_team": "Mirassol",
+        "away_team": "Vasco da Gama Saf",
+        "home_team_cbf_id": "20385",
+        "away_team_cbf_id": "60646",
+        "home_score": "2",
+        "away_score": "1",
+        "local": "José Maria de Campos Maia - Mirassol - SP"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20002",
+      "name": "Palmeiras",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20002/escudo.jpg",
+      "stadium": "Beira-Rio",
+      "city": "Porto Alegre",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20002"
+    },
+    "squad": [
+      {
+        "name": "Mauricio Magalhaes Prado",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Paulo Henrique Sampaio Filho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Riquelme Fillipi Marinho de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ramon Sosa Acosta",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno de Lara Fuchs",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Agustin Giay",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Erick Machado Belé",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Khellven Douglas Silva Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Robson Fernandes dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Raul Gomez Portillo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jefté Vital da Silva Dias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Murilo Cerqueira Paim",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Arthur Gabriel Santana Marcolino",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Manuel Alberto Lopez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcelo Lomba do Nascimento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luis Gustavo Roncholeta Benedetti",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Robson Fernandes dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Miguel dos Santos Pereira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Raphael Cavalcante Veiga",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vitor Hugo Roque Ferreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kauan Lima da Cunha",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luis Felipe Pacheco da Costa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joaquin Piquerez Moreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kone Zie Mohamed",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wanderson Carlos Ferreira dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Felipe Anderson Pereira Gomes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luighi Hanri Sousa Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jhon Adolfo Arias Andrade",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Evangelista Santana de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Emiliano Martinez Toranza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marlon Rodrigues Freitas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Bruno Rafael Rodrigues do Nascimento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Andreas Hugo Hoelgebaum Pereira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Larson Torna Ferreira dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luiz Felipe Vieira Santana de Sá",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Allan Andrade Elias",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831915",
+        "competition": "Campeonato Brasileiro",
+        "date": "12/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-13T00:30:00.000Z",
+        "home_team": "Internacional",
+        "away_team": "Palmeiras",
+        "home_team_cbf_id": "20011",
+        "away_team_cbf_id": "20002",
+        "home_score": "1",
+        "away_score": "3",
+        "local": "Beira-Rio - Porto Alegre - RS"
+      },
+      {
+        "id_jogo": "831902",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-05T00:30:00.000Z",
+        "home_team": "Palmeiras",
+        "away_team": "Vitória",
+        "home_team_cbf_id": "20002",
+        "away_team_cbf_id": "20018",
+        "home_score": "5",
+        "away_score": "1",
+        "local": "Arena Barueri - Barueri - SP"
+      },
+      {
+        "id_jogo": "831894",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-01-28T22:00:00.000Z",
+        "home_team": "Atlético Mineiro",
+        "away_team": "Palmeiras",
+        "home_team_cbf_id": "62194",
+        "away_team_cbf_id": "20002",
+        "home_score": "2",
+        "away_score": "2",
+        "local": "ARENA MRV - Belo Horizonte - MG"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20007",
+      "name": "Red Bull Bragantino",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20007/escudo.jpg",
+      "stadium": "Neo Química Arena",
+      "city": "Sao Paulo",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20007"
+    },
+    "squad": [
+      {
+        "name": "Weimar Enrique Vivas Palacios",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Girotto Franco",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vinicius Mendonca Pereira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fabio Silva de Freitas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Tiago Luis Volpi",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fabricio Oliveira de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Henry David Mosquera Sanchez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fernando Henrique Pires Costa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alix Vinicius de Souza Sampaio",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Maria Herrera Ares",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Eric dos Santos Rodrigues",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cleiton Schwengber",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ignacio Sosa Ospital",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Reis de Alcantara",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rodrigo Huendra Almeida Mendonça",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Yuri Silva Leles de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Marques Alves dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ryan Augusto Tavares da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luis Antonio da Rocha Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Eduardo Gonzaga Mendes Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Davi Gomes de Alvarenga",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Eduardo Colcenti Antunes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Ribeiro Neves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fernando dos Santos Pedro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Henrique Barbosa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kevyn Henrique Monteiro de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cauê Nascimento Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Fernandes Siqueira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Isidro Miguel Pitta Saldivar",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ariel Agustín Sant'anna Quintero",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Andres Hurtado Cheme",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcelo Braz da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kevyn Henrique Monteiro de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Henrique Ribeiro Goncalves",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831912",
+        "competition": "Campeonato Brasileiro",
+        "date": "12/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-12T23:00:00.000Z",
+        "home_team": "Corinthians",
+        "away_team": "Red Bull Bragantino",
+        "home_team_cbf_id": "20001",
+        "away_team_cbf_id": "20007",
+        "home_score": "2",
+        "away_score": "0",
+        "local": "Neo Química Arena - Sao Paulo - SP"
+      },
+      {
+        "id_jogo": "831903",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-04T22:00:00.000Z",
+        "home_team": "Red Bull Bragantino",
+        "away_team": "Atlético Mineiro",
+        "home_team_cbf_id": "20007",
+        "away_team_cbf_id": "62194",
+        "home_score": "1",
+        "away_score": "0",
+        "local": "Cícero de Souza Marques - Braganca Paulista - SP"
+      },
+      {
+        "id_jogo": "831896",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-01-28T22:00:00.000Z",
+        "home_team": "Coritiba SAF",
+        "away_team": "Red Bull Bragantino",
+        "home_team_cbf_id": "61590",
+        "away_team_cbf_id": "20007",
+        "home_score": "0",
+        "away_score": "1",
+        "local": "Couto Pereira - Curitiba - PR"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20022",
+      "name": "Remo",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20022/escudo.jpg",
+      "stadium": "ARENA MRV",
+      "city": "Belo Horizonte",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20022"
+    },
+    "squad": [
+      {
+        "name": "Leonardo de Andrade Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Thalisson Gabriel Pereira Moreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cristian Marcelo Gonzalez Tassano",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Panagiots Tachtsidis",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jaderson Flores dos Reis",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Michael Nicolas Ferreira Berrondo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Lucas de Almeida Carvalho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Francisco Jose Freire de Freitas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marrony da Silva Liberato Silveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Franco Catarozzi Parafita",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonel Marcelo Picco",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alef Mangueira Severino Pereira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Diego Manuel Hernandez Gonzalez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kayky Henrique Almeida Brandão da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Giovanni Fernando Cofreste Pavani",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vitor Frezarin Bueno",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Juan Carlos Osorio Arbelaez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcelo Rodrigues Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Ricardo Araujo Fernandes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rafael Monti Azpiazu",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "José Welison da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "João Pedro Sousa Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "William Klaus",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Victor Danilo Cantillo Jimenez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Eduardo de Queiroz Melo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Moises de Lima",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcelo Rangel Rosa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marllon Goncalves Jeronimo Borges",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ygor Vinhas Oliveira Lima",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Patrick Bezerra do Nascimento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Patrick de Paula Carreiro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Kawan Thomaz Reis de Moraes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Glaybson Yago Souza Lisboa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Victor Ferreira da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ivan Quaresma da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Raphael Guimaraes de Paula",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Savio Antonio Alves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Braian Ezequiel Cufre",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831914",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-11T23:00:00.000Z",
+        "home_team": "Atlético Mineiro",
+        "away_team": "Remo",
+        "home_team_cbf_id": "62194",
+        "away_team_cbf_id": "20022",
+        "home_score": "3",
+        "away_score": "3",
+        "local": "ARENA MRV - Belo Horizonte - MG"
+      },
+      {
+        "id_jogo": "831908",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-04T23:00:00.000Z",
+        "home_team": "Remo",
+        "away_team": "Mirassol",
+        "home_team_cbf_id": "20022",
+        "away_team_cbf_id": "20385",
+        "home_score": "2",
+        "away_score": "2",
+        "local": "Mangueirão - Belem - PA"
+      },
+      {
+        "id_jogo": "831897",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-01-28T22:00:00.000Z",
+        "home_team": "Vitória",
+        "away_team": "Remo",
+        "home_team_cbf_id": "20018",
+        "away_team_cbf_id": "20022",
+        "home_score": "2",
+        "away_score": "0",
+        "local": "Manoel Barradas - Salvador - BA"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20008",
+      "name": "Santos Fc",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20008/escudo.jpg",
+      "stadium": "Arena da Baixada",
+      "city": "Curitiba",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20008"
+    },
+    "squad": [
+      {
+        "name": "Neymar da Silva Santos Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Othavio Basso",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Vinicius Menino",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luan Peres Petroni",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rafael da Silva Freitas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alexis David Duarte Pereira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Miguel Angel Terceros Acuna",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lautaro Ariel Diaz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fernando Pradella Rocha",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Nascimento Resende Brazao",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mayke Rocha de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Thaciano Mickael da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Vinícius Rodrigues Lira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Ivaldo Almeida Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "João Pedro Lucio da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rodrigo Plazezwski Falcão",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Adonis Uriel Frias",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Pedro Chermont Crema",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Barbosa Almeida",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alvaro Martin Barreal",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gonzalo Daniel Escobar",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Francisco das Chagas Soares dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Benjamin Rollheiser",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Diogenes Vinicius da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "João Paulo Ananias Bento",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Billal Brahimi",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Ruben Caballero Gonzalez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Tomás Eduardo Rincón Hernández",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Nadson Juan Maia da Silva de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Morais Silva Bontempo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Willian Souza Arao da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Joao Felipe Schmidt Urbano",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Robson de Souza Júnior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ronielson da Silva Barbosa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Moises Vieira da Veiga",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Igor Vinicius de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mateus Xavier de Sousa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Rafael Vivian",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gustavo Henrique Pereira",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831916",
+        "competition": "Campeonato Brasileiro",
+        "date": "12/02/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-02-12T22:00:00.000Z",
+        "home_team": "Athletico Paranaense",
+        "away_team": "Santos Fc",
+        "home_team_cbf_id": "20052",
+        "away_team_cbf_id": "20008",
+        "home_score": "2",
+        "away_score": "1",
+        "local": "Arena da Baixada - Curitiba - PR"
+      },
+      {
+        "id_jogo": "831901",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-04T23:00:00.000Z",
+        "home_team": "Santos Fc",
+        "away_team": "São Paulo",
+        "home_team_cbf_id": "20008",
+        "away_team_cbf_id": "20005",
+        "home_score": "1",
+        "away_score": "1",
+        "local": "Vila Belmiro - Santos - SP"
+      },
+      {
+        "id_jogo": "831898",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-01-28T23:00:00.000Z",
+        "home_team": "Chapecoense",
+        "away_team": "Santos Fc",
+        "home_team_cbf_id": "20086",
+        "away_team_cbf_id": "20008",
+        "home_score": "4",
+        "away_score": "2",
+        "local": "Arena Condá - Chapeco - SC"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20005",
+      "name": "São Paulo",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20005/escudo.jpg",
+      "stadium": "Morumbi",
+      "city": "Sao Paulo",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20005"
+    },
+    "squad": [
+      {
+        "name": "Matheus Doria Macedo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alan Javier Franco",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Nicolas Bosshardt",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rafael Pires Monteiro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pedro Henrique Ferreira da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Rafael Toloi",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Damian Josue Bobadilla Benitez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luan Vinicius da Silva Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Felipe Gabriel Preis",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Maik Gomes Viegas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Hugo Leonardo Nunes Fernandes Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Daniel de Oliveira Sertanejo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Young Navarro Moraes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucca Marques Alencar",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cedric Ricardo Alves Soares",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jonathan Calleri",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Wendell Nascimento Borges",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Miguel Coronel",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pablo Gonçalves Maia Fortunato",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marcos Antonio Silva Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Aldemir dos Santos Ferreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Enzo Hernan Díaz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gonzalo Andrés Tapia Dubournais",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Robert Abel Arboleda Escobar",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Ramon Batista Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luciano da Rocha Neves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Felipe Negrucci Berdague",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Rodrigues Moura da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Nahuel Adolfo Ferraresi Hernandez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Andre Oliveira Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Sabino Chagas Monteiro",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831911",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-12T00:30:00.000Z",
+        "home_team": "São Paulo",
+        "away_team": "Grêmio",
+        "home_team_cbf_id": "20005",
+        "away_team_cbf_id": "20013",
+        "home_score": "2",
+        "away_score": "0",
+        "local": "Morumbi - Sao Paulo - SP"
+      },
+      {
+        "id_jogo": "831901",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-04T23:00:00.000Z",
+        "home_team": "Santos Fc",
+        "away_team": "São Paulo",
+        "home_team_cbf_id": "20008",
+        "away_team_cbf_id": "20005",
+        "home_score": "1",
+        "away_score": "1",
+        "local": "Vila Belmiro - Santos - SP"
+      },
+      {
+        "id_jogo": "831891",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-01-29T00:30:00.000Z",
+        "home_team": "São Paulo",
+        "away_team": "Flamengo",
+        "home_team_cbf_id": "20005",
+        "away_team_cbf_id": "20016",
+        "home_score": "2",
+        "away_score": "1",
+        "local": "Morumbi - Sao Paulo - SP"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "60646",
+      "name": "Vasco da Gama Saf",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/60646/escudo.jpg",
+      "stadium": "São Januário",
+      "city": "Rio de Janeiro",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/60646"
+    },
+    "squad": [
+      {
+        "name": "João Pedro Murilo de Paula Morais",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pablo de Paula Cardoso",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Claudio Paul Spinelli",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Danilo das Neves Pinheiro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Luis Rodriguez Bebanz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jair Rodrigues Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Alan Gabriel Saldivia Vazquez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Adson Ferreira Soares",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cauan Lucas Barros da Luz",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Johan Rojas Echavarria",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Piton Crivellaro",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Daniel Cerantola Fuzato",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Souza da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mateus Carvalho dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luis Eduardo Soares da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas de Freitas Molarinho Chagas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus França de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Andrey Fernandes de Oliveira Nunes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Diego Campos Minete",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "João Vitor Fonseca da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Paulo Henrique de Oliveira Alves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Phillipe Gabriel Pires de Oliveira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Victor Luis Chuab Zamblauskas",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Guilherme Estrella de Paiva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "David Correa da Fonseca",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Eccehomo Cuesta Figueroa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Thiago Henrique Santos Mendes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Nuno Gonçalo Rocha Moreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Carlos Andres Gomez Hinestroza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Marino Hinestroza Angulo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Brenner Souza da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Hugo Moura Arruda da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Robert Renan Alves Barbosa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leonardo Cesar Jardim",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831910",
+        "competition": "Campeonato Brasileiro",
+        "date": "11/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-12T00:30:00.000Z",
+        "home_team": "Vasco da Gama Saf",
+        "away_team": "Bahia",
+        "home_team_cbf_id": "60646",
+        "away_team_cbf_id": "61377",
+        "home_score": "0",
+        "away_score": "1",
+        "local": "São Januário - Rio de Janeiro - RJ"
+      },
+      {
+        "id_jogo": "831900",
+        "competition": "Campeonato Brasileiro",
+        "date": "05/02/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-02-05T23:00:00.000Z",
+        "home_team": "Vasco da Gama Saf",
+        "away_team": "Chapecoense",
+        "home_team_cbf_id": "60646",
+        "away_team_cbf_id": "20086",
+        "home_score": "1",
+        "away_score": "1",
+        "local": "São Januário - Rio de Janeiro - RJ"
+      },
+      {
+        "id_jogo": "831893",
+        "competition": "Campeonato Brasileiro",
+        "date": "29/01/2026",
+        "time": "20:00",
+        "datetime_iso": "2026-01-29T23:00:00.000Z",
+        "home_team": "Mirassol",
+        "away_team": "Vasco da Gama Saf",
+        "home_team_cbf_id": "20385",
+        "away_team_cbf_id": "60646",
+        "home_score": "2",
+        "away_score": "1",
+        "local": "José Maria de Campos Maia - Mirassol - SP"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  },
+  {
+    "team": {
+      "cbf_id": "20018",
+      "name": "Vitória",
+      "logo_url": "https://conteudo.cbf.com.br/clubes/20018/escudo.jpg",
+      "stadium": "Manoel Barradas",
+      "city": "Salvador",
+      "team_page_url": "https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026/20018"
+    },
+    "squad": [
+      {
+        "name": "Ronald dos Santos Lopes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ramon Ramos Lima",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Caique de Jesus Goncalves",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Matheus Martins Fogaca de Paulo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Nathan Gabriel de Souza Mendes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luan Candido de Almeida",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Rodrigues da Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Fabricio do Rosario dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mateus da Silva Duarte",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Pablo Santos de Alcantara",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Osvaldo Lourenco Filho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Vasconcelos Ferreira",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Riccieli Eduardo da Silva Junior",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lucas Willians Assis Arcanjo",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Renato Kayzer de Souza",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Eduardo Marcelo Rodrigues Nunes",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Ezequiel Oliveira Reis",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Marcos Alves Luis",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Hueglo dos Santos Neris",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Lawan Kennyd Gabriel Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Aitor Cantalapiedra Fernandez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Luis Miguel Borges de Paula",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jamerson Santos de Jesus",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Edenilson Santos Nascimento Filho",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Leandro Emmanuel Martinez",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Gabriel Baralhas dos Santos",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Erick de Arruda Serafim",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Jose Breno Silva Costa",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Yuri Sena dos Reis Batista",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Cleidson Andrade de Souza Silva",
+        "position": "",
+        "number": ""
+      },
+      {
+        "name": "Mario Sergio Santos Costa",
+        "position": "",
+        "number": ""
+      }
+    ],
+    "games": [
+      {
+        "id_jogo": "831917",
+        "competition": "Campeonato Brasileiro",
+        "date": "10/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-11T00:30:00.000Z",
+        "home_team": "Vitória",
+        "away_team": "Flamengo",
+        "home_team_cbf_id": "20018",
+        "away_team_cbf_id": "20016",
+        "home_score": "1",
+        "away_score": "2",
+        "local": "Manoel Barradas - Salvador - BA"
+      },
+      {
+        "id_jogo": "831902",
+        "competition": "Campeonato Brasileiro",
+        "date": "04/02/2026",
+        "time": "21:30",
+        "datetime_iso": "2026-02-05T00:30:00.000Z",
+        "home_team": "Palmeiras",
+        "away_team": "Vitória",
+        "home_team_cbf_id": "20002",
+        "away_team_cbf_id": "20018",
+        "home_score": "5",
+        "away_score": "1",
+        "local": "Arena Barueri - Barueri - SP"
+      },
+      {
+        "id_jogo": "831897",
+        "competition": "Campeonato Brasileiro",
+        "date": "28/01/2026",
+        "time": "19:00",
+        "datetime_iso": "2026-01-28T22:00:00.000Z",
+        "home_team": "Vitória",
+        "away_team": "Remo",
+        "home_team_cbf_id": "20018",
+        "away_team_cbf_id": "20022",
+        "home_score": "2",
+        "away_score": "0",
+        "local": "Manoel Barradas - Salvador - BA"
+      }
+    ],
+    "raw_tabs": {
+      "competicoes_count": 0,
+      "historico_count": 0
+    }
+  }
+]

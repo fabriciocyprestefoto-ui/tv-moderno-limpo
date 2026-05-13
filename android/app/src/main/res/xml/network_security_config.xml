@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network Security Configuration for RED X TV Box
+    O catálogo IPTV pode entregar canais de vários provedores em HTTP puro.
+    Em APK/WebView, bloquear cleartext por padrão faz muitos canais falharem
+    com erro genérico antes do player conseguir abrir o stream.
+-->
+<network-security-config>
+    <!-- Permite HTTP para streams IPTV dinâmicos. Domínios sensíveis continuam HTTPS-only abaixo. -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+
+    <!-- Supabase: HTTPS only -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">supabase.co</domain>
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </domain-config>
+
+    <!-- TMDB API: HTTPS only -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">themoviedb.org</domain>
+        <domain includeSubdomains="true">tmdb.org</domain>
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </domain-config>
+
+    <!--
+        Exceções para provedores/artefatos que operam em HTTP puro.
+        Adicione aqui cada domínio de provedor que use HTTP (não HTTPS).
+    -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">newoneblue.site</domain>
+        <domain includeSubdomains="true">fontez.cc</domain>
+        <domain includeSubdomains="true">tmsimg.com</domain>
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

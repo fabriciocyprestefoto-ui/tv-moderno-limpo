@@ -1,0 +1,17 @@
+{
+    "versionCode": 23,
+    "versionName": "2.3",
+    "apkUrl": "https://chemorena.com/a/redflix.apk",
+    "force": true,
+    "changelog": [
+        "PADRONIZAÇÃO: O tamanho do card 'Quem está Assistindo' agora é idêntico ao modal de login Admin (md: 448px).",
+        "UI REFINANCE: Ajustado raio das bordas para 28px e paddings para p-8, garantindo consistência visual.",
+        "PERFORMANCE: Aurora Background ultra leve mantido para fluidez em TV Box.",
+        "LAYOUT: Melhorado o agrupamento de perfis dentro do novo formato de card reduzido."
+    ],
+    "minimumSupportedVersion": 1,
+    "apkSizeMB": 21.77,
+    "apkSHA256": "289540a74bd36fed69fa5e719c5e75e7dcfb4a378b1134e21b2952274b8cfdb2f",
+    "releaseDate": "2026-03-02T05:15:00Z",
+    "environment": "production"
+}

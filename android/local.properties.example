@@ -1,0 +1,12 @@
+# Copie para local.properties (mesma pasta) e preencha.
+# local.properties já está no .gitignore — não commite senhas.
+#
+# Caminho do SDK (Android Studio costuma criar automaticamente):
+# sdk.dir=C\:\\Users\\SEU_USUARIO\\AppData\\Local\\Android\\Sdk
+#
+# Assinatura release (obrigatório para npm run build:apk):
+# As senhas devem ser EXATAMENTE as usadas ao criar android/redx-release.jks
+# (alias padrão do projeto: redx-key).
+KEYSTORE_PASSWORD=sua_senha_do_keystore
+KEY_PASSWORD=sua_senha_da_chave
+KEY_ALIAS=redx-key

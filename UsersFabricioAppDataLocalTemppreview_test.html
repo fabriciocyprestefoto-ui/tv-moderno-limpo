@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redflix | Spatial Streaming</title>
+    <meta
+      name="description"
+      content="Redflix – streaming de filmes, séries e TV ao vivo com navegação por controle remoto e suporte a TV Box Android."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Redflix" />
+    <meta property="og:title" content="Redflix | Streaming" />
+    <meta
+      property="og:description"
+      content="Assista filmes, séries e TV ao vivo. Compatível com TV Box e controle remoto."
+    />
+    <meta property="og:image" content="/assets/og-cover.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Redflix | Streaming" />
+    <meta
+      name="twitter:description"
+      content="Assista filmes, séries e TV ao vivo. Compatível com TV Box e controle remoto."
+    />
+    <meta name="twitter:image" content="/assets/og-cover.jpg" />
+
+    <!-- Player usa HTML5 nativo (<video>) -->
+
+    <!-- TV Box: D-pad bridge - MainActivity.injectKey calls this -->
+    <script>
+      (function () {
+        var m = {
+          ArrowUp: 38,
+          ArrowDown: 40,
+          ArrowLeft: 37,
+          ArrowRight: 39,
+          Enter: 13,
+          Escape: 27,
+          Backspace: 8,
+          ' ': 32,
+          Menu: 0,
+        };
+        for (var i = 0; i <= 9; i++) m['' + i] = 48 + i;
+
+        window.__dispatchTVKey__ = function (k) {
+          var key = k === ' ' || k === 'Space' ? ' ' : k || '';
+          if (key === 'Back') key = 'Backspace'; // Android KEYCODE_BACK
+          var c = m[key] || 0;
+          var codeStr =
+            key === ' '
+              ? 'Space'
+              : key.indexOf('Arrow') === 0 ||
+                  key === 'Enter' ||
+                  key === 'Escape' ||
+                  key === 'Backspace' ||
+                  key === 'Tab'
+                ? key
+                : 'Key' + key;
+          var el = document.activeElement;
+          var inInput =
+            el &&
+            (el.tagName === 'INPUT' ||
+              el.tagName === 'TEXTAREA' ||
+              el.tagName === 'SELECT' ||
+              el.isContentEditable);
+          var isLivtvSearch =
+            el && el.getAttribute && el.getAttribute('data-livetv-search') === 'true';
+          var isFocusable =
+            el &&
+            (el.tagName === 'BUTTON' ||
+              el.tagName === 'A' ||
+              el.hasAttribute('tabindex') ||
+              el.hasAttribute('data-nav-item') ||
+              el.hasAttribute('data-player-control'));
+          try {
+            var opts = {
+              key: key,
+              code: codeStr,
+              keyCode: c,
+              which: c,
+              bubbles: true,
+              cancelable: true,
+              composed: true,
+            };
+            var isLiveTV = !!window.__livetvActive;
+            var isDetails = !!window.__detailsActive;
+            var isPlayer = !!window.__playerActive;
+            var isLogin = !!window.__loginActive;
+            var isWhoIsWatching = !!window.__whoIsWatchingActive;
+            var isProfiles = !!window.__profilesActive;
+            var isSearchActive = !!window.__searchActive;
+            if (inInput && isLivtvSearch && (key === 'ArrowUp' || key === 'ArrowDown')) {
+              window.dispatchEvent(new KeyboardEvent('keydown', opts));
+            } else if (inInput) {
+              /* Sempre enviar teclas ao input quando focado (incl. Login) — permite @ e letras se MainActivity passar */
+              el.dispatchEvent(new KeyboardEvent('keydown', opts));
+            } else if (isFocusable && (key === 'Enter' || key === ' ')) {
+              var ev = new KeyboardEvent('keydown', opts);
+              el.dispatchEvent(ev);
+              if (!ev.defaultPrevented && (el.tagName === 'BUTTON' || el.tagName === 'A'))
+                el.click();
+            } else if (
+              (isLiveTV ||
+                isDetails ||
+                isPlayer ||
+                isLogin ||
+                isWhoIsWatching ||
+                isProfiles ||
+                isSearchActive) &&
+              (key === 'ArrowUp' ||
+                key === 'ArrowDown' ||
+                key === 'ArrowLeft' ||
+                key === 'ArrowRight' ||
+                key === 'Up' ||
+                key === 'Down' ||
+                key === 'Left' ||
+                key === 'Right' ||
+                key === 'Escape' ||
+                key === 'Backspace' ||
+                key === 'Back' ||
+                key === 'Enter' ||
+                key === ' ' ||
+                key === 'OK' ||
+                key === 'Select' ||
+                key === 'ChannelUp' ||
+                key === 'ChannelDown' ||
+                key === 'MediaChannelUp' ||
+                key === 'MediaChannelDown' ||
+                key === 'ContextMenu' ||
+                /^[0-9]$/.test(key))
+            ) {
+              window.dispatchEvent(new KeyboardEvent('keydown', opts));
+            } else if (isFocusable) {
+              el.dispatchEvent(new KeyboardEvent('keydown', opts));
+            } else {
+              window.dispatchEvent(new KeyboardEvent('keydown', opts));
+            }
+          } catch (e) {
+            try {
+              var ev2 = document.createEvent('Event');
+              ev2.initEvent('keydown', true, true);
+              ev2.key = key;
+              ev2.keyCode = c;
+              ev2.which = c;
+              window.dispatchEvent(ev2);
+            } catch (e3) {}
+          }
+        };
+        window.__canExitApp = false;
+      })();
+      /* Smart TV: notificar native quando input/textarea focado — permite teclado virtual do sistema aceitar @ e letras */
+      (function () {
+        function check(el) {
+          return (
+            el &&
+            (el.tagName === 'INPUT' ||
+              el.tagName === 'TEXTAREA' ||
+              el.tagName === 'SELECT' ||
+              el.isContentEditable)
+          );
+        }
+        function setFocused(f) {
+          try {
+            if (window.RedxAndroidBridge) {
+              window.RedxAndroidBridge.setInputFocused(f);
+              return;
+            }
+            if (f)
+              setTimeout(function () {
+                try {
+                  if (window.RedxAndroidBridge) window.RedxAndroidBridge.setInputFocused(true);
+                } catch (e) {}
+              }, 100);
+          } catch (e) {}
+        }
+        document.addEventListener(
+          'focusin',
+          function (e) {
+            if (check(e.target)) setFocused(true);
+          },
+          true
+        );
+        document.addEventListener(
+          'focusout',
+          function (e) {
+            if (check(e.target)) setFocused(false);
+          },
+          true
+        );
+      })();
+    </script>
+    <!-- Preconnects movidos para após o first paint (não bloquear rendering em TV Box) -->
+    <!-- Google Fonts: carregamento assíncrono — NÃO bloqueia rendering em WebView antigo -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      as="style"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    /></noscript>
+
+    <!-- Vinheta preload removido: arquivo opcional; as="video" causava warning em alguns navegadores -->
+
+    <!-- Vite injeta modulepreload e CSS automaticamente no build -->
+
+    <!-- Estilos mínimos para first paint (antes de index.css carregar) -->
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        background-color: #0b0514;
+        color: #ffffff;
+        margin: 0;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+    </style>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+    <script type="module" crossorigin src="./assets/index-BuC2X6Oq.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/vendor-capacitor-DdYjUcRd.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-react-DJg6FZz0.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-misc-DJUFgKfV.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-supabase-BBpnykW9.js">
+    <link rel="modulepreload" crossorigin href="./assets/app-core-BrUiD_Z1.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-router-CPA76dUA.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-icons-DltP4btR.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-motion-CYB78Mmb.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-tanstack-Dxpj0-jl.js">
+    <link rel="modulepreload" crossorigin href="./assets/app-ui-hooks-iUaJgGa6.js">
+    <link rel="stylesheet" crossorigin href="./assets/app-ui-hooks-DZnod2LQ.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-CGZlmpa5.css">
+    <script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+    <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+  <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
+
+  <body>
+    <div id="root"></div>
+    <!-- Fallback visual puro HTML/CSS: aparece ANTES do React montar.
+         React substitui o conteúdo de #root, escondendo este indicador automaticamente.
+         Em TV Box com JS lento/bloqueado, o usuário vê "Carregando..." em vez de tela roxa. -->
+    <div
+      id="preboot"
+      style="
+        position: fixed;
+        inset: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99998;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #060010;
+        color: #fff;
+        font-family: system-ui, sans-serif;
+      "
+    >
+      <img
+        src="./logored.png"
+        alt="Redflix"
+        style="height: 64px; width: auto; margin-bottom: 32px"
+        onerror="this.style.display = 'none'"
+      />
+      <div
+        style="
+          width: 200px;
+          height: 3px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+          overflow: hidden;
+        "
+      >
+        <div
+          style="
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(90deg, #7c3aed, #a855f7);
+            border-radius: 4px;
+            animation: prebootBar 1.5s ease-in-out infinite;
+          "
+        ></div>
+      </div>
+      <p
+        style="
+          margin-top: 18px;
+          font-size: 11px;
+          letter-spacing: 0.3em;
+          color: rgba(255, 255, 255, 0.3);
+          text-transform: uppercase;
+        "
+      >
+        Carregando…
+      </p>
+      <style>
+        @keyframes prebootBar {
+          0% {
+            transform: translateX(-100%);
+          }
+          50% {
+            transform: translateX(250%);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
+      </style>
+    </div>
+    <script>
+      // Remove preboot assim que React montar (MutationObserver no #root)
+      (function () {
+        var p = document.getElementById('preboot');
+        if (!p) return;
+        var r = document.getElementById('root');
+        if (!r) return;
+        var o = new MutationObserver(function () {
+          if (r.childNodes.length > 0) {
+            p.style.display = 'none';
+            o.disconnect();
+          }
+        });
+        o.observe(r, { childList: true });
+        setTimeout(function () {
+          p.style.display = 'none';
+          o.disconnect();
+        }, 90000);
+      })();
+    </script>
+    <script>
+      try {
+        var B = '20260306h';
+        if (localStorage.getItem('redx-build') !== B) {
+          sessionStorage.clear();
+          try {
+            indexedDB.deleteDatabase('redx-epg-db');
+          } catch (_) {}
+          var keysToRemove = [];
+          var preserve = ['redx-catalog-cache', 'redx-active-profile', 'redx_post_login_redirect'];
+          for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k && preserve.indexOf(k) === -1) keysToRemove.push(k);
+          }
+          keysToRemove.forEach(function (k) {
+            try {
+              localStorage.removeItem(k);
+            } catch (_) {}
+          });
+          localStorage.setItem('redx-build', B);
+        }
+      } catch (e) {}
+    </script>
+    <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+    <script nomodule crossorigin id="vite-legacy-polyfill" src="./assets/polyfills-legacy-C7-vy7dd.js"></script>
+    <script nomodule crossorigin id="vite-legacy-entry" data-src="./assets/index-legacy-Bx-03OwK.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+  </body>
+</html>

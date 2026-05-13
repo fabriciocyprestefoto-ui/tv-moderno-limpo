@@ -1,0 +1,149 @@
+# ── Dependências e saída de build ──
+node_modules/
+dist/
+dist-ssr/
+build/
+.output/
+*.tsbuildinfo
+
+# ── Segredos e overrides locais (nunca commitar) ──
+.env
+.env.local
+.env.production
+.env.*.local
+!.env.example
+!.env.e2e
+
+# ── Android: fonte versionada; artefatos e bundle web embutido são regenerados ──
+android/.gradle/
+android/**/build/
+android/**/.cxx/
+android/local.properties
+android/**/*.jks
+android/app/src/main/assets/public/
+android/build_output.txt
+android/build_output_2.txt
+android/debug_build_output.txt
+android/output.txt
+
+# ── IDE / ferramentas locais ──
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.claude/
+.cursor/
+.agents/
+.codex-runtime/
+.continue/
+.windsurf/
+
+# ── SO ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ──
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Binários e pacotes grandes ──
+*.apk
+*.zip
+*.exe
+
+# ── Conteúdo acidental / não usado pelo app Vite ──
+public/futcard-main/
+Nova pasta*/
+Nova pasta (2)/
+Nova pasta (3)/
+Nova pasta (4)/
+Nova pasta (5)/
+Nova pasta (6)/
+Nova pasta (7)/
+Nova pasta (8)/
+_backup_restore_point/
+backup/
+como/
+tv/
+testsprite_tests/
+android-native/
+api-brasileirao/
+detalhes/
+fut/
+kids/
+mobile/
+mobileapp/
+Posters_TVBox_Todas_Versoes/
+reports/
+tmp/
+
+# ── Supabase CLI local ──
+supabase/.temp/
+supabase/.branches/
+
+# ── SQL solto na raiz (migrations em supabase/migrations ficam versionadas) ──
+*.sql
+!supabase/migrations/**/*.sql
+
+# ── Scripts / lixo na raiz do repo ──
+*.bat
+append_css.py
+update_click.py
+update_logos.py
+update_player_css.py
+write_player.py
+canais.txt
+times.txt
+playlist_*.m3u
+*.m3u
+limpafinal-restore-*.zip
+playwright-*.png
+vite-dev.*.log
+skills-lock.json
+supabase_schema.sql
+site.code-workspace
+.mcp.json
+.tmp_supabase_openapi.json
+
+# ── Testes manuais / diagnóstico na raiz ──
+test-*.html
+test_*.html
+test_*.mjs
+test_*.json
+check_*.mjs
+create_table_*.mjs
+execute_*.mjs
+fix_admin_role.mjs
+run_migration.ts
+run_sql_migration.mjs
+execute_sql_direct.ts
+temp.css
+build_log.txt
+hs_err_pid*.log
+replay_pid*.log
+diff.txt
+claude_desktop_config.json
+*.bak
+EXEMPLOS_INTEGRACAO.js
+
+# ── Cypress artefatos gerados ──
+cypress/results/*.xml
+cypress/screenshots/
+cypress/videos/
+
+# ── Docs opcionais (descomente se quiser versionar) ──
+# docs/
+
+# ── Mídia grande na raiz (use public/ quando for asset do app) ──
+vinheta.mp4
+/epgicon.png
+/ChatGPT*.png
+/In+*.webp
+/Prime_Video_002.jpg
+/prime_video.jpg
+/globoplay_upscaled.png
+/logored.png
+/netflix.jpg
+/x.png

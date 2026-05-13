@@ -1,0 +1,727 @@
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS.CSS — Transições e Efeitos para TV Box (10-foot UI)
+   ═══════════════════════════════════════════════════════════
+   - Curvas de easing otimizadas para tela grande
+   - Ripple, glow, scroll suave
+   - Page transitions
+   - Skeleton shimmer
+   - Focus spring animation
+   - Parallax sutil
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Variáveis de animação ── */
+:root {
+  --anim-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --anim-ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --anim-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --anim-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --anim-fast: 120ms;
+  /* 180ms — responsividade imediata em TV Box (era 300ms) */
+  --anim-normal: 180ms;
+  /* 280ms — animações de página (era 500ms) */
+  --anim-slow: 280ms;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* FOCUS — Spring Scale Animation                        */
+/* ═══════════════════════════════════════════════════════ */
+
+/* .tv-focusable spring ease (data-nav-item focus agora é definido exclusivamente em index.css) */
+.tv-focusable {
+  transition:
+    transform var(--anim-normal) var(--anim-spring),
+    box-shadow var(--anim-fast) ease,
+    border-color var(--anim-fast) linear,
+    opacity var(--anim-normal) var(--anim-ease-in-out);
+}
+
+.tv-focusable:focus-visible {
+  transform: scale(1.03);
+  will-change: transform;
+  transition:
+    transform var(--anim-normal) var(--anim-spring),
+    box-shadow 200ms ease,
+    border-color var(--anim-fast) linear;
+}
+
+.tv-focusable:hover {
+  transform: scale(1.03);
+  will-change: transform;
+  transition:
+    transform var(--anim-normal) var(--anim-ease-out-expo),
+    box-shadow 200ms ease;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* RIPPLE — Efeito ao selecionar/navegar                 */
+/* ═══════════════════════════════════════════════════════ */
+
+@keyframes tv-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.tv-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(168, 85, 247, 0.35) 0%,
+    rgba(168, 85, 247, 0.1) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 100;
+  animation: tv-ripple 600ms var(--anim-ease-out-expo) forwards;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* GLOW — Pulsante no foco                               */
+/* ═══════════════════════════════════════════════════════ */
+
+@keyframes focus-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px rgba(0, 0, 0, 0.8),
+      0 0 20px rgba(255, 255, 255, 0.2),
+      0 0 40px rgba(168, 85, 247, 0.15);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 2px rgba(0, 0, 0, 0.8),
+      0 0 30px rgba(255, 255, 255, 0.3),
+      0 0 60px rgba(168, 85, 247, 0.25);
+  }
+}
+
+/* focus-glow-active: sombra estática em vez de animação infinita.
+ * box-shadow infinito força repaint constante — fatal em TV Box. */
+.focus-glow-active {
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.8),
+    0 0 24px rgba(168, 85, 247, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* SMOOTH SCROLLING                                      */
+/* ═══════════════════════════════════════════════════════ */
+
+/* scroll-behavior: smooth removido do html global — em TV Box Android WebView
+ * esse modo ativa um scroll suave por JavaScript que consome CPU durante navegação.
+ * Scroll programático via scrollIntoView() ainda funciona. */
+/* html { scroll-behavior: smooth; } */
+
+/* Auto-scroll container para D-pad */
+[data-nav-scroll] {
+  scroll-behavior: smooth;
+  scroll-padding: 48px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Scroll suave vertical */
+.tv-scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-padding: 100px 0;
+  overscroll-behavior-y: contain;
+}
+
+/* Scroll suave horizontal */
+.tv-scroll-horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scroll-padding: 48px;
+  overscroll-behavior-x: contain;
+}
+
+/* TV Box: desabilitar scroll-behavior smooth — causa jank durante navegação D-pad */
+.tv-box-mode [data-nav-scroll],
+.tv-box-mode .tv-scroll-container,
+.tv-box-mode .tv-scroll-horizontal {
+  scroll-behavior: auto !important;
+}
+
+.tv-scroll-horizontal > * {
+  scroll-snap-align: start;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* PAGE TRANSITIONS                                      */
+/* ═══════════════════════════════════════════════════════ */
+
+@keyframes page-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.99);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes page-exit {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.99);
+  }
+}
+
+/* 200ms em vez de 400ms — troca de página percebida como instantânea */
+.page-transition-enter {
+  animation: page-enter 200ms var(--anim-ease-out-expo) forwards;
+}
+
+.page-transition-exit {
+  animation: page-exit 150ms var(--anim-ease-in-out) forwards;
+}
+
+/* Fade simples */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in var(--anim-normal) var(--anim-ease-in-out) forwards;
+}
+
+/* Slide variants */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up var(--anim-slow) var(--anim-ease-out-expo) forwards;
+}
+
+.animate-slide-down {
+  animation: slide-down var(--anim-slow) var(--anim-ease-out-expo) forwards;
+}
+
+.animate-slide-left {
+  animation: slide-left var(--anim-slow) var(--anim-ease-out-expo) forwards;
+}
+
+.animate-slide-right {
+  animation: slide-right var(--anim-slow) var(--anim-ease-out-expo) forwards;
+}
+
+/* Stagger para listas — aplica delay incremental (20ms = resposta rápida em TV Box) */
+.stagger-item {
+  opacity: 0;
+}
+
+.stagger-item:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.stagger-item:nth-child(2) {
+  animation-delay: 20ms;
+}
+
+.stagger-item:nth-child(3) {
+  animation-delay: 40ms;
+}
+
+.stagger-item:nth-child(4) {
+  animation-delay: 60ms;
+}
+
+.stagger-item:nth-child(5) {
+  animation-delay: 80ms;
+}
+
+.stagger-item:nth-child(6) {
+  animation-delay: 100ms;
+}
+
+.stagger-item:nth-child(7) {
+  animation-delay: 120ms;
+}
+
+.stagger-item:nth-child(8) {
+  animation-delay: 140ms;
+}
+
+.stagger-item:nth-child(9) {
+  animation-delay: 160ms;
+}
+
+.stagger-item:nth-child(10) {
+  animation-delay: 180ms;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* SKELETON SHIMMER (Loading Placeholder)                */
+/* ═══════════════════════════════════════════════════════ */
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    rgba(255, 255, 255, 0.04) 80%
+  );
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.5s linear infinite;
+  border-radius: 12px;
+}
+
+.skeleton-text {
+  height: 14px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.skeleton-card {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* PARALLAX — Sutil no Hero Banner                       */
+/* ═══════════════════════════════════════════════════════ */
+
+.parallax-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.parallax-layer {
+  /* will-change removido do estado estático — criava GPU layer permanente para TODOS
+   * os elementos parallax mesmo sem scroll. Agora só ativo durante scroll via JS. */
+  transition: transform 80ms linear;
+}
+
+.parallax-slow {
+  transform: translateY(calc(var(--scroll-y, 0) * 0.3));
+}
+
+.parallax-medium {
+  transform: translateY(calc(var(--scroll-y, 0) * 0.5));
+}
+
+.parallax-fast {
+  transform: translateY(calc(var(--scroll-y, 0) * 0.8));
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* CARD ANIMATIONS                                       */
+/* ═══════════════════════════════════════════════════════ */
+
+/* Fade-in ao entrar na viewport (via IntersectionObserver) */
+@keyframes card-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 200ms em vez de 500ms — stagger de cards era visualmente lento em listas longas */
+.card-animate-in {
+  animation: card-reveal 200ms var(--anim-ease-out-expo) forwards;
+}
+
+/* Press/select feedback */
+@keyframes card-press {
+  0% {
+    transform: scale(1.03);
+  }
+
+  50% {
+    transform: scale(0.98);
+  }
+
+  100% {
+    transform: scale(1.03);
+  }
+}
+
+.card-press-feedback {
+  animation: card-press 300ms var(--anim-spring) forwards;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* PROGRESS BAR ANIMATION                                */
+/* ═══════════════════════════════════════════════════════ */
+
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: var(--progress, 0%);
+  }
+}
+
+.progress-bar-animated {
+  animation: progress-fill 800ms var(--anim-ease-out-expo) forwards;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* TOOLTIP / BADGE ANIMATIONS                            */
+/* ═══════════════════════════════════════════════════════ */
+
+@keyframes badge-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.badge-animate {
+  animation: badge-pop 400ms var(--anim-spring) forwards;
+}
+
+@keyframes tooltip-show {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tooltip-animate {
+  animation: tooltip-show 200ms var(--anim-ease-out-expo) forwards;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* 10-FOOT UI — Safe Zone & Tipografia                   */
+/* ═══════════════════════════════════════════════════════ */
+
+/* Safe zone wrapper — 48px mínimo nas bordas */
+.tv-safe-zone {
+  padding: 48px;
+}
+
+@media (max-width: 1280px) {
+  .tv-safe-zone {
+    padding: 32px;
+  }
+}
+
+/* TV Box 1280x720 — safe zone 48px em todas as resoluções TV */
+@media (max-width: 1280px) and (max-height: 800px) {
+  .tv-safe-zone {
+    padding: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tv-safe-zone {
+    padding: 16px;
+  }
+}
+
+/* Tipografia mínima para 10-ft */
+.tv-text-body {
+  font-size: clamp(18px, 1.5vw, 22px);
+  line-height: 1.5;
+}
+
+.tv-text-title {
+  font-size: clamp(32px, 3vw, 48px);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.tv-text-hero {
+  font-size: clamp(48px, 5vw, 72px);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.tv-text-caption {
+  font-size: clamp(14px, 1.2vw, 18px);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Botões mínimos para TV */
+.tv-btn {
+  min-width: 160px;
+  min-height: 56px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition:
+    transform var(--anim-normal) var(--anim-spring),
+    background var(--anim-fast) ease,
+    box-shadow 200ms ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tv-btn:focus-visible {
+  transform: scale(1.03);
+}
+
+.tv-btn-primary {
+  background: #a855f7;
+  color: white;
+  border: none;
+}
+
+.tv-btn-primary:hover,
+.tv-btn-primary:focus-visible {
+  background: #c084fc;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+}
+
+.tv-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+.tv-btn-secondary:hover,
+.tv-btn-secondary:focus-visible {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* TV Box: desabilitar blur em tv-btn-secondary */
+.tv-box-mode .tv-btn-secondary {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* GRID SPACING — Múltiplos de 8px                       */
+/* ═══════════════════════════════════════════════════════ */
+
+.tv-gap-xs {
+  gap: 8px;
+}
+
+.tv-gap-sm {
+  gap: 16px;
+}
+
+.tv-gap-md {
+  gap: 24px;
+}
+
+.tv-gap-lg {
+  gap: 32px;
+}
+
+.tv-gap-xl {
+  gap: 48px;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* CONTRAST — WCAG AAA (modo escuro)                     */
+/* ═══════════════════════════════════════════════════════ */
+
+/* Texto principal: branco sobre fundo escuro */
+.tv-contrast-high {
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Texto secundário com contraste garantido */
+.tv-contrast-medium {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Surface com contraste */
+.tv-surface {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tv-surface-elevated {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/* REDUCED MOTION — Respeitar preferências do sistema    */
+/* ═══════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .parallax-slow,
+  .parallax-medium,
+  .parallax-fast {
+    transform: none !important;
+  }
+
+  /* Skeleton shimmer: parar animação mas manter visual */
+  .skeleton-shimmer-netflix {
+    animation: none !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* HeroBanner: troca de slides sem fade */
+  [data-hero-banner] .motion-banner-fade {
+    transition: none !important;
+  }
+
+  /* Spinner: trocar por opacidade estática */
+  .animate-spin {
+    animation: none !important;
+    opacity: 0.6;
+  }
+}
+
+/* ── Loading spinners e pulse (fallback para animate-pulse-slow, animate-spin-slow) ── */
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2.5s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2.5s linear infinite;
+}

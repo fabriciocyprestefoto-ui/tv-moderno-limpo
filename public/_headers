@@ -1,0 +1,28 @@
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  # HSTS: 1 ano + includeSubDomains. Não adicionar preload sem confirmar todos os subdomínios.
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  # unsafe-inline necessário: vite-plugin-legacy injeta script de detecção ES-modules inline.
+  # unsafe-eval ausente: HLS.js 1.x ESM não usa eval.
+  # connect-src usa https: (não *) — bloqueia HTTP/FTP mas mantém streams IPTV (todos HTTPS) e Supabase Realtime (wss:).
+  # form-action 'self': impede submit de formulários para origens externas (independente de default-src no CSP L2+).
+  # manifest-src 'self': bloqueia injeção de manifesto PWA hostil.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src * data: blob:; media-src * blob:; connect-src 'self' https: wss:; worker-src 'self' blob:; font-src 'self' data: https://fonts.gstatic.com; manifest-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+
+/sw.js
+  Cache-Control: no-store, no-cache, must-revalidate
+
+/workbox-*.js
+  Cache-Control: no-store, no-cache, must-revalidate
+
+/assets/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.woff2
+  Cache-Control: public, max-age=31536000, immutable

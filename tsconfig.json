@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    /* Path aliases */
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "vite-env.d.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "android",
+    "appandroid",
+    ".claude",
+    ".codex-runtime",
+    "Nova pasta",
+    "Nova pasta (2)",
+    "Nova pasta*",
+    "como",
+    "tv",
+    "_backup_restore_point",
+    "supabase/functions",
+    "public/futcard-main",
+    "public/times",
+    "vitest.config.ts",
+    "vitest.setup.ts",
+    "cypress",
+    "testsprite_tests"
+  ]
+}

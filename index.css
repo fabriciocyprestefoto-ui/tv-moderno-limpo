@@ -1,0 +1,3319 @@
+@import 'tailwindcss';
+@import './modern-home.css';
+@import './animations.css';
+@import './redx-bg.css';
+
+/* Fallback global: remove overlays ::before de #root e #app (corrige overlay roxo em todas as páginas) */
+#root::before,
+#app::before {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DESIGN TOKENS — variáveis globais do RedFlix
+   Uso: rgba(var(--color-primary) / 0.5) ou var(--radius-card)
+   ═══════════════════════════════════════════════════════ */
+:root {
+  /* ── Cores principais (RGB separado para usar com opacity) ── */
+  --color-primary: 168 85 247; /* purple-500  #A855F7 */
+  --color-primary-l: 196 164 255; /* purple-300  #C4A4FF */
+  --color-primary-d: 90 24 154; /* purple-900  #5A189A */
+  --color-accent: 59 130 246; /* blue-500    #3B82F6  (live dot) */
+  --color-danger: 239 68 68; /* red-500     #EF4444  (erro/live) */
+  --color-success: 34 197 94; /* green-500   #22C55E */
+
+  /* ── Superfícies ── */
+  --surface-0: 5 5 8; /* #050508 fundo mais escuro */
+  --surface-1: 16 16 30; /* #10101E cards */
+  --surface-2: 22 22 30; /* #16161E cards elevados */
+  --surface-3: 30 5 60; /* #1E053C purple tint */
+
+  /* ── Raios de borda ── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-pill: 9999px;
+
+  /* ── Sombras com a cor primária ── */
+  --shadow-glow-sm: 0 0 12px rgba(var(--color-primary) / 0.4);
+  --shadow-glow-md: 0 0 24px rgba(var(--color-primary) / 0.5);
+  --shadow-glow-lg: 0 0 40px rgba(var(--color-primary) / 0.6);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  /* ── Tipografia ── */
+  --text-2xs: 0.5625rem; /*  9px */
+  --text-xs: 0.625rem; /* 10px */
+  --text-sm: 0.6875rem; /* 11px */
+  --text-base: 0.75rem; /* 12px */
+  --text-md: 0.8125rem; /* 13px */
+
+  /* ── Transições ── */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --spring: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Backdrop blur padrão ── */
+  --blur-sm: blur(8px);
+  --blur-md: blur(16px);
+  --blur-lg: blur(24px);
+  --blur-xl: blur(40px);
+}
+
+/* ─── Canal / LiveTV glass effects (referencia.txt) ─── */
+.glass-dark {
+  background: rgba(25, 25, 25, 0.4);
+  -webkit-backdrop-filter: blur(45px) saturate(2);
+  backdrop-filter: blur(45px) saturate(2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+}
+.vision-glass {
+  background: rgba(25, 25, 25, 0.35);
+  -webkit-backdrop-filter: blur(60px) saturate(2.4);
+  backdrop-filter: blur(60px) saturate(2.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.vision-card {
+  background: rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    background-color 400ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 400ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 400ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.vision-card-active {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.45) 0%, rgba(126, 34, 206, 0.3) 100%);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  backdrop-filter: blur(40px) saturate(1.8);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 12px 40px rgba(168, 85, 247, 0.4);
+}
+.glass-input {
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+}
+.selected-glow {
+  background: linear-gradient(to right, rgba(157, 78, 221, 0.8), rgba(90, 24, 154, 0.8));
+  border: 1px solid rgba(157, 78, 221, 0.5);
+  box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+  border-radius: 16px;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Scrollbar utilities ─── */
+.scrollbar-none,
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar,
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ═══ SIDEBAR RAIL — fino, roxo, expande todo ao focar (estilo YouTube) ═══ */
+
+:root {
+  --sidebar-w: 54px;
+  --sidebar-w-expanded: 204px;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-accent: #c084fc;
+  --sidebar-active-bg: rgba(255, 255, 255, 0.1);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-transition: 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Rail fixo — vidro fosco transparente (frosted glass) */
+.sidebar-rail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: var(--sidebar-w);
+  background: rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  z-index: 50;
+  padding: 6px 0 10px;
+  overflow: hidden;
+  transition: width var(--sidebar-transition);
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Expande o sidebar inteiro quando foco entra */
+.sidebar-expanded {
+  width: var(--sidebar-w-expanded);
+}
+
+/* Logo */
+.sidebar-logo-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 0 10px 0;
+  border-bottom: 1px solid var(--sidebar-border);
+  margin-bottom: 2px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+/* Quando expandido, alinhar à esquerda com padding */
+.sidebar-expanded .sidebar-logo-area {
+  justify-content: flex-start;
+  padding-left: 14px;
+}
+.sidebar-logo-x {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  flex-shrink: 0;
+  margin: 0 auto;
+  display: block;
+  transition: opacity var(--sidebar-transition);
+}
+.sidebar-expanded .sidebar-logo-x {
+  opacity: 0;
+  position: absolute;
+}
+.sidebar-logo-full {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  transition:
+    opacity var(--sidebar-transition),
+    max-width var(--sidebar-transition);
+}
+.sidebar-expanded .sidebar-logo-full {
+  opacity: 1;
+  max-width: 150px;
+}
+
+/* Nav list — sem padding horizontal: icon-cell ocupa 100% da largura */
+.sidebar-nav-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+.sidebar-nav-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Footer */
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 6px 0 0;
+  border-top: 1px solid var(--sidebar-border);
+  flex-shrink: 0;
+}
+
+/* Botão de nav — ícone + label */
+.sidebar-nav-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  min-height: 38px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  transition:
+    background var(--sidebar-transition),
+    color var(--sidebar-transition);
+}
+
+.sidebar-nav-btn:hover,
+.sidebar-nav-btn:focus-visible {
+  background: var(--sidebar-hover-bg);
+  color: #fff;
+  outline: none;
+  box-shadow: none;
+}
+
+.sidebar-nav-btn.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(219, 39, 119) 100%);
+  box-shadow:
+    0 4px 15px rgba(124, 58, 237, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Barra ativa à esquerda — overflow:visible para aparecer mesmo no sidebar colapsado */
+.sidebar-active-bar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, rgb(124, 58, 237) 0%, rgb(219, 39, 119) 100%);
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.7);
+  z-index: 2;
+  overflow: visible;
+}
+
+/* Célula do ícone — ocupa exatamente a largura do sidebar fechado, sem overflow */
+.sidebar-icon-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  height: 38px;
+  flex-shrink: 0;
+}
+
+/* Label — oculto quando fechado, aparece quando sidebar expande */
+.sidebar-label-text {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: inherit;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  transition:
+    opacity var(--sidebar-transition),
+    max-width var(--sidebar-transition);
+  letter-spacing: 0.01em;
+}
+.sidebar-expanded .sidebar-label-text {
+  opacity: 1;
+  max-width: 160px;
+}
+
+/* Avatar */
+.sidebar-avatar-img {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  object-position: center 15%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  display: block;
+}
+
+/* Offset do conteúdo principal — baseado na largura fechada */
+.sidebar-content-offset {
+  padding-left: var(--sidebar-w) !important;
+}
+
+/* TV Box: sem transição para evitar flicker */
+.tv-box-mode .sidebar-rail,
+.tv-box-mode .sidebar-label-text,
+.tv-box-mode .sidebar-brand-name {
+  transition: none !important;
+}
+
+/* ═══ END SIDEBAR RAIL ═══ */
+
+/* ── VisionOS Details — fundo transparente, renderizado via portal ── */
+.vision-details-page {
+  background: transparent !important;
+}
+
+/* NOTA: no Android WebView TV Box, evite transform/backface/will-change no
+   proprio <video> e tambem em ancestors imediatos. Isso pode quebrar o
+   compositor de hardware e gerar o sintoma audio ok + tela preta. */
+
+/* WebView TV: esconda botões overlay de mídia.
+   IMPORTANTE: não suprimir ::-webkit-media-controls (enclosure inteiro) —
+   em alguns Android TV Box isso faz o Chromium pintar camada preta sobre o vídeo.
+   Suprimir apenas os botões individualmente é seguro.
+   Chromium ≥100 (Android 9+/10+) adicionou pseudo-elementos novos que precisam
+   ser listados explicitamente — o seletor genérico *::before não atinge shadow DOM. */
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-start-playback-button,
+video::-internal-media-controls-overlay-cast-button,
+video::-internal-media-controls-download-button,
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-fullscreen-button,
+video::-webkit-media-controls-timeline,
+video::-webkit-media-controls-current-time-display,
+video::-webkit-media-controls-time-remaining-display,
+video::-webkit-media-controls-mute-button,
+video::-webkit-media-controls-volume-slider,
+video::-webkit-media-controls-seek-back-button,
+video::-webkit-media-controls-seek-forward-button,
+video::-webkit-media-controls-picture-in-picture-button,
+video::-internal-media-controls-overflow-button {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  -webkit-appearance: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+/* Chromium 100+: overlay de play em fullscreen / TV usa shadow host diferente */
+video::--webkit-media-controls-overlay-enclosure {
+  display: none !important;
+}
+
+/* ===== TV Box / Remote Control Focus Styles v3 — Cinematic Dark ===== */
+
+/* ── Palette & Focus Variables ── */
+:root {
+  --bg-base: #080808;
+  --bg-surface: #111114;
+  --bg-elevated: #1a1a1f;
+  --accent: #a855f7;
+  --accent-bright: #c084fc;
+  --accent-deep: #4c1d95;
+  --accent-glow: rgba(168, 85, 247, 0.4);
+  --text-primary: #f0f0f0;
+  --text-secondary: #8a8a90;
+  --glass-bg: rgba(18, 18, 22, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  --primary-accent: #a855f7;
+  --obsidian-bg: #080808;
+  --crimson-glow: #7a1010;
+
+  /* Foco estilo streaming (hairline branco, ~0.5px) */
+  --focus-color: #ffffff;
+  --focus-glow-color: transparent;
+  --focus-accent: rgba(255, 255, 255, 0.95);
+  --focus-accent-glow: transparent;
+  --focus-transition: 120ms cubic-bezier(0.22, 1, 0.36, 1);
+  --focus-outline-width: 0.5px;
+  --focus-scale: 1.02;
+  --focus-ring: 0.5px solid #ffffff;
+  --focus-ring-shadow: 0 0 0 0.5px #ffffff;
+  --focus-offset: 0px;
+}
+
+/* ── Override Tailwind ring: hairline branco ── */
+*:focus-visible {
+  --tw-ring-color: #ffffff !important;
+}
+
+/* ── Global focus-visible — linha branca 0.5px sólida (D-Pad / teclado) ── */
+button:focus-visible:not([data-nav-custom-focus]),
+a:focus-visible:not([data-nav-custom-focus]),
+[tabindex]:focus-visible:not([data-nav-custom-focus]),
+input:focus-visible:not([data-nav-custom-focus]),
+select:focus-visible:not([data-nav-custom-focus]),
+textarea:focus-visible:not([data-nav-custom-focus]),
+[data-nav-item]:focus-visible:not([data-nav-custom-focus]) {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: none !important;
+  transition:
+    outline var(--focus-transition),
+    transform var(--focus-transition),
+    filter var(--focus-transition) !important;
+  z-index: 100;
+}
+
+/* ── Estilos aprimorados para cards de mídia (data-nav-item) ── */
+[data-nav-item] {
+  transition:
+    transform var(--focus-transition),
+    box-shadow var(--focus-transition),
+    filter var(--focus-transition);
+  scroll-margin-top: 100px;
+  scroll-margin-bottom: 100px;
+}
+
+[data-nav-item]:focus-visible:not([data-nav-custom-focus]) {
+  transform: scale(var(--focus-scale));
+  z-index: 100;
+}
+
+/* Actor card: sem retângulo — seleção fica só no círculo da foto */
+[data-nav-actor-card]:focus,
+[data-nav-actor-card]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: scale(1) !important;
+  background: transparent !important;
+}
+
+/* ── MediaCard: seleção via expansão (sem outline CSS — componente gerencia o próprio foco) ── */
+[data-nav-media-card]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* ── Poster card (VideoCard e similares): hairline branco (sem glow — melhor em TV) ── */
+[data-nav-poster-card]:focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: none !important;
+  border-radius: 1rem !important;
+  transform: scale(var(--focus-scale)) !important;
+}
+
+/* ── LiveTV menu categorias ── */
+[data-nav-livetv-category]:focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset) !important;
+  box-shadow: none !important;
+}
+
+/* ── LiveTV Channel item ── */
+[data-nav-channel-item]:focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset) !important;
+  transform: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+  scroll-margin-top: 200px;
+  scroll-margin-bottom: 200px;
+}
+
+[data-nav-channel-item]:hover {
+  transform: none !important;
+  filter: none !important;
+}
+
+/* ── Hover equivalente (para mouse, se presente) ── */
+[data-nav-item]:hover {
+  transform: scale(1.02);
+  z-index: 40;
+  filter: brightness(1.05);
+}
+
+/* ── Focus ring para teclado virtual ── */
+.keyboard-key:focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  background: rgba(255, 255, 255, 0.12) !important;
+  transform: scale(1.12);
+}
+
+/* ── Remover outline em click de mouse (apenas D-Pad/keyboard) ── */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+[tabindex]:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Perfis: desativar outline/glow global — usa ring do Tailwind ── */
+[data-profile-btn]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Cards de seleção de perfil: sem linha de contorno no foco ── */
+.profile-select-card:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* ── Menu de navegação: seleção sem borda/contorno (fundo escuro apenas) ── */
+.nav-menu-item:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* ── Sidebar: foco (D-pad/teclado) — o highlight é gerenciado via classe .active pelo estado focusedPage ── */
+.sidebar-nav-btn[data-nav-item]:focus-visible,
+.sidebar-nav-btn[data-nav-item]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ═══ RIPPLE EFFECT ═══ */
+.spatial-nav-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 100;
+  animation: spatial-ripple 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes spatial-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+
+  60% {
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* ═══ FOCUS INDICATOR FLUTUANTE — DESABILITADO ═══ */
+/* O indicador flutuante foi desativado pois causava um retângulo vermelho
+   visível em todas as páginas. Os estilos :focus-visible já cuidam do foco. */
+.spatial-focus-indicator {
+  display: none !important;
+}
+
+/* ═══ SKIP LINKS (visíveis apenas no foco) ═══ */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: var(--focus-accent);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 0 0 12px 12px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: top 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  outline: none;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ═══ FOCUS GROUP INDICATOR ═══ */
+[data-nav-group] {
+  position: relative;
+}
+
+[data-nav-group].group-active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--focus-accent);
+  border-radius: 2px;
+  opacity: 0.6;
+  animation: group-bar-pulse 2s ease-in-out infinite;
+}
+
+@keyframes group-bar-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* ═══ FOCUS TRAP OVERLAY (escurece fundo do modal) ═══ */
+.focus-trap-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+  animation: trap-fade-in 300ms ease forwards;
+}
+
+@keyframes trap-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ═══ BANNER PROGRESS BAR ═══ */
+@keyframes banner-progress {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes heroPillFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* U2: Page transition — fade suave entre trocas de página (sem flash branco) */
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-page-in {
+  animation: page-in 200ms ease-out forwards;
+}
+
+:root {
+  --red-accent: var(--accent);
+  --red-glow: var(--accent-glow);
+  --key-focus: rgba(255, 255, 255, 0.2);
+}
+
+/* TV-safe glass: max 10px blur to avoid GPU strain on TV boxes */
+.glass-effect {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.6);
+}
+
+.tv-glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.thick-glass {
+  background: rgba(18, 18, 22, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
+}
+
+.vision-btn {
+  background: rgba(18, 18, 22, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.vision-btn:hover,
+.vision-btn:focus {
+  background: rgba(30, 30, 36, 0.9);
+  transform: translateY(-2px) scale(1.03);
+  outline: none;
+  box-shadow: 0 0 20px var(--accent-glow);
+  border-color: rgba(168, 85, 247, 0.4);
+}
+
+.vision-btn-highlight {
+  background: rgba(168, 85, 247, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.keyboard-key {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 700;
+  font-size: 1.2rem;
+  transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.keyboard-key:hover,
+.keyboard-key:focus {
+  background: rgba(168, 85, 247, 0.3);
+  transform: scale(1.12);
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.5),
+    0 0 12px var(--accent-glow);
+  outline: none;
+  border-color: rgba(168, 85, 247, 0.5);
+}
+
+.keyboard-key:active {
+  transform: scale(0.95);
+}
+
+.tilt-container {
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+.tilt-card {
+  transition: transform 0.25s cubic-bezier(0.1, 0, 0.1, 1);
+  transform-style: preserve-3d;
+}
+
+.tilt-shine {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.5s;
+  border-radius: inherit;
+}
+
+.tilt-container:hover .tilt-shine {
+  opacity: 1;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.mask-vignette {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.red-text-glow {
+  text-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+}
+
+.poster-aura {
+  position: absolute;
+  inset: -16px;
+  background: radial-gradient(circle at center, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+  /* filter:blur e animation REMOVIDOS — blur em pseudo-elemento animado é
+     extremamente pesado no Chromium/WebView de TV Box (compositing layer extra
+     a cada frame). O gradiente radial por si só já provê o efeito de aura. */
+  z-index: -1;
+  opacity: 0.5;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Host para o efeito de ripple do useSpatialNavigation.
+   Usar classe CSS em vez de mutar element.style diretamente previne
+   reflow forçado e facilita remoção limpa após a animação. */
+.spatial-ripple-host {
+  overflow: hidden;
+  position: relative;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s linear infinite;
+  background-size: 200% 100%;
+}
+
+/* Shimmer Netflix-level para LazyImage — gradiente suave com highlight central */
+.lazy-shimmer {
+  will-change: opacity, background-position; /* GPU layer — evita reflow por animação */
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.04) 30%,
+    rgba(255, 255, 255, 0.1) 48%,
+    rgba(255, 255, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0.1) 52%,
+    rgba(255, 255, 255, 0.04) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 300% 100%;
+  animation: shimmer 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ═══ BANNER PROGRESS BAR ═══ */
+@keyframes banner-progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* ═══ NETFLIX SHIMMER SKELETON ═══ */
+@keyframes netflix-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-shimmer-netflix {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 20%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 80%,
+    transparent 100%
+  );
+  animation: netflix-shimmer 1.5s ease-in-out infinite;
+}
+
+/* ═══ Foco hairline (.focusable) ═══ */
+.focusable:focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  transform: scale(var(--focus-scale));
+  box-shadow: none !important;
+  transition:
+    outline var(--focus-transition),
+    transform var(--focus-transition) !important;
+  z-index: 100;
+  position: relative;
+}
+
+/* ═══ NOVO BADGE PULSE ═══ */
+@keyframes novo-badge-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.7);
+  }
+}
+
+.novo-badge-glow {
+  animation: novo-badge-pulse 2s ease-in-out infinite;
+}
+
+/* ═══ SKIP INTRO BUTTON ═══ */
+@keyframes skip-intro-appear {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.skip-intro-animate {
+  animation: skip-intro-appear 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ═══ TOAST NOTIFICATION ═══ */
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toast-slide-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* ═══ ONBOARDING OVERLAY ═══ */
+@keyframes onboarding-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.onboarding-overlay {
+  animation: onboarding-fade-in 500ms ease forwards;
+}
+
+.responsive-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .responsive-container {
+    padding: 0 3rem;
+  }
+}
+
+.vision-glow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 5;
+  border-radius: 50%;
+  mix-blend-mode: soft-light;
+  transition: transform 0.1s ease-out;
+}
+
+@keyframes pulse-red {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-pulse-red {
+  animation: pulse-red 4s infinite ease-in-out;
+}
+
+/* ── Accent Glass Effect (Lilac Edition) ── */
+:root {
+  --lilac-light: #d8b4fe;
+  --lilac-primary: #a855f7;
+  --purple-deep: #4c1d95;
+  --glass-border-lilac: rgba(255, 255, 255, 0.2);
+  --glass-bg-lilac: rgba(76, 29, 149, 0.15);
+}
+
+.glass-panel-lilac {
+  background: rgba(45, 15, 85, 0.3);
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  border: 1px solid var(--glass-border-lilac);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* TV Box: desabilitar blur em painéis glass definidos via CSS (não capturados pelo seletor genérico) */
+.tv-box .glass-panel-lilac,
+.tv-box-mode .glass-panel-lilac,
+.tv-box .vision-glass-panel,
+.tv-box-mode .vision-glass-panel {
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  background: rgba(18, 18, 22, 0.92);
+}
+
+.lilac-tint-accent {
+  background: rgba(216, 180, 254, 0.08);
+}
+
+.btn-lilac-accent {
+  background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+  transition: all 0.3s ease;
+  font-weight: 700;
+  color: white;
+}
+
+.btn-lilac-accent:hover {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+  transform: translateY(-1px);
+}
+
+/* ── REDX Profile Management - Spatial Experience ── */
+:root {
+  --glass-pink: rgba(168, 85, 247, 0.12);
+  --glass-pink-border: rgba(168, 85, 247, 0.25);
+  --bg-deep: var(--bg-base);
+}
+
+/* Evita fundo branco ao rolar — usa mesma cor do redx-bg.css */
+html {
+  background-color: var(--redx-bg-darkest, #020617);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: transparent;
+  min-height: 100vh;
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+.vision-3d-context {
+  perspective: 2000px;
+  perspective-origin: center center;
+}
+
+/* TV Box safe: sem backdrop-filter */
+.vision-glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transform-style: preserve-3d;
+}
+
+/* TV Box: desabilitar backdrop-filter para evitar lag e telas pretas em dispositivos fracos */
+.tv-box [class*='backdrop-blur'],
+.tv-box .backdrop-blur-sm,
+.tv-box .backdrop-blur-md,
+.tv-box .backdrop-blur-xl,
+.tv-box .backdrop-blur-2xl,
+.tv-box [style*='backdrop-filter'],
+.tv-box [style*='backdropFilter'],
+.tv-box-mode [class*='backdrop-blur'],
+.tv-box-mode .backdrop-blur-sm,
+.tv-box-mode .backdrop-blur-md,
+.tv-box-mode .backdrop-blur-xl,
+.tv-box-mode .backdrop-blur-2xl,
+.tv-box-mode [style*='backdrop-filter'],
+.tv-box-mode [style*='backdropFilter'] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Esconde controles nativos do Chromium / WebView Android no <video> ANTES do JS rodar.
+   Sem isso, Chromium ≥100 (Android 9+/10+) renderiza overlay-play-button gigante até
+   o autoplay disparar. Aplica em todas as tags video do app — controles próprios via React. */
+video::-webkit-media-controls,
+video::-webkit-media-controls-enclosure,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-overlay-enclosure,
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+/* Some WebViews require both the pseudo-element AND parent video[controls] guard */
+video {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Logos do rail de plataformas: forçar monocromia branca mesmo se regra global zerar filter.
+   Cobre lite-mode (que tem `.lite-mode * { filter: none !important }`) e tv-box-mode.
+   Banner filtrado (.platform-filter-logo-glass img) usa style inline pra suportar Pluto TV (brightness-0 sem invert). */
+.platform-logo-glass img,
+.platform-logo-glass img.platform-logo-img,
+.lite-mode .platform-logo-glass img,
+.lite-mode .platform-logo-img,
+.tv-box .platform-logo-glass img,
+.tv-box-mode .platform-logo-glass img,
+.platform-logo-img.platform-logo-img {
+  filter: brightness(0) invert(1) !important;
+  -webkit-filter: brightness(0) invert(1) !important;
+}
+
+/* Plataformas (rail + banner): mesma transparencia/vidro 3D do banner Home.
+ * TV Box: backdrop-filter caro/instavel — profundidade via gradient translucido
+ * + inset highlight + sombra. RAIL e BANNER usam a MESMA receita pra render
+ * consistente. */
+.tv-box .platform-logo-glass,
+.tv-box-mode .platform-logo-glass,
+.tv-box .platform-filter-logo-glass,
+.tv-box-mode .platform-filter-logo-glass {
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.04) 45%,
+    rgba(255, 255, 255, 0.08) 100%
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow:
+    0 10px 36px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28) !important;
+}
+
+/* Sidebar lateral principal (Home/Filmes/Series/etc): em TV box deve ficar
+ * translucido como no desktop. Antes o tv-box mantinha o fundo do desktop
+ * (rgba(0,0,0,0.18)+blur); reforcamos com vidro mais visivel sem opacar. */
+.tv-box .sidebar-rail,
+.tv-box-mode .sidebar-rail {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 10, 25, 0.32) 0%,
+    rgba(15, 10, 25, 0.22) 60%,
+    rgba(15, 10, 25, 0.18) 100%
+  ) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
+  backdrop-filter: blur(22px) saturate(170%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    2px 0 24px rgba(0, 0, 0, 0.35),
+    inset -1px 0 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Sidebar LiveTV (PitoSidebar) em TV box: tambem translucido roxo, sem opacar */
+.tv-box .livetv-sidebar-purple,
+.tv-box-mode .livetv-sidebar-purple {
+  background: linear-gradient(
+    180deg,
+    rgba(88, 28, 135, 0.30) 0%,
+    rgba(88, 28, 135, 0.22) 100%
+  ) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(167, 139, 250, 0.26) !important;
+  box-shadow:
+    0 16px 48px rgba(88, 28, 135, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+}
+
+/* TV Box: hairline branco, sem glow (performance + estilo referência streaming) */
+.tv-box [data-nav-item]:not([data-nav-custom-focus]):focus-visible,
+.tv-box-mode [data-nav-item]:not([data-nav-custom-focus]):focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset) !important;
+  box-shadow: none !important;
+  transform: scale(var(--focus-scale)) !important;
+  transition: none !important;
+}
+
+/* ── TV / WebView: :focus quando :focus-visible não dispara (D-Pad) ── */
+[data-nav-item]:not([data-nav-custom-focus]):focus,
+[data-nav-media-card]:not([data-nav-custom-focus]):focus,
+[data-nav-poster-card]:not([data-nav-custom-focus]):focus {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: none !important;
+  transform: scale(var(--focus-scale, 1.02));
+  z-index: 100;
+}
+[data-nav-livetv-category]:focus {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset) !important;
+}
+[data-nav-channel-item]:focus {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset) !important;
+  box-shadow: none !important;
+}
+
+/* ── Actor card: SEM retângulo — seleção fica APENAS no círculo da foto ──
+   Especificidade dupla ([attr][attr]) para ganhar das regras [data-nav-item]:focus acima */
+[data-nav-actor-card][data-nav-actor-card]:focus,
+[data-nav-actor-card][data-nav-actor-card]:focus-visible,
+.tv-box [data-nav-actor-card]:focus,
+.tv-box-mode [data-nav-actor-card]:focus,
+.tv-box [data-nav-actor-card]:focus-visible,
+.tv-box-mode [data-nav-actor-card]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: scale(1) !important;
+  background: transparent !important;
+}
+
+.keyboard-key:focus {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  background: rgba(255, 255, 255, 0.12) !important;
+  transform: scale(1.12);
+}
+/* Não mostrar no click de mouse (pointer events) — mantém experiência limpa */
+@media (pointer: fine) {
+  [data-nav-item]:not([data-nav-custom-focus]):focus:not(:focus-visible),
+  [data-nav-media-card]:not([data-nav-custom-focus]):focus:not(:focus-visible),
+  [data-nav-poster-card]:not([data-nav-custom-focus]):focus:not(:focus-visible),
+  [data-nav-channel-item]:focus:not(:focus-visible),
+  .keyboard-key:focus:not(:focus-visible) {
+    outline: none !important;
+    transform: none !important;
+  }
+}
+
+/* TV Box: Desativar animações de pulso que causam tremor (flicker) */
+.tv-box-mode .animate-pulse,
+.tv-box-mode .animate-pulse-slow,
+.tv-box .animate-pulse,
+.tv-box .animate-pulse-slow {
+  animation: none !important;
+  opacity: 0.8 !important;
+  /* Estabiliza opacidade para evitar transparência total */
+}
+
+/* Acessibilidade: usuários que preferem movimento reduzido (vestibular, epilepsia)
+   — desativa shimmer e pulso para toda a aplicação */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer,
+  .lazy-shimmer,
+  .skeleton-shimmer-netflix {
+    animation: none !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .animate-pulse,
+  .animate-pulse-slow,
+  .animate-pulse-red {
+    animation: none !important;
+  }
+}
+
+/* TV Box: poster/card — só hairline, zero glow */
+.tv-box-mode [data-nav-media-card]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+.tv-box-mode [data-nav-poster-card]:focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset) !important;
+  box-shadow: none !important;
+  transition: none !important;
+}
+.tv-box-mode .novo-badge-glow {
+  animation: none !important;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.5) !important;
+}
+/* TV Box: will-change: auto força em todos elementos de foco fora do player */
+.tv-box-mode [data-nav-item]:not(:focus-visible) {
+  will-change: auto !important;
+}
+
+/* TV Box: desabilitar animações infinite de spin que causam redraws contínuos off-screen */
+.tv-box .animate-spin-slow,
+.tv-box-mode .animate-spin-slow,
+.tv-box .focus-glow-active,
+.tv-box-mode .focus-glow-active {
+  animation: none !important;
+}
+
+/* TV Box: desabilitar blur em classes CSS inline (FutebolPage, etc.) */
+.tv-box .fut-vision-panel,
+.tv-box-mode .fut-vision-panel,
+.tv-box .fut-vision-card,
+.tv-box-mode .fut-vision-card,
+.tv-box .fut-team-logo-chip,
+.tv-box-mode .fut-team-logo-chip {
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  background: rgba(18, 18, 22, 0.88) !important;
+}
+
+/* TV Box: desabilitar blur em details-glass-card e details-botao-glass */
+.tv-box-mode .details-glass-card,
+.tv-box-mode .details-botao-glass {
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Força aceleração de hardware em listas pesadas */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* TV Box: logos passam devagar (120s em vez de 40s) */
+.tv-box-mode .platform-track {
+  animation-duration: 120s !important;
+}
+
+/* TV Box: reduzir tremor do banner — isolamento de composição */
+.tv-box-mode [data-hero-banner] {
+  contain: layout paint;
+  transform: translateZ(0);
+}
+
+.profile-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.profile-card:hover {
+  transform: translateY(-15px) translateZ(50px) rotateX(5deg);
+  z-index: 50;
+}
+
+.avatar-ring {
+  position: relative;
+  transition: all 0.4s ease;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.profile-card:hover .avatar-ring {
+  box-shadow: 0 0 30px rgba(255, 150, 200, 0.4);
+  border-color: rgba(255, 150, 200, 0.8);
+}
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.text-glow-spatial {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.vision-glass-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.vision-glass-profiles {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* LiveTV/VOD: evitar a camada preta de controles nativos em Android WebView.
+   Mantemos o compositor do vídeo intacto e removemos apenas botões overlay. */
+.live-tv-video video::-webkit-media-controls-start-playback-button,
+.live-tv-video video::-webkit-media-controls-overlay-play-button,
+.live-tv-video video::-webkit-media-controls-play-button,
+.live-tv-video video::-internal-media-controls-overlay-cast-button {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  display: none !important;
+  -webkit-appearance: none !important;
+}
+
+/* TV nova/Android WebView: vinheta e player principal nunca devem mostrar
+   o ícone gigante de start-playback quando autoplay roda em modo muted.
+   Cobrimos todos os <video> dentro das superfícies de player conhecidas. */
+.redx-player-viewport video::-webkit-media-controls-overlay-play-button,
+.redx-player-viewport video::-webkit-media-controls-start-playback-button,
+.redx-player-viewport video::-webkit-media-controls-play-button,
+.redx-player-viewport video::-internal-media-controls-overlay-cast-button,
+[role='dialog'][aria-label='Introdução'] video::-webkit-media-controls-overlay-play-button,
+[role='dialog'][aria-label='Introdução'] video::-webkit-media-controls-start-playback-button,
+[role='dialog'][aria-label='Introdução'] video::-webkit-media-controls-play-button {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  display: none !important;
+  -webkit-appearance: none !important;
+}
+
+.glass-player-container video.redflix-main-video::-webkit-media-controls-start-playback-button,
+.glass-player-container video.redflix-main-video::-webkit-media-controls-overlay-play-button,
+.glass-player-container video.redflix-main-video::-webkit-media-controls-play-button,
+.glass-player-container video.redflix-main-video::-internal-media-controls-overlay-cast-button {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Player fullscreen */
+.redx-player-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+  z-index: 2147483000;
+}
+
+/* Estilo de posicionamento e tamanho do vídeo — SEM transforms, backface, will-change */
+.redx-player-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  background: #000;
+  z-index: 0;
+}
+
+.redx-live-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  background: #000;
+  z-index: 0;
+}
+
+/* Container ao vivo — superfície própria do player */
+.live-tv-video {
+  background: #000 !important;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Android TV/WebView: evita camada preta do compositor sobre <video>. */
+html[data-page='player'] .redx-player-viewport,
+html[data-page='livetv'] .live-tv-video {
+  isolation: isolate;
+  transform: none !important;
+  filter: none !important;
+}
+
+.redx-player-topbar {
+  padding-top: max(1.25rem, env(safe-area-inset-top));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-bottom: 2rem;
+}
+
+.redx-player-bottombar {
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-top: 2rem;
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+}
+
+.redx-player-control-shell {
+  max-width: none;
+}
+
+.redx-player-center-controls {
+  gap: clamp(1rem, 4vw, 4rem);
+}
+
+@supports not (height: 100dvh) {
+  .redx-player-viewport {
+    height: 100vh;
+  }
+}
+
+@media (max-aspect-ratio: 4/3) {
+  .redx-player-center-controls {
+    gap: 1rem;
+  }
+}
+
+/* Containers de player — sempre transparentes */
+.live-player-area,
+.live-player-area > div {
+  background: transparent !important;
+}
+
+/* TV Box: Configuração — layout responsivo (referência 1280×700) */
+.tv-box .settings-tvbox-layout [data-settings-nav] span {
+  font-size: 0.5rem !important;
+  letter-spacing: 0.08em !important;
+}
+
+.tv-box .settings-tvbox-layout .text-\[9px\] {
+  font-size: 0.45rem !important;
+}
+
+/* Mouse click: esconder outline no click (mas manter visível para D-pad/keyboard) */
+[data-nav-item]:focus:not(:focus-visible),
+[data-nav-livetv-category]:focus:not(:focus-visible),
+[data-player-control]:focus:not(:focus-visible),
+[tabindex='0']:focus:not(:focus-visible) {
+  outline: none !important;
+  outline-offset: 0;
+}
+
+/* ── BLINDAGEM PARA PLAYER/LIVETV (ANDROID TV WEBVIEW) ── */
+/* html+body ficam pretos pra evitar bleeding do gradiente roxo no compositor.
+ * #root e #app ficam TRANSPARENTES pra não cobrir o vídeo. */
+html[data-page='player'],
+html[data-page='livetv'] {
+  background: #000 !important;
+  background-image: none !important;
+}
+
+html[data-page='player'] body,
+html[data-page='livetv'] body {
+  background: #000 !important;
+  background-image: none !important;
+}
+
+html[data-page='player'] #root,
+html[data-page='livetv'] #root {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+html[data-page='player'] #app,
+html[data-page='livetv'] #app {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Mantém proteção explícita do commit estável para player/livetv */
+html[data-page='player'] #root::before,
+html[data-page='player'] #app::before,
+html[data-page='livetv'] #root::before,
+html[data-page='livetv'] #app::before {
+  display: none !important;
+}
+
+/* Android TV/WebView hardening:
+   remove efeitos que quebram composição de vídeo (áudio toca + tela preta). */
+html[data-page='player'] *,
+html[data-page='livetv'] * {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-page='player'] .redx-player-viewport,
+html[data-page='livetv'] .live-tv-video,
+html[data-page='player'] .redx-player-video,
+html[data-page='livetv'] .redx-live-video {
+  transform: none !important;
+  filter: none !important;
+  isolation: auto !important;
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+}
+
+/* ===== Detalhes Page — Glass UI System (from detalhes-main) ===== */
+
+.details-glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.details-botao-play {
+  background: linear-gradient(135deg, #7b2ff7, #c11efc);
+  color: white;
+  border: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.details-botao-play:hover {
+  transform: scale(1.03);
+  filter: brightness(1.2);
+  box-shadow: 0 10px 30px rgba(193, 30, 252, 0.6) !important;
+}
+/* Regras de foco separadas — evita invalidação em WebViews antigas */
+.details-botao-play:focus {
+  transform: scale(1.05);
+  filter: brightness(1.15);
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: 0 10px 30px rgba(193, 30, 252, 0.7) !important;
+}
+.details-botao-play:focus-visible {
+  transform: scale(1.05);
+  filter: brightness(1.15);
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: 0 10px 30px rgba(193, 30, 252, 0.7) !important;
+}
+
+.details-botao-glass {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.details-botao-glass:hover {
+  transform: scale(1.03);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+/* Regras de foco separadas — evita invalidação em WebViews antigas */
+.details-botao-glass:focus {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.6);
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4) !important;
+}
+.details-botao-glass:focus-visible {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.6);
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4) !important;
+}
+
+.details-card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  cursor: pointer;
+  outline: none;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  /* FIX: will-change: auto no estado base — promove camada só quando necessário */
+  will-change: auto;
+}
+
+.details-card:focus,
+.details-card:hover {
+  will-change: transform;
+  transform: scale(1.03) translateY(-8px);
+  box-shadow: none;
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  border-color: rgba(255, 255, 255, 0.35);
+  z-index: 10;
+}
+
+.details-scroll-horizontal {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 1.5rem;
+  padding: 1rem 0 2rem 0;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.details-scroll-horizontal::-webkit-scrollbar {
+  display: none;
+}
+
+.details-scroll-item {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+.vision-glass-card-transparent {
+  background: rgba(255, 255, 255, 0.03) !important;
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 1.35rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.vision-season-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.vision-season-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+.vision-season-pill:focus-visible {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: none !important;
+  transform: scale(1.06) !important;
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  z-index: 10;
+}
+.vision-season-pill:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.vision-season-pill--active {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.35) 0%,
+    rgba(109, 40, 217, 0.45) 100%
+  ) !important;
+  border-color: rgba(167, 139, 250, 0.5) !important;
+  box-shadow:
+    0 0 24px rgba(139, 92, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.vision-season-pill--active:focus-visible {
+  border-color: #fff !important;
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: none !important;
+}
+.vision-season-pill--active:focus:not(:focus-visible) {
+  border-color: rgba(167, 139, 250, 0.5) !important;
+  box-shadow:
+    0 0 24px rgba(139, 92, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.vision-episode-card {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.vision-episode-card:hover,
+.vision-episode-card:focus-visible {
+  will-change: transform;
+  transform: scale(1.04);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: none;
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+}
+.vision-episode-card:focus-visible {
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: none !important;
+}
+/* FIX: will-change: auto no estado base do card de episódio */
+.vision-episode-card:not(:hover):not(:focus-visible) {
+  will-change: auto;
+}
+
+.tv-box-mode .vision-episode-card,
+.tv-box-mode .vision-season-pill {
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+}
+.tv-box-mode .vision-season-pill--active {
+  background: rgba(109, 40, 217, 0.4) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MODERN PREMIUM PLAYER (NETFLIX STYLE / VISIONOS INSPIRED)
+   Otimizado para TV BOX (Performance first, sem blur pesado)
+   ════════════════════════════════════════════════════════════════ */
+
+.netflix-player-hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px;
+  background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  z-index: 40;
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.netflix-player-hud * {
+  pointer-events: auto;
+}
+
+.netflix-progress-container {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 8px;
+  outline: none;
+}
+
+.netflix-progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  position: relative;
+  transition: height 200ms ease;
+}
+
+.netflix-progress-container:focus .netflix-progress-bar-bg,
+.netflix-progress-container:hover .netflix-progress-bar-bg {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.netflix-progress-bar-active {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #a855f7;
+  border-radius: 4px;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+}
+
+.netflix-progress-thumb {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 200ms ease;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.netflix-progress-container:focus .netflix-progress-thumb,
+.netflix-progress-container:hover .netflix-progress-thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.netflix-control-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  outline: none;
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+}
+
+.netflix-control-btn:focus,
+.netflix-control-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
+  transform: scale(1.15);
+  box-shadow: none;
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+}
+
+.netflix-control-btn:active {
+  transform: scale(0.95);
+}
+
+.netflix-control-btn.active {
+  color: #a855f7;
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.1);
+}
+
+/* ── Cast Overlay (dentro do player) ── */
+.cast-overlay-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 350px;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.15);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 60px;
+  animation: slide-up-player 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes slide-up-player {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.cast-carousel-player {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 20px 0;
+}
+
+.cast-carousel-player::-webkit-scrollbar {
+  display: none;
+}
+
+.cast-actor-card-player {
+  flex-shrink: 0;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  outline: none;
+  transition: all 300ms ease;
+  cursor: pointer;
+}
+
+.cast-actor-card-player:focus,
+.cast-actor-card-player:hover {
+  transform: scale(1.12);
+}
+
+.cast-actor-img-player {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  transition:
+    border-color 300ms ease,
+    box-shadow 300ms ease;
+}
+
+.cast-actor-card-player:focus .cast-actor-img-player {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 0.5px #ffffff;
+}
+
+/* ── Settings Menu Overlay (Áudio/Legendas) ── */
+.player-settings-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 480px;
+  max-width: 90vw;
+  background: rgba(40, 40, 50, 0.4);
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 32px;
+  padding: 40px;
+  z-index: 150;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+  animation: modal-pop 350ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes modal-pop {
+  from {
+    transform: translate(-50%, -45%) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.settings-option-item {
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  transition: all 250ms ease;
+  cursor: pointer;
+  outline: none;
+  border: 1.5px solid transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+}
+
+.settings-option-item:focus,
+.settings-option-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.settings-option-item.active {
+  background: rgba(168, 85, 247, 0.3);
+  border-color: rgba(168, 85, 247, 0.6);
+  color: #fff;
+  font-weight: 800;
+}
+
+.settings-option-item:focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+}
+
+.next-episode-overlay {
+  position: absolute;
+  bottom: 120px;
+  right: 60px;
+  width: 420px;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter:;
+  backdrop-filter:;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 24px;
+  z-index: 200;
+  animation: slide-in-right 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: auto;
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Removido sistema de foco global redundante — focos gerenciados pelos componentes */
+
+.profile-select-card {
+  border-radius: 9999px !important;
+}
+
+/* ── Focused card: escala leve (alinhada ao --focus-scale) ── */
+[data-nav-item]:focus {
+  transform: scale(var(--focus-scale, 1.02));
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s ease;
+}
+
+/* ── Sibling dimming: adjacent cards fade when one is focused ── */
+[data-nav-row]:has([data-nav-item]:focus) [data-nav-item]:not(:focus) {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* ── Glass buttons: hairline branco no foco ── */
+.glass:focus,
+.glass:focus-visible,
+button.glass:focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: none !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  transition:
+    outline var(--focus-transition),
+    border-color 0.2s ease;
+}
+
+/* ── Campos de formulário: foco visível em TV ── */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: var(--focus-ring) !important;
+  outline-offset: var(--focus-offset);
+  box-shadow: none !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transition:
+    outline var(--focus-transition),
+    border-color 0.2s ease;
+}
+
+/* ── Sidebar nav items: highlight gerenciado via .active pelo estado focusedPage ── */
+.sidebar-nav-btn:focus-visible,
+.sidebar-nav-btn[data-nav-item]:focus-visible,
+.sidebar-nav-btn[data-nav-item]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Mouse clicks: suppress glow ring (only show for D-pad / keyboard) ── */
+[data-nav-item]:focus:not(:focus-visible),
+[data-nav-livetv-category]:focus:not(:focus-visible),
+[data-player-control]:focus:not(:focus-visible),
+[tabindex='0']:focus:not(:focus-visible),
+.glass:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible),
+select:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ── TV / touch: :focus sem :focus-visible (WebView D-pad) — hairline branco ── */
+@media (pointer: coarse), (hover: none) {
+  [data-nav-item]:focus,
+  [data-nav-livetv-category]:focus,
+  [data-player-control]:focus {
+    outline: var(--focus-ring) !important;
+    outline-offset: var(--focus-offset);
+    box-shadow: none !important;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ═══ PIto LiveTV — Classes de UI ══════════════════════════════════════════ */
+:root {
+  --color-silk-tertiary: #7c3aed;
+}
+
+@layer components {
+  .clean-menu-glass {
+    background: linear-gradient(
+      180deg,
+      rgba(116, 66, 217, 0.38) 0%,
+      rgba(88, 40, 170, 0.28) 50%,
+      rgba(52, 24, 102, 0.22) 100%
+    );
+    backdrop-filter: blur(50px) saturate(180%);
+    -webkit-backdrop-filter: blur(50px) saturate(180%);
+    border: none !important;
+    border-right: 1px solid rgba(233, 213, 255, 0.1);
+    box-shadow:
+      4px 0 40px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* LiveTV legado: se algo ainda usar clean-menu-glass nesta rota */
+  html[data-page='livetv'] .clean-menu-glass {
+    background: linear-gradient(
+      180deg,
+      rgba(14, 14, 16, 0.94) 0%,
+      rgba(8, 8, 10, 0.9) 55%,
+      rgba(6, 6, 8, 0.92) 100%
+    );
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow:
+      4px 0 48px rgba(0, 0, 0, 0.65),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  /*
+   * LiveTV visionOS — mesmo idioma do ChannelGuide (rounded-4xl, vidro branco suave, inset highlight).
+   * Painéis laterais / boot / numpad (referência: pages/ChannelGuide.tsx + vision-card em index.css).
+   */
+  html[data-page='livetv'] .livetv-vision-panel {
+    background: linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.045) 42%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+    -webkit-backdrop-filter: blur(48px) saturate(170%);
+    backdrop-filter: blur(48px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 2rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      0 28px 96px rgba(0, 0, 0, 0.52),
+      0 0 0 1px rgba(0, 0, 0, 0.12);
+  }
+
+  .tv-box html[data-page='livetv'] .livetv-vision-panel,
+  .tv-box-mode html[data-page='livetv'] .livetv-vision-panel {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(26, 26, 30, 0.94);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  /* ── Sidebar de categorias — vidro roxo do player (mesma paleta G do Player.tsx) ── */
+  /* ── Vidro roxo idêntico ao player (G.surface = rgba(88,28,135,0.32)) ── */
+  .livetv-sidebar-purple {
+    background: rgba(88, 28, 135, 0.22); /* ainda mais transparente — igual ao HUD */
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(167, 139, 250, 0.28);
+    border-radius: 2rem;
+    box-shadow:
+      0 16px 48px rgba(88, 28, 135, 0.45),
+      0 0 0 1px rgba(167, 139, 250, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    /* −2% de altura: margem vertical de 1vh em cada lado */
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+  }
+
+  /* Sidebar LiveTV em TV box: translucido roxo (regra detalhada acima @1183). */
+  .tv-box .livetv-sidebar-purple,
+  .tv-box-mode .livetv-sidebar-purple {
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+  }
+
+  /* Linhas do sidebar roxo */
+  .livetv-sidebar-row {
+    border-radius: 1.5rem;
+    background: transparent;
+    border: 1px solid transparent;
+    transition:
+      background 0.18s ease,
+      border-color 0.18s ease,
+      transform 0.15s ease;
+  }
+
+  .livetv-sidebar-row:hover {
+    background: rgba(167, 139, 250, 0.12);
+    border-color: rgba(167, 139, 250, 0.18);
+  }
+
+  .livetv-sidebar-row--focus {
+    background: rgba(167, 139, 250, 0.18);
+    border-color: rgba(167, 139, 250, 0.35);
+    box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.15);
+    transform: scale(1.02);
+  }
+
+  /* Seleção ativa: mesmo gradiente do .sidebar-nav-btn.active */
+  .livetv-sidebar-row--active {
+    background: linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(219, 39, 119) 100%);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 4px 15px rgba(124, 58, 237, 0.5),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+
+  .tv-box .livetv-sidebar-row--active,
+  .tv-box-mode .livetv-sidebar-row--active {
+    background: linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(219, 39, 119) 100%);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.5);
+  }
+
+  html[data-page='livetv'] .livetv-vision-boot {
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.04) 50%,
+      rgba(255, 255, 255, 0.07) 100%
+    );
+    -webkit-backdrop-filter: blur(36px) saturate(160%);
+    backdrop-filter: blur(36px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 2rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 24px 64px rgba(0, 0, 0, 0.45);
+  }
+
+  .tv-box html[data-page='livetv'] .livetv-vision-boot,
+  .tv-box-mode html[data-page='livetv'] .livetv-vision-boot {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(22, 22, 26, 0.96);
+  }
+
+  html[data-page='livetv'] .livetv-vision-floating-header {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    -webkit-backdrop-filter: blur(28px) saturate(150%);
+    backdrop-filter: blur(28px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 1.25rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 16px 48px rgba(0, 0, 0, 0.35);
+  }
+
+  .tv-box html[data-page='livetv'] .livetv-vision-floating-header,
+  .tv-box-mode html[data-page='livetv'] .livetv-vision-floating-header {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(20, 20, 24, 0.88);
+  }
+
+  html[data-page='livetv'] .livetv-vision-numpad {
+    background: linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.28) 0%,
+      rgba(88, 28, 135, 0.18) 100%
+    );
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(167, 139, 250, 0.38);
+    border-radius: 2.5rem;
+    box-shadow:
+      inset 0 1px 0 rgba(167, 139, 250, 0.22),
+      0 32px 80px rgba(88, 28, 135, 0.55);
+  }
+
+  .tv-box html[data-page='livetv'] .livetv-vision-numpad,
+  .tv-box-mode html[data-page='livetv'] .livetv-vision-numpad {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(58, 18, 105, 0.92);
+    border-color: rgba(167, 139, 250, 0.35);
+  }
+
+  /* Linhas categoria/canal — cápsulas visionOS */
+  .livetv-vision-row {
+    border-radius: 1.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .livetv-vision-row:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .livetv-vision-row--focus {
+    background: rgba(255, 255, 255, 0.11);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .livetv-vision-row--active {
+    background: linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(219, 39, 119) 100%);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 4px 15px rgba(124, 58, 237, 0.5),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+
+  .tv-box .livetv-vision-row--active,
+  .tv-box-mode .livetv-vision-row--active {
+    background: linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(219, 39, 119) 100%);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.5);
+  }
+
+  .pito-glass-panel {
+    background: linear-gradient(
+      135deg,
+      rgba(88, 28, 135, 0.48) 0%,
+      rgba(72, 18, 120, 0.38) 60%,
+      rgba(50, 10, 90, 0.44) 100%
+    );
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(167, 139, 250, 0.28);
+    box-shadow:
+      0 16px 48px rgba(88, 28, 135, 0.45),
+      0 0 0 1px rgba(167, 139, 250, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  html[data-page='livetv'] .pito-glass-panel {
+    background: linear-gradient(
+      135deg,
+      rgba(18, 18, 22, 0.92) 0%,
+      rgba(10, 10, 12, 0.88) 55%,
+      rgba(8, 8, 10, 0.9) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 20px 56px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .pito-glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow:
+      0 10px 30px -10px rgba(0, 0, 0, 0.5),
+      inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    transform: perspective(1000px) translateZ(0);
+    transition: all 500ms ease-out;
+  }
+
+  .pito-glass-card-3d {
+    box-shadow:
+      0 15px 35px -10px rgba(0, 0, 0, 0.6),
+      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+    transform: perspective(1000px) translateZ(10px);
+  }
+
+  .pito-active-gradient {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.8) 0%, rgba(219, 39, 119, 0.8) 100%);
+    box-shadow:
+      0 15px 35px -10px rgba(0, 0, 0, 0.6),
+      0 0 30px rgba(124, 58, 237, 0.3);
+    transform: perspective(1000px) translateZ(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .pito-vision-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pito-vision-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 500ms;
+    pointer-events: none;
+  }
+
+  .pito-vision-glow:hover::after {
+    opacity: 1;
+  }
+
+  .pito-no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .pito-no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Logos das plataformas — carrossel (Home / Filmes / Séries / Kids) */
+  .platform-logo-glass {
+    flex-shrink: 0;
+    width: 90px;
+    height: 53px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    cursor: pointer;
+    outline: none;
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.05) 45%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 6px 28px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(20px) saturate(165%);
+    -webkit-backdrop-filter: blur(20px) saturate(165%);
+    transition:
+      background 220ms ease-out,
+      border-color 220ms ease-out,
+      box-shadow 220ms ease-out,
+      transform 220ms ease-out;
+  }
+
+  .platform-logo-glass:hover {
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow:
+      0 10px 36px rgba(0, 0, 0, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  }
+
+  .platform-logo-glass:focus,
+  .platform-logo-glass:focus-visible {
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: none;
+    outline: none;
+  }
+
+  /* Logo grande ao filtrar por plataforma (PlatformFilterBanner) */
+  .platform-filter-logo-glass {
+    min-width: 260px;
+    min-height: 100px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.08) 42%,
+      rgba(255, 255, 255, 0.06) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    box-shadow:
+      0 12px 56px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(28px) saturate(185%);
+    -webkit-backdrop-filter: blur(28px) saturate(185%);
+  }
+}
+/* ══════════════════════════════════════════════════════════════════════════ */
+
+/* Mesmo padrão que .live-tv-video: alguns Chromiums só pintam o botão overlay */
+.glass-player-container video.redflix-main-video::-webkit-media-controls-start-playback-button,
+.glass-player-container video.redflix-main-video::-webkit-media-controls-overlay-play-button,
+.glass-player-container video.redflix-main-video::-webkit-media-controls-play-button {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ===== Modern Glassmorphism Player Redesign ===== */
+
+/* Base Player Container */
+.glass-player-container {
+  background: #000;
+  overflow: hidden;
+}
+
+/* Bottom Bar - Sleek Glass Panel */
+.redx-player-bottombar .glass {
+  background: rgba(10, 10, 15, 0.45) !important;
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5) !important;
+  box-shadow:
+    0 -15px 40px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  border-radius: 20px !important;
+  margin-bottom: env(safe-area-inset-bottom, 1.5rem);
+  padding: 1.5rem 2rem !important;
+}
+
+.tv-box-mode .redx-player-bottombar .glass {
+  background: rgba(10, 10, 15, 0.9) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Center Controls - Floating Glass Pills */
+.redx-player-center-controls button.glass {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.tv-box-mode .redx-player-center-controls button.glass {
+  background: rgba(25, 25, 30, 0.9) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Center Controls - Play Button Highlight */
+.redx-player-center-controls button.glass.w-24,
+.redx-player-center-controls button.glass.md\:w-36 {
+  background: rgba(168, 85, 247, 0.15) !important;
+  border: 1px solid rgba(168, 85, 247, 0.3) !important;
+  box-shadow:
+    0 15px 40px rgba(168, 85, 247, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.redx-player-center-controls button.glass.w-24 svg,
+.redx-player-center-controls button.glass.md\:w-36 svg {
+  color: #d8b4fe !important;
+  fill: #d8b4fe !important;
+  filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.6));
+}
+
+/* Hover/Focus Enhancements */
+.redx-player-center-controls button.glass:hover,
+.redx-player-center-controls button.glass:focus-visible {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: scale(1.15) translateY(-5px) !important;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  outline: none !important;
+}
+
+.redx-player-center-controls button.glass.w-24:hover,
+.redx-player-center-controls button.glass.w-24:focus-visible,
+.redx-player-center-controls button.glass.md\:w-36:hover,
+.redx-player-center-controls button.glass.md\:w-36:focus-visible {
+  background: rgba(168, 85, 247, 0.3) !important;
+  border-color: rgba(168, 85, 247, 0.6) !important;
+  box-shadow:
+    0 20px 50px rgba(168, 85, 247, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  transform: scale(1.18) translateY(-5px) !important;
+}
+
+/* Bottom Bar - Typography Polish */
+.redx-player-bottombar span.text-white\/30 {
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  font-size: 0.8rem;
+}
+
+/* Bottom Bar - Navigation Items Focus */
+.redx-player-bottombar button:focus-visible {
+  outline: none !important;
+  color: #a855f7 !important;
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
+}
+
+/* Bottom Bar - Volume Slider Redesign */
+.redx-player-bottombar input[type='range'] {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+}
+.redx-player-bottombar input[type='range']::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.redx-player-bottombar input[type='range']::-webkit-slider-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #a855f7;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -6px;
+  box-shadow:
+    0 0 10px rgba(168, 85, 247, 0.8),
+    inset 0 0 4px rgba(255, 255, 255, 0.8);
+  border: 2px solid white;
+  transition: transform 0.2s;
+}
+.redx-player-bottombar input[type='range']:focus-visible::-webkit-slider-thumb {
+  transform: scale(1.3);
+  background: #d8b4fe;
+}
+.redx-player-bottombar input[type='range']:focus-visible::-webkit-slider-runnable-track {
+  background: rgba(168, 85, 247, 0.3);
+}
+
+/* Bottom Bar - Progress/Seek bar thumb/glow enhancement */
+.redx-player-bottombar .bg-white\/15 {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.redx-player-bottombar .hover\:h-2:hover {
+  height: 8px !important;
+  border-radius: 9999px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Player Transitions & Polish */
+.redx-player-bottombar {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.redx-player-center-controls {
+  animation: rxFloatIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes rxFloatIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ACTOR CARD — sem retângulo de seleção (última regra, maior prioridade)
+   A seleção visual fica apenas no círculo da foto (via Tailwind group-focus)
+   ══════════════════════════════════════════════════════════════════════════ */
+[data-nav-actor-card]:focus,
+[data-nav-actor-card]:focus-visible,
+[data-nav-actor-card][data-nav-actor-card]:focus,
+[data-nav-actor-card][data-nav-actor-card]:focus-visible,
+.tv-box [data-nav-actor-card]:focus,
+.tv-box [data-nav-actor-card]:focus-visible,
+.tv-box-mode [data-nav-actor-card]:focus,
+.tv-box-mode [data-nav-actor-card]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: scale(1) !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE LAYOUT — versão para acesso via celular
+   Ativo apenas quando data-mobile="true" está no #root
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Root container ── */
+.mobile-app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  width: 100%;
+  background: #0a0414;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Header fixo no topo ── */
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: linear-gradient(180deg, rgba(10, 4, 20, 0.98) 0%, rgba(10, 4, 20, 0.85) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.18);
+}
+
+/* Hamburger button */
+.mobile-hamburger {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  outline: none;
+  flex-shrink: 0;
+}
+.mobile-hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+/* Logo centralizada */
+.mobile-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+}
+
+/* Avatar btn */
+.mobile-avatar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  border: 2px solid rgba(167, 139, 250, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* ── Drawer overlay ── */
+.mobile-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ── Drawer lateral ── */
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 400;
+  width: min(300px, 82vw);
+  background: linear-gradient(160deg, rgba(20, 6, 40, 0.98) 0%, rgba(40, 10, 70, 0.97) 100%);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-right: 1px solid rgba(124, 58, 237, 0.28);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Drawer header */
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.mobile-drawer-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Perfil rápido no drawer */
+.mobile-drawer-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.mobile-drawer-profile:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mobile-drawer-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  border: 2px solid rgba(167, 139, 250, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Nav do drawer */
+.mobile-drawer-nav {
+  flex: 1;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 13px 12px;
+  border-radius: 14px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  outline: none;
+}
+.mobile-drawer-item:active {
+  background: rgba(124, 58, 237, 0.15);
+}
+.mobile-drawer-item.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.28) 0%, rgba(79, 70, 229, 0.18) 100%);
+  color: white;
+  border: 1px solid rgba(167, 139, 250, 0.25);
+}
+
+/* Footer do drawer */
+.mobile-drawer-footer {
+  padding: 16px 12px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.mobile-drawer-settings {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  outline: none;
+}
+.mobile-drawer-settings:active {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Main content area ── */
+.mobile-main {
+  flex: 1;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+.mobile-main.has-header {
+  padding-top: 56px;
+}
+.mobile-main.has-bottom-nav {
+  padding-bottom: 68px;
+}
+
+/* ── Bottom navigation bar ── */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 4px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: linear-gradient(0deg, rgba(10, 4, 20, 0.99) 0%, rgba(10, 4, 20, 0.88) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.mobile-bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  min-width: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-bottom-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 2px;
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+  border-radius: 2px;
+}
+
+.mobile-bottom-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  transition: transform 0.2s;
+}
+.mobile-bottom-nav-icon.active {
+  filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.7));
+  transform: translateY(-1px);
+}
+
+.mobile-bottom-nav-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.38);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+.mobile-bottom-nav-label.active {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ── Ajustes de conteúdo para mobile ── */
+@media (max-width: 767px) {
+  /* Remove sidebar offset em mobile */
+  .mobile-app-root .sidebar-content-offset {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  /* Esconde a sidebar desktop se por acaso aparecer */
+  .mobile-app-root [data-nav-sidebar] {
+    display: none !important;
+  }
+
+  /* Scroll horizontal suave nas linhas de conteúdo */
+  .mobile-app-root .scroll-container,
+  .mobile-app-root [class*='overflow-x-auto'] {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .mobile-app-root .scroll-container::-webkit-scrollbar,
+  .mobile-app-root [class*='overflow-x-auto']::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Cards maiores em mobile */
+  .mobile-app-root .media-card,
+  .mobile-app-root [class*='media-card'] {
+    min-width: 120px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   LITE MODE — dispositivo antigo (Android ≤7, Firestick) OU internet lenta
+   Desativa TUDO que pode causar tela preta, lag ou crash em WebView antigo.
+   Aplicado via JS em utils/liteMode.ts combinando device + probe de rede.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* 1 — Mata TODAS animações e transições */
+.lite-mode *,
+.lite-mode *::before,
+.lite-mode *::after {
+  animation: none !important;
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition: none !important;
+  transition-duration: 0.001ms !important;
+  will-change: auto !important;
+}
+
+/* 2 — Mata backdrop-filter em tudo (causa tela preta e crash em WebView antigo) */
+.lite-mode * {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* 3 — Mata filter/blur visual */
+.lite-mode * {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+
+/* 4 — Remove box-shadow e text-shadow pesados (fora do foco de navegação) */
+.lite-mode *:not(:focus-visible):not([data-nav-item]:focus) {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* 5 — Smooth scroll → auto (jank em D-Pad) */
+.lite-mode * {
+  scroll-behavior: auto !important;
+}
+
+/* 6 — Elimina will-change acumulado por framer-motion */
+.lite-mode * {
+  will-change: auto !important;
+}
+
+/* 7 — Hero banner: gradient → cor sólida */
+.lite-mode .hero-banner-bg {
+  background-image: none !important;
+  background-color: #0b0f14 !important;
+  transition: none !important;
+}
+
+/* 8 — Todos os painéis de vidro → fundo sólido */
+.lite-mode .glass-panel-lilac,
+.lite-mode .vision-glass,
+.lite-mode .vision-glass-panel,
+.lite-mode .glass-dark,
+.lite-mode .glass-effect,
+.lite-mode .thick-glass,
+.lite-mode .tv-glass,
+.lite-mode [class*='glass'] {
+  background: rgba(18, 18, 28, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* 9 — Vision cards sem hover effect */
+.lite-mode .vision-card,
+.lite-mode .vision-card-active {
+  background: rgba(255, 255, 255, 0.07) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* 10 — Skeleton shimmer → placeholder estático */
+.lite-mode .animate-pulse,
+.lite-mode [class*='skeleton'],
+.lite-mode [class*='shimmer'] {
+  animation: none !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* 11 — Força framer-motion a não esconder elementos (escopo exclusivo [data-projection-id])
+   IMPORTANTE: não usar [style*='opacity:0'] — quebraria modais/overlays com opacity legítimo.
+   [data-projection-id] é o atributo exclusivo do Framer Motion, seguro de resetar. */
+.lite-mode [data-projection-id] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* 12 — Platform logos sem blur */
+.lite-mode .platform-logo-glass,
+.lite-mode .platform-filter-logo-glass {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: rgba(28, 28, 38, 0.92) !important;
+}
+
+/* 13 — LiveTV Pito: sidebar e overlays sem blur */
+.lite-mode .livetv-vision-boot {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: rgba(10, 10, 20, 0.96) !important;
+}
+
+/* 14 — Remove glow infinito (mas preserva foco D-pad no .focus-glow-active) */
+.lite-mode [class*='glow']:not(.focus-glow-active),
+.lite-mode .novo-badge-glow {
+  animation: none !important;
+  box-shadow: none !important;
+}
+/* Quando .focus-glow-active está ativo: mantém indicador leve para D-pad */
+.lite-mode .focus-glow-active {
+  animation: none !important;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.75), 0 0 0 4px rgba(139, 92, 246, 0.2) !important;
+}
+
+/* 15 — AppBootScreen: gradiente animado → sólido */
+.lite-mode [class*='boot'],
+.lite-mode [class*='Boot'] {
+  background-image: none !important;
+  background-color: #080810 !important;
+}
+
+/* 16 — Sidebar rail: sem blur */
+.lite-mode .sidebar-rail {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: rgba(10, 10, 20, 0.98) !important;
+  transition: none !important;
+}
+
+/* 17 — Futebol vision panels */
+.lite-mode .fut-vision-panel,
+.lite-mode [class*='fut-glass'] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: rgba(15, 15, 25, 0.95) !important;
+}
+
+/* 18 — Foco D-pad visível em lite-mode (sem glow pesado, contorno leve e sólido) */
+.lite-mode *:focus-visible,
+.lite-mode [data-nav-item]:focus {
+  outline: 2px solid rgba(139, 92, 246, 0.85) !important;
+  outline-offset: 2px !important;
+}

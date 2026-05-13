@@ -1,0 +1,30 @@
+{
+  "appId": "com.redflix.tvmoderno",
+  "appName": "RedFlix TV Moderno",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": false,
+    "webContentsDebuggingEnabled": false,
+    "mediaPlaybackRequiresUserGesture": false,
+    "backgroundColor": "#000000",
+    "appendUserAgent": " RedflixTV/1.0"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "launchAutoHide": true,
+      "backgroundColor": "#000000",
+      "androidSplashResourceName": "empty_splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true,
+      "layoutName": "launch_screen",
+      "useDialog": true
+    }
+  }
+}

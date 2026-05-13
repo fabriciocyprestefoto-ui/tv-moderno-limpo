@@ -1,0 +1,76 @@
+import React, { memo } from 'react';
+import {
+  LayoutGrid,
+  Clock,
+  Tv,
+  Trophy,
+  Film,
+  Newspaper,
+  Star,
+  BookOpen,
+  Baby,
+  Music,
+  Heart,
+  Globe,
+  Lock,
+  Users,
+} from 'lucide-react';
+
+export const CATEGORIES = [
+  { id: 'all', name: 'Todos', icon: <LayoutGrid /> },
+  { id: 'recentes', name: 'Recentes', icon: <Clock />, match: ['__recentes__'] },
+  { id: 'abertos', name: 'TV Aberta', icon: <Tv />, match: ['abertos', 'tv aberta', 'aberto'] },
+  {
+    id: 'esportes',
+    name: 'Esportes',
+    icon: <Trophy />,
+    match: ['esportes', 'esporte', 'sport', 'sports', 'ppv'],
+  },
+  {
+    id: 'filmes',
+    name: 'Filmes e Séries',
+    icon: <Film />,
+    match: ['filmes', 'series', 'filme', 'serie'],
+  },
+  {
+    id: 'noticias',
+    name: 'Notícias',
+    icon: <Newspaper />,
+    match: ['noticias', 'noticia', 'news', 'jornalismo'],
+  },
+  {
+    id: 'variedades',
+    name: 'Variedades',
+    icon: <Star />,
+    match: ['variedades', 'variedade', 'entretenimento'],
+  },
+  {
+    id: 'reality',
+    name: 'Reality',
+    icon: <Users />,
+    match: ['bbb', 'big brother', 'reality', 'bbb 2026'],
+  },
+  { id: '24h', name: '24h', icon: <Clock />, match: ['24h', '24hs', '24 horas'] },
+  {
+    id: 'docs',
+    name: 'Documentários',
+    icon: <BookOpen />,
+    match: ['documentarios', 'documentario', 'docs', 'discovery'],
+  },
+  {
+    id: 'infantil',
+    name: 'Infantil',
+    icon: <Baby />,
+    match: ['infantil', 'kids', 'infantis', 'desenhos', 'crianca'],
+  },
+  { id: 'musica', name: 'Música', icon: <Music />, match: ['musica', 'music', 'clips', 'clipe'] },
+  {
+    id: 'religiosos',
+    name: 'Religiosos',
+    icon: <Heart />,
+    match: ['religiosos', 'religiao', 'igreja', 'gospel'],
+  },
+  { id: 'globo', name: 'Globo', icon: <Globe />, match: ['globo'] },
+  { id: 'premiere', name: 'Premiere', icon: <Lock />, match: ['premiere'] },
+  { id: 'adulto', name: 'Adulto', icon: <Lock />, match: ['adulto', 'adult', '+18', 'xxx'] },
+];

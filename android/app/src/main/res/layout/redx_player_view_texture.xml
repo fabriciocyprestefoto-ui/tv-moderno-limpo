@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TextureView fallback para TCL, Chromecast/Google TV, Fire TV e boxes problematicas. -->
+<androidx.media3.ui.PlayerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/redx_player_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    app:surface_type="texture_view"
+    app:resize_mode="fit"
+    app:show_buffering="when_playing"
+    app:shutter_background_color="@android:color/transparent"
+    app:auto_show="false"
+    app:hide_on_touch="true" />
