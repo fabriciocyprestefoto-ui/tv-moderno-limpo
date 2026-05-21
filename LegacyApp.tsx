@@ -78,7 +78,6 @@ function shouldGateVinhetaBeforeHtml5Player(media: Media): boolean {
   if (media.skipIntro) return false;
   if (media.introVideoUrl) return false;
   if (hasNativePlayer()) return false;
-  if (isLegacyHtml5OnlyTV()) return false;
   return true;
 }
 
@@ -936,6 +935,7 @@ const LegacyAppInner: React.FC = () => {
             media: { ...playbackMedia, stream_url: streamUrl, skipIntro: true },
             url: streamUrl,
           };
+          setTransitionMedia(null);
           setPlaybackVinhetaActive(true);
           setIsNavigating(false);
           return;
@@ -1182,6 +1182,18 @@ const LegacyAppInner: React.FC = () => {
   }, [selectedMedia, routeNavigate, showToast]);
 
   const handleLogin = () => {
+    if (user?.id && !activeProfile) {
+      const autoProfile: UserProfile = {
+        id: `auto-${user.id}`,
+        name: 'Usuário',
+        avatar: '',
+        isKids: false,
+        parentalRating: '18',
+      } as unknown as UserProfile;
+      persistProfile(autoProfile);
+      setActiveProfile(autoProfile);
+      markProfileSelected();
+    }
     preloadHomeKidsChunks();
     // Vai direto para Home — sem tela de seleção de perfil
     setCurrentPage(Page.HOME);
@@ -1360,6 +1372,7 @@ const LegacyAppInner: React.FC = () => {
       needsCatalog &&
       (currentPage === Page.HOME || currentPage === Page.KIDS);
     if (homeOrKidsAwaitingCatalog) {
+      if (isNativePlatform()) return <HomeSkeleton />;
       return <LoadingScreen text="Carregando início…" />;
     }
 

@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { DETAILS_VINHETA_MAX_MS } from '@/config/playerDefaults';
 import { playWhenVideoReady, prepareVideoForAutoplay } from '@/utils/videoAutoplay';
 import { hasNativePlayer } from '@/utils/tvModernoBridge';
+import { platformBannerFallbackUrls } from '@/utils/publicAssetUrl';
 
 interface VinhetaGateProps {
   active: boolean;
@@ -9,8 +10,7 @@ interface VinhetaGateProps {
   onCancel?: () => void;
 }
 
-// Sempre absoluto — base: './' no vite.config causaria path errado em rotas como /details/123
-const VINHETA_URL = `/vinheta-tv.mp4?v=${import.meta.env.VITE_APP_VERSION ?? '1'}`;
+const VINHETA_URLS = platformBannerFallbackUrls('vinheta-tv.mp4', import.meta.env.VITE_APP_VERSION ?? '1');
 const FAILSAFE_MS = DETAILS_VINHETA_MAX_MS;
 // Tempo mínimo de exibição: garante presença visual sem bloquear a navegação por 8s.
 // FAILSAFE é o teto máximo para vídeos que nunca disparam onEnded (WebView antigo).
@@ -21,6 +21,7 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
   const mountedAtRef = useRef(0);
   const minTimerRef = useRef<number | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [sourceIndex, setSourceIndex] = useState(0);
 
   const finish = useCallback(() => {
     if (completedRef.current) return;
@@ -44,6 +45,7 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
     if (!active) return;
     completedRef.current = false;
     mountedAtRef.current = Date.now();
+    setSourceIndex(0);
     // TV Moderno: NÃO toca vinheta web — pula direto pro onComplete.
     // Vinheta deveria rodar em ExoPlayer nativo (EXTRA_INTRO_URL) — não implementado
     // nessa build pra evitar timer preso. Skip completo é OK funcionalmente.
@@ -95,7 +97,7 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
       window.clearTimeout(stallTimer2);
       cleanupReadyPlay();
     };
-  }, [active]);
+  }, [active, finish, sourceIndex]);
 
   useEffect(() => {
     if (!active) return;
@@ -135,7 +137,7 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
             el.volume = 0;
           }
         }}
-        src={VINHETA_URL}
+        src={VINHETA_URLS[sourceIndex] ?? VINHETA_URLS[0]}
         className="h-full w-full object-cover"
         autoPlay
         muted
@@ -147,7 +149,13 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
         preload="auto"
         aria-hidden="true"
         onEnded={finish}
-        onError={finish}
+        onError={() => {
+          if (sourceIndex + 1 < VINHETA_URLS.length) {
+            setSourceIndex((current) => current + 1);
+            return;
+          }
+          finish();
+        }}
       />
     </div>
   );

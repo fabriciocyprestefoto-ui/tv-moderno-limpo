@@ -12,7 +12,9 @@ import { fetchAdultStreamsFromM3U, type AdultStream } from '@/services/adultoSer
 import { useTvBackHandler } from '@/hooks/useTvBackHandler';
 import { logger } from '@/utils/logger';
 import { setSignal } from '@/utils/appSignals';
-import { hasNativePlayer, openNativePlayer } from '@/utils/tvModernoBridge';
+import { runtimeFlags } from '@/config/runtimeFlags';
+import { isNativePlatform, playNative } from '@/services/nativePlayerService';
+import { isFireTV, isLegacyHtml5OnlyTV } from '@/utils/tvBoxDetector';
 
 const ADULT_LIMIT = 400;
 
@@ -66,7 +68,14 @@ export default function AdultoPage() {
   // Player
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<any | null>(null);
+  const nativeAdultLaunchRef = useRef(0);
   const [liveStreamError, setLiveStreamError] = useState<string | null>(null);
+  const useNativeAdultPlayer =
+    runtimeFlags.isTvBuild &&
+    runtimeFlags.nativeAndroidPlayerEnabled &&
+    !isFireTV() &&
+    !isLegacyHtml5OnlyTV() &&
+    isNativePlatform();
 
   // Marcar página como adulta para CSS + sinalizar player ativo para spatial/remote nav
   useEffect(() => {
@@ -211,21 +220,55 @@ export default function AdultoPage() {
     setIsChannelMenuVisible(false);
   }, [allChannels]);
   // Player HLS — padrão jogador2 (minimalista). Mesmo path que LiveTV (funcionando).
-  // TV Moderno: bridge nativo abre Media3 — nenhum <video> renderizado.
+  // TV Moderno: NativePlayerPlugin abre Media3 — nenhum <video> renderizado.
   useEffect(() => {
-    if (!hasNativePlayer() || !selectedChannel?.stream_url) return;
-    openNativePlayer({
+    if (!useNativeAdultPlayer || !selectedChannel?.stream_url) return;
+
+    const launchId = ++nativeAdultLaunchRef.current;
+    let cancelled = false;
+    setLiveStreamError(null);
+    setSignal('playerActive', true);
+
+    void playNative({
       url: selectedChannel.stream_url,
       title: selectedChannel.name,
       type: 'live',
       poster: selectedChannel.logo || '',
-    });
-    setLiveStreamError(null);
-  }, [selectedChannel]);
+      logo: selectedChannel.logo || '',
+      isLive: true,
+    })
+      .then((result) => {
+        if (cancelled || nativeAdultLaunchRef.current !== launchId) return;
+        setSignal('playerActive', false);
+
+        if (result.action === 'channelUp' || result.action === 'channelDown') {
+          const currentIndex = allChannels.findIndex((ch) => ch.id === selectedChannel.id);
+          const baseIndex = currentIndex >= 0 ? currentIndex : focusedChannelIndex;
+          const delta = result.action === 'channelUp' ? 1 : -1;
+          const nextIndex = (baseIndex + delta + allChannels.length) % allChannels.length;
+          const nextChannel = allChannels[nextIndex];
+          if (nextChannel) {
+            setFocusedChannelIndex(nextIndex);
+            setSelectedChannel(nextChannel);
+          }
+        }
+      })
+      .catch((err) => {
+        if (cancelled || nativeAdultLaunchRef.current !== launchId) return;
+        setSignal('playerActive', false);
+        logger.error('[AdultoPage] Native adult player failed', err);
+        setLiveStreamError(err instanceof Error ? err.message : 'Falha ao abrir este stream.');
+      });
+
+    return () => {
+      cancelled = true;
+      setSignal('playerActive', false);
+    };
+  }, [allChannels, focusedChannelIndex, selectedChannel, useNativeAdultPlayer]);
 
   // URLs adult_streams já são .m3u8 nativos.
   useEffect(() => {
-    if (hasNativePlayer()) return;
+    if (useNativeAdultPlayer) return;
     const video = videoRef.current;
     if (!video || !selectedChannel?.stream_url) return;
 
@@ -302,7 +345,7 @@ export default function AdultoPage() {
         video.load();
       } catch { /* noop */ }
     };
-  }, [selectedChannel]);
+  }, [selectedChannel, useNativeAdultPlayer]);
 
   // Retry stream
   const retryStream = useCallback(() => {
@@ -354,7 +397,7 @@ export default function AdultoPage() {
       {/* Vídeo full-screen — WebView Android renderiza <video> em surface nativa
           ATRÁS do DOM; outer bg opaco esconderia frames. Manter transparente. */}
       <div className="absolute inset-0 z-0" style={{ background: 'transparent' }}>
-        {hasNativePlayer() ? null :
+        {useNativeAdultPlayer ? null :
         selectedChannel?.stream_url &&
         !selectedChannel.stream_url.toLowerCase().match(/youtube|youtu\.be/) ? (
           <video

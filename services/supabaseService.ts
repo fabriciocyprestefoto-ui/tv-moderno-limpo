@@ -1471,6 +1471,16 @@ export async function getSeriesIdsWithPlayableEpisodes(): Promise<Set<string>> {
   return ids;
 }
 
+/**
+ * Corte de ano do catálogo do usuário (regra de produto):
+ *   - Filmes: a partir de 2020.
+ *   - Séries: a partir de 2015.
+ * Aplicado em todas as listagens (Home/Filmes/Séries/Gêneros) que consomem
+ * getCatalogWithFilters. O admin usa caminhos próprios e não é afetado.
+ */
+export const CATALOG_MIN_YEAR_MOVIES = 2020;
+export const CATALOG_MIN_YEAR_SERIES = 2015;
+
 /** Carrega catálogo com suporte a carregamento progressivo (initialLimit para primeira tela rápida) */
 export async function getCatalogWithFilters(
   filters?: CatalogFilters,
@@ -1478,9 +1488,16 @@ export async function getCatalogWithFilters(
   options?: { fetchAll?: boolean },
   signal?: AbortSignal
 ): Promise<{ movies: Movie[]; series: Series[] }> {
-  const effectiveFilters = {
+  // Corte estrito por tipo. Math.max preserva filtros de ano mais restritos vindos da UI/admin
+  // (ex.: usuário filtra 2023) sem nunca descer abaixo do piso de produto (2020 filmes / 2015 séries).
+  const requestedMinYear = filters?.minYear ?? 0;
+  const moviesFilters: CatalogFilters = {
     ...filters,
-    minYear: filters?.minYear || 1900,
+    minYear: Math.max(requestedMinYear, CATALOG_MIN_YEAR_MOVIES),
+  };
+  const seriesFilters: CatalogFilters = {
+    ...filters,
+    minYear: Math.max(requestedMinYear, CATALOG_MIN_YEAR_SERIES),
   };
 
   const limit = initialLimit ?? 200;
@@ -1488,8 +1505,8 @@ export async function getCatalogWithFilters(
 
   // Promise.allSettled: catálogo parcial se uma tabela retornar erro (ex: RLS, timeout)
   const [moviesPage1Result, seriesPage1Result] = await Promise.allSettled([
-    getMoviesPaginated(1, limit, effectiveFilters, signal),
-    getSeriesPaginated(1, limit, effectiveFilters, signal),
+    getMoviesPaginated(1, limit, moviesFilters, signal),
+    getSeriesPaginated(1, limit, seriesFilters, signal),
   ]);
 
   if (moviesPage1Result.status === 'rejected' && seriesPage1Result.status === 'rejected') {
@@ -1539,12 +1556,12 @@ export async function getCatalogWithFilters(
     const [moreMoviesResult, moreSeriesResult] = await Promise.allSettled([
       fetchAllPages(
         signal,
-        (p) => getMoviesPaginated(p, 200, effectiveFilters, signal),
+        (p) => getMoviesPaginated(p, 200, moviesFilters, signal),
         moviesPage1
       ),
       fetchAllPages(
         signal,
-        (p) => getSeriesPaginated(p, 200, effectiveFilters, signal),
+        (p) => getSeriesPaginated(p, 200, seriesFilters, signal),
         seriesPage1
       ),
     ]);
@@ -1563,7 +1580,7 @@ export async function getCatalogWithFilters(
     .filter((series) => hasCatalogSeriesPlayback(series));
 
   logger.log(
-    `📦 Catálogo carregado: ${allMovies.length} filmes, ${allSeries.length} séries (desde ${effectiveFilters.minYear})`
+    `📦 Catálogo carregado: ${allMovies.length} filmes (desde ${moviesFilters.minYear}), ${allSeries.length} séries (desde ${seriesFilters.minYear})`
   );
 
   return {

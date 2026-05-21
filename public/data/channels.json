@@ -176,14 +176,6 @@
     "is_premium": false
   },
   {
-    "name": "SBT SP 4K",
-    "logo": "https://img.onetv.plus/icones_channels/SBT_Campinas.png",
-    "category": "Canais 4K",
-    "stream_url": "http://newoneblue.site:80/2450460821/4412686551/231469.m3u8",
-    "number": 23,
-    "is_premium": false
-  },
-  {
     "name": "SPORTV 4K",
     "logo": "https://img.onetv.plus/icones_channels/Sport_TV_1.png",
     "category": "Canais 4K",
@@ -3360,22 +3352,6 @@
     "is_premium": false
   },
   {
-    "name": "SBT SP - SAO PAULO HD",
-    "logo": "https://img.onetv.plus/icones_channels/SBT_Campinas.png",
-    "category": "Canais - Abertos",
-    "stream_url": "http://newoneblue.site:80/2450460821/4412686551/235985.m3u8",
-    "number": 421,
-    "is_premium": false
-  },
-  {
-    "name": "SBT SP - SAO PAULO FHD",
-    "logo": "https://img.onetv.plus/icones_channels/SBT_Campinas.png",
-    "category": "Canais - Abertos",
-    "stream_url": "http://newoneblue.site:80/2450460821/4412686551/235984.m3u8",
-    "number": 422,
-    "is_premium": false
-  },
-  {
     "name": "SBT RJ - RIO HD",
     "logo": "https://img.onetv.plus/icones_channels/SBT_Campinas.png",
     "category": "Canais - Abertos",
@@ -3405,38 +3381,6 @@
     "category": "Canais - Abertos",
     "stream_url": "http://newoneblue.site:80/2450460821/4412686551/809283.m3u8",
     "number": 426,
-    "is_premium": false
-  },
-  {
-    "name": "SBT SP - CENTRAL HD",
-    "logo": "https://img.onetv.plus/icones_channels/SBT_Campinas.png",
-    "category": "Canais - Abertos",
-    "stream_url": "http://newoneblue.site:80/2450460821/4412686551/676686.m3u8",
-    "number": 427,
-    "is_premium": false
-  },
-  {
-    "name": "SBT SP - CENTRAL FHD",
-    "logo": "https://img.onetv.plus/icones_channels/SBT_Campinas.png",
-    "category": "Canais - Abertos",
-    "stream_url": "http://newoneblue.site:80/2450460821/4412686551/676768.m3u8",
-    "number": 428,
-    "is_premium": false
-  },
-  {
-    "name": "SBT SP - VTV CAMPINAS HD",
-    "logo": "https://img.onetv.plus/icones_channels/SBT_Campinas.png",
-    "category": "Canais - Abertos",
-    "stream_url": "http://newoneblue.site:80/2450460821/4412686551/671526.m3u8",
-    "number": 429,
-    "is_premium": false
-  },
-  {
-    "name": "SBT SP - VTV CAMPINAS FHD",
-    "logo": "https://img.onetv.plus/icones_channels/SBT_Campinas.png",
-    "category": "Canais - Abertos",
-    "stream_url": "http://newoneblue.site:80/2450460821/4412686551/676714.m3u8",
-    "number": 430,
     "is_premium": false
   },
   {

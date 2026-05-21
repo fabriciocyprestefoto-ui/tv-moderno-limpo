@@ -696,6 +696,12 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
   const numberOfEpisodes = detail?.number_of_episodes || 0;
   const releaseDate = detail?.release_date || detail?.first_air_date || '';
   const lastAirDate = detail?.last_air_date || '';
+  const directSeriesUrl = useMemo(
+    () =>
+      pickFirstRealStreamUrlFromRow((dbItem || media) as unknown as Record<string, unknown>) ||
+      pickFirstRealStreamUrlFromRow(media as unknown as Record<string, unknown>),
+    [dbItem, media]
+  );
   const buildEpisodePlaybackMedia = useCallback(
     (ep: Episode): Media => {
       const baseMedia = dbItem || media;
@@ -718,12 +724,6 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
   const hasPlayableEpisode = useMemo(
     () => episodes.some((ep) => hasValidVideoUrl(ep as unknown as Record<string, unknown>)),
     [episodes]
-  );
-  const directSeriesUrl = useMemo(
-    () =>
-      pickFirstRealStreamUrlFromRow((dbItem || media) as unknown as Record<string, unknown>) ||
-      pickFirstRealStreamUrlFromRow(media as unknown as Record<string, unknown>),
-    [dbItem, media]
   );
   const isDirectOnlySeriesPlayback =
     isSeries && Boolean(directSeriesUrl) && dbSeasons.length === 0 && seasons.length === 0;

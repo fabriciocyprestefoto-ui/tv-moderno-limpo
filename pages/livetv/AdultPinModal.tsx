@@ -328,7 +328,11 @@ const AdultPinModal: React.FC<AdultPinModalProps> = ({ onSuccess, onCancel }) =>
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/45 backdrop-blur-md"
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      style={{
+        background:
+          'linear-gradient(135deg, #0b0514 0%, #1e0a3c 24%, #3b1278 52%, #581c87 78%, #7c3aed 100%)',
+      }}
       onKeyDown={handleKeyDown}
       tabIndex={-1}
     >

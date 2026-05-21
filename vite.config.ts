@@ -130,6 +130,51 @@ function inlineCapacitorLegacyBundle(rootDir: string, enabled: boolean): Plugin 
   };
 }
 
+/**
+ * plugin-legacy com `renderModernChunks:false` descarta o passe moderno e leva junto o
+ * asset CSS — o APK Capacitor abria sem estilo (layout cru, controles HTML padrão).
+ * Este plugin captura o CSS no `generateBundle` (enforce:'pre', antes do legacy descartar),
+ * reescreve o ficheiro no `dist` e injeta o `<link>` no `index.html`.
+ */
+function preserveLegacyCss(rootDir: string, enabled: boolean): Plugin {
+  return {
+    name: 'preserve-legacy-css',
+    apply: 'build',
+    enforce: 'post',
+    // Injeta o <link> no HTML gerado (antes do inline de scripts no closeBundle).
+    transformIndexHtml(html) {
+      if (!enabled) return html;
+      if (html.includes('assets/style.css')) return html;
+      return html.replace(
+        /<\/head>/i,
+        '  <link rel="stylesheet" href="./assets/style.css" />\n  </head>'
+      );
+    },
+    // Recompila index.css com o mesmo PostCSS/Tailwind v4 do projeto e escreve o ficheiro.
+    // O passe moderno (que normalmente carrega o CSS) é descartado pelo plugin-legacy, então
+    // geramos o CSS de forma independente e o servimos via <link> estático.
+    async closeBundle() {
+      if (!enabled) return;
+      const outDir = path.join(rootDir, 'dist');
+      const assetsDir = path.join(outDir, 'assets');
+
+      const { default: postcss } = await import('postcss');
+      const { default: tailwind } = await import('@tailwindcss/postcss');
+      const { default: autoprefixer } = await import('autoprefixer');
+
+      const cssEntry = path.join(rootDir, 'index.css');
+      const rawCss = await fs.promises.readFile(cssEntry, 'utf-8');
+      const result = await postcss([tailwind(), autoprefixer()]).process(rawCss, {
+        from: cssEntry,
+        to: path.join(assetsDir, 'style.css'),
+      });
+
+      await fs.promises.mkdir(assetsDir, { recursive: true });
+      await fs.promises.writeFile(path.join(assetsDir, 'style.css'), result.css, 'utf-8');
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => {
   const envDir = path.resolve(__dirname);
   const env = loadEnv(mode, envDir, '');
@@ -425,6 +470,7 @@ export default defineConfig(({ mode }) => {
       stripMistakenPublicCopies(envDir, ['futcard-main']),
       stripCapacitorServiceWorker(envDir, isCapacitorBuild),
       inlineCapacitorLegacyBundle(envDir, isCapacitorBuild),
+      preserveLegacyCss(envDir, isCapacitorBuild),
     ],
     envDir,
     define: {
@@ -448,6 +494,11 @@ export default defineConfig(({ mode }) => {
     build: {
       minify: 'terser',
       sourcemap: false,
+      // plugin-legacy com renderModernChunks:false descarta o passe moderno; com
+      // cssCodeSplit:true (default) o CSS por-chunk vai junto e o APK abre sem estilo.
+      // cssCodeSplit:false agrupa todo o CSS num único asset top-level, que sobrevive
+      // ao descarte e é referenciado via <link> em index.html.
+      cssCodeSplit: false,
       // hls.js, lucide-react e vendor-misc são naturalmente grandes; cache agressivo compensa.
       chunkSizeWarningLimit: 800,
       rollupOptions: {

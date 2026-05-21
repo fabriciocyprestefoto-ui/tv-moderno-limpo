@@ -27,6 +27,7 @@ import { isNativePlatform } from '../services/nativePlayerService';
 import { runtimeFlags } from '../config/runtimeFlags';
 import { getMediaPoster as getMediaPosterUrl } from '../utils/mediaUtils';
 import { userService as userSvcForNative } from '../services/userService';
+import { publicAssetUrl } from '../utils/publicAssetUrl';
 // ── Sub-componentes extraídos ────────────────────────────────────────────────
 import PlayerErrorScreen from '../components/player/PlayerErrorScreen';
 import PlayerResumeOverlay from '../components/player/PlayerResumeOverlay';
@@ -347,14 +348,17 @@ const PlayerImpl: React.FC<PlayerProps> = ({
   const [showControls, setShowControls] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const introVideoSrc = React.useMemo(() => '/vinheta-tv.mp4', []);
-  // Em lite mode (device antigo / rede lenta) pula vinheta completamente
-  // Pula vinheta só em Android ≤7 (codec legado). TV Boxes modernos com pouca RAM recebem a vinheta normalmente.
+  const introVideoSrc = React.useMemo(
+    () => publicAssetUrl('vinheta-tv.mp4', import.meta.env.VITE_APP_VERSION ?? '1'),
+    []
+  );
+  // Fallback interno: quando o Player HTML5 for aberto diretamente, ainda mostra a vinheta.
+  // O fluxo normal do app usa VinhetaGate antes de montar /watch e chega aqui com skipIntro=true.
   const [showIntro, setShowIntro] = useState(() => {
     // TV Moderno: pula vinheta web — playback acontece em ExoPlayerActivity nativo.
     if (hasNativePlayer()) return false;
     if (media.skipIntro) return false;
-    return isLegacyHtml5OnlyTV() ? false : Boolean(introVideoSrc);
+    return Boolean(introVideoSrc);
   });
   const showIntroRef = useRef(showIntro);
   const [mainVideoReady, setMainVideoReady] = useState(false);

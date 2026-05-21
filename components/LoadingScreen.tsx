@@ -16,6 +16,7 @@ export const LoadingScreen = ({
   className?: string;
 }) => {
   const layerClass = className || 'z-[9999]';
+
   return (
     <div
       className={`fixed inset-0 flex items-center justify-center ${layerClass}`.trim()}

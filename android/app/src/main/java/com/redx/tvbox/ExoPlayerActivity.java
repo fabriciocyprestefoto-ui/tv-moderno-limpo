@@ -113,6 +113,17 @@ public class ExoPlayerActivity extends Activity {
     private static final long INTRO_STALL_TIMEOUT_MS = 9_000L;
     private static final long MAIN_STALL_TIMEOUT_MS = 30_000L;
 
+    // Vinheta pré-VOD: sequência de frames .webp (mesma do boot NativeBootActivity).
+    // Substitui o antigo asset:///public/vinheta-tv.mp4 que travava em STATE_BUFFERING
+    // no decoder Realtek do TCL. Renderizada como overlay ImageView, não como item
+    // de playlist do ExoPlayer.
+    private static final int  INTRO_FRAME_COUNT       = 72;
+    private static final int  INTRO_START_FRAME       = 6;
+    private static final int  INTRO_FRAME_STEP        = 2;
+    private static final long INTRO_FRAME_DURATION_MS = 65L;
+    private static final long INTRO_OVERLAY_MAX_MS    = 4_000L;
+    private static final String INTRO_FRAME_PATH      = "public/boot-vinheta/frame_%03d.webp";
+
     private ExoPlayer   player;
     private PlayerView  playerView;
     private FrameLayout root;
@@ -179,6 +190,12 @@ public class ExoPlayerActivity extends Activity {
             handleMainBufferStall();
         }
     };
+    private final Runnable introFrameTick = new Runnable() {
+        @Override public void run() { renderNextIntroFrame(); }
+    };
+    private final Runnable introOverlayMaxTimeout = new Runnable() {
+        @Override public void run() { finishWebpIntro("overlay_max_timeout"); }
+    };
     /** Auto-hide do HUD (delay unico de 6s, alinhado com sitepronto-novo):
      *  VOD: HUD inicia GONE; aparece quando a vinheta termina e o main stream comeca a tocar;
      *       some 6s depois; pausa mantem HUD visivel; play retoma o timer.
@@ -198,6 +215,7 @@ public class ExoPlayerActivity extends Activity {
     private boolean hudAllowed() {
         if (player == null) return false;
         if (isLive) return true;
+        if (webpIntroActive) return false;
         if (introQueuedForCurrentPlayback) {
             return player.getCurrentMediaItemIndex() >= 1;
         }
@@ -225,6 +243,15 @@ public class ExoPlayerActivity extends Activity {
     private boolean retriedAsHls  = false;
     /** True quando intro foi adicionada ao playlist na última chamada de preparePlayback. */
     private boolean introQueuedForCurrentPlayback = false;
+
+    // ── Vinheta webp (overlay de frames) ──────────────────────────────────────
+    private ImageView introOverlayView;
+    private android.graphics.Bitmap introCurrentFrame;
+    private int     introFrameIndex   = INTRO_START_FRAME;
+    /** True enquanto a vinheta webp está visível (bloqueia HUD e segura o main stream). */
+    private boolean webpIntroActive   = false;
+    /** True após a vinheta webp ter tocado uma vez — evita replay em retries/fallback. */
+    private boolean webpIntroConsumed = false;
     /** IMP-07 (PRD §15.2): preserva intenção do usuário (play/pause) através de onPause/onResume.
      *  Sem isso, voltar do home/background reativava play mesmo se usuário tinha pausado via HUD. */
     private boolean wasPlayingBeforePause = true;
@@ -923,9 +950,9 @@ public class ExoPlayerActivity extends Activity {
                 .setReadTimeoutMs(25_000)
                 .setDefaultRequestProperties(headers);
 
-        // Buffer agressivo pra rede instável de TV Box (60-120s).
+        // Buffer otimizado pra TV Box moderna e rede instável (32-64s).
         DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
-                .setBufferDurationsMs(60_000, 120_000, 2_500, 5_000)
+                .setBufferDurationsMs(32_000, 64_000, 5_000, 5_000)
                 .setPrioritizeTimeOverSizeThresholds(true)
                 .build();
 
@@ -940,8 +967,10 @@ public class ExoPlayerActivity extends Activity {
         androidx.media3.datasource.DataSource.Factory sourceFactory = dsFactory;
 
         // Decoder fallback: tenta próximo decoder se primário falha (HEVC em Firestick antigo, etc.)
+        // EXTENSION_RENDERER_MODE_PREFER prioriza extensões de software caso a renderização em hardware (TCL) falhe ou esteja bugada.
         androidx.media3.exoplayer.DefaultRenderersFactory renderersFactory =
                 new androidx.media3.exoplayer.DefaultRenderersFactory(this)
+                        .setExtensionRendererMode(androidx.media3.exoplayer.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
                         .setEnableDecoderFallback(true)
                         .setMediaCodecSelector(
                                 androidx.media3.exoplayer.mediacodec.MediaCodecSelector.DEFAULT);
@@ -1242,32 +1271,119 @@ public class ExoPlayerActivity extends Activity {
         player.stop();
         player.clearMediaItems();
 
+        // Vinheta agora é overlay de frames .webp (ver startWebpIntro), não um item de
+        // playlist do ExoPlayer. O main stream é sempre o item 0.
         introQueuedForCurrentPlayback = false;
-        diag("introUrl=" + (introUrl == null ? "NULL" : introUrl));
-        if (introUrl != null && !introUrl.isEmpty()) {
-            try {
-                MediaItem intro = buildMediaItem(introUrl, false);
-                player.addMediaItem(intro);
-                introQueuedForCurrentPlayback = true;
-                diag("Vinheta enfileirada OK");
-                mainHandler.postDelayed(introWatchdog, INTRO_STALL_TIMEOUT_MS);
-            } catch (Exception e) {
-                Log.w(TAG, "intro inválida — ignorando", e);
-                diag("Vinheta ERRO: " + e.getMessage());
-            }
-        } else {
-            diag("Sem vinheta (introUrl vazio)");
-        }
-        player.addMediaItem(main);
 
-        // Seek para VOD sem intro: aplica posição inicial direto no main stream.
-        // COM intro: o seek é adiado para onMediaItemTransition (intro toca primeiro,
-        // depois busca a posição salva). Seekar aqui pularia a intro inteira!
-        if (!isLive && startPositionMs > 0 && !introQueuedForCurrentPlayback) {
+        boolean useWebpIntro = !isLive && !webpIntroConsumed
+                && introUrl != null && !introUrl.isEmpty();
+        diag("introUrl=" + (introUrl == null ? "NULL" : introUrl) + " webpIntro=" + useWebpIntro);
+
+        player.addMediaItem(main);
+        if (!isLive && startPositionMs > 0) {
             player.seekTo(0, startPositionMs);
         }
-        player.setPlayWhenReady(true);
-        player.prepare();
+
+        if (useWebpIntro) {
+            // NÃO prepara/toca o player ainda: a vinheta webp roda sobre fundo preto.
+            // prepare()+play são chamados em finishWebpIntro() — assim a SurfaceView do
+            // vídeo (setZOrderMediaOverlay no TCL) não renderiza um frame do filme por
+            // cima da vinheta.
+            webpIntroConsumed = true;
+            startWebpIntro();
+        } else {
+            player.setPlayWhenReady(true);
+            player.prepare();
+        }
+    }
+
+    // ───────────────────────── Vinheta webp (overlay) ─────────────────────────
+
+    /** Inicia a vinheta de frames .webp sobre fundo preto, antes do main stream. */
+    private void startWebpIntro() {
+        try {
+            if (introOverlayView == null) {
+                introOverlayView = new ImageView(this);
+                introOverlayView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                introOverlayView.setBackgroundColor(Color.BLACK);
+                introOverlayView.setLayoutParams(new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT));
+                // Acima de playerView (z=10) e do HUD (z=80).
+                introOverlayView.setTranslationZ(120f);
+                root.addView(introOverlayView);
+            }
+            introOverlayView.setVisibility(View.VISIBLE);
+            introOverlayView.bringToFront();
+            webpIntroActive = true;
+            introFrameIndex = INTRO_START_FRAME;
+            if (bufferingView != null) bufferingView.setVisibility(View.GONE);
+            if (loadingLabel != null) loadingLabel.setVisibility(View.GONE);
+            if (playerHud != null) playerHud.setVisibility(View.GONE);
+            mainHandler.removeCallbacks(introOverlayMaxTimeout);
+            mainHandler.postDelayed(introOverlayMaxTimeout, INTRO_OVERLAY_MAX_MS);
+            diag("Vinheta webp: start");
+            renderNextIntroFrame();
+        } catch (Exception e) {
+            Log.w(TAG, "Falha ao iniciar vinheta webp", e);
+            finishWebpIntro("start_error");
+        }
+    }
+
+    private void renderNextIntroFrame() {
+        if (!webpIntroActive || introOverlayView == null) return;
+        if (introFrameIndex >= INTRO_FRAME_COUNT) {
+            finishWebpIntro("frames_done");
+            return;
+        }
+        try {
+            String assetPath = String.format(java.util.Locale.US, INTRO_FRAME_PATH, introFrameIndex);
+            try (java.io.InputStream stream = getAssets().open(assetPath)) {
+                android.graphics.Bitmap next = android.graphics.BitmapFactory.decodeStream(stream);
+                if (next == null) throw new IllegalStateException("frame null: " + assetPath);
+                android.graphics.Bitmap prev = introCurrentFrame;
+                introCurrentFrame = next;
+                introOverlayView.setImageBitmap(introCurrentFrame);
+                if (prev != null && !prev.isRecycled()) prev.recycle();
+            }
+            introFrameIndex += INTRO_FRAME_STEP;
+            mainHandler.postDelayed(introFrameTick, INTRO_FRAME_DURATION_MS);
+        } catch (Exception e) {
+            Log.w(TAG, "Falha no frame " + introFrameIndex + " da vinheta webp", e);
+            finishWebpIntro("frame_error");
+        }
+    }
+
+    /** Encerra a vinheta webp, remove o overlay e libera o main stream. */
+    private void finishWebpIntro(String reason) {
+        if (!webpIntroActive && introOverlayView == null) return;
+        diag("Vinheta webp fim: " + reason);
+        webpIntroActive = false;
+        if (mainHandler != null) {
+            mainHandler.removeCallbacks(introFrameTick);
+            mainHandler.removeCallbacks(introOverlayMaxTimeout);
+        }
+        // Agora libera o filme: prepara e toca o main stream (item 0).
+        if (player != null && !isLive) {
+            player.setPlayWhenReady(true);
+            player.prepare();
+        }
+        if (introOverlayView != null) {
+            introOverlayView.setVisibility(View.GONE);
+            introOverlayView.setImageDrawable(null);
+            if (root != null) root.removeView(introOverlayView);
+            introOverlayView = null;
+        }
+        releaseIntroFrame();
+        // HUD aparece sozinho quando o main stream começar a tocar (onIsPlayingChanged).
+        updateHud();
+    }
+
+    private void releaseIntroFrame() {
+        try {
+            if (introCurrentFrame != null && !introCurrentFrame.isRecycled()) introCurrentFrame.recycle();
+            introCurrentFrame = null;
+        } catch (Exception ignored) {}
     }
 
     private void skipIntroAndPlayMain(String reason) {
@@ -1462,6 +1578,12 @@ public class ExoPlayerActivity extends Activity {
         Log.i(TAG, "onDestroy");
         if (debugUpdateHandler != null) { debugUpdateHandler.removeCallbacksAndMessages(null); debugUpdateHandler = null; }
         if (mainHandler != null) mainHandler.removeCallbacks(introWatchdog);
+        webpIntroActive = false;
+        if (mainHandler != null) {
+            mainHandler.removeCallbacks(introFrameTick);
+            mainHandler.removeCallbacks(introOverlayMaxTimeout);
+        }
+        releaseIntroFrame();
         if (player != null) {
             player.release();
             player = null;
@@ -1547,6 +1669,7 @@ public class ExoPlayerActivity extends Activity {
                         int pos = (player != null && !isLive) ? (int) (player.getCurrentPosition() / 1000) : 0;
                         res.putExtra(RESULT_POSITION, pos);
                         setResult(RESULT_OK, res);
+                        pausePlayerBeforeFinish();
                         finish();
                     }
                     return true;
@@ -1557,6 +1680,7 @@ public class ExoPlayerActivity extends Activity {
                         int pos = (player != null && !isLive) ? (int) (player.getCurrentPosition() / 1000) : 0;
                         res.putExtra(RESULT_POSITION, pos);
                         setResult(RESULT_OK, res);
+                        pausePlayerBeforeFinish();
                         finish();
                     }
                     return true;
@@ -1577,16 +1701,18 @@ public class ExoPlayerActivity extends Activity {
     private void returnResultAndFinish() {
         int positionSec = 0;
         if (player != null && !isLive) {
-            // Se ainda na vinheta (index 0 com intro queued), posição = 0.
-            boolean introQueued = (introUrl != null && !introUrl.isEmpty());
-            int mainIndex = introQueued ? 1 : 0;
-            if (player.getCurrentMediaItemIndex() == mainIndex) {
+            if (webpIntroActive) {
+                // Ainda na vinheta: o filme nem começou — preserva a posição de retomada.
+                positionSec = (int) (startPositionMs / 1000);
+            } else {
+                // Main stream é sempre o item 0 (vinheta agora é overlay, não item de playlist).
                 positionSec = (int) (player.getCurrentPosition() / 1000);
             }
         }
         Intent res = new Intent();
         res.putExtra(RESULT_POSITION, positionSec);
         setResult(RESULT_OK, res);
+        pausePlayerBeforeFinish();
         finish();
     }
 
@@ -1596,15 +1722,24 @@ public class ExoPlayerActivity extends Activity {
         // Para acoes VOD (openCast/openEpisodes) incluimos position para resume pos-painel.
         int positionSec = 0;
         if (player != null && !isLive) {
-            boolean introQueued = (introUrl != null && !introUrl.isEmpty());
-            int mainIndex = introQueued ? 1 : 0;
-            if (player.getCurrentMediaItemIndex() == mainIndex) {
+            if (webpIntroActive) {
+                positionSec = (int) (startPositionMs / 1000);
+            } else {
                 positionSec = (int) (player.getCurrentPosition() / 1000);
             }
         }
         res.putExtra(RESULT_POSITION, positionSec);
         setResult(RESULT_OK, res);
+        pausePlayerBeforeFinish();
         finish();
+    }
+
+    private void pausePlayerBeforeFinish() {
+        if (player == null) return;
+        try {
+            player.setPlayWhenReady(false);
+            player.pause();
+        } catch (Exception ignored) {}
     }
 
     private void updateDebugOverlay() {

@@ -213,8 +213,11 @@
 
     <!-- Vinheta preload removido: arquivo opcional; as="video" causava warning em alguns navegadores -->
 
-    <!-- Vite injeta modulepreload e CSS automaticamente no build -->
-    <link rel="stylesheet" href="/index.css" />
+    <!-- CSS é importado em index.tsx (import './index.css') — Vite emite e injeta o
+         <link> com hash automaticamente. NÃO referenciar /index.css manualmente: no
+         build Capacitor (plugin-legacy renderModernChunks:false) o link cru é descartado
+         e o app abre sem CSS. -->
+
 
     <!-- Estilos mínimos para first paint (antes de index.css carregar) -->
     <style>
@@ -238,8 +241,7 @@
   <body>
     <div id="root"></div>
     <!-- Fallback visual puro HTML/CSS: aparece ANTES do React montar.
-         React substitui o conteúdo de #root, escondendo este indicador automaticamente.
-         Em TV Box com JS lento/bloqueado, o usuário vê "Carregando..." em vez de tela roxa. -->
+         Mantém a identidade da vinheta, sem spinner/texto de carregamento. -->
     <div
       id="preboot"
       style="
@@ -250,64 +252,15 @@
         right: 0;
         bottom: 0;
         z-index: 99998;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        display: block;
         background: #060010;
+        background-image: url('./vinheta-poster.webp');
+        background-size: cover;
+        background-position: center;
         color: #fff;
         font-family: system-ui, sans-serif;
       "
     >
-      <img
-        src="./logored.png"
-        alt="Redflix"
-        style="height: 64px; width: auto; margin-bottom: 32px"
-        onerror="this.style.display = 'none'"
-      />
-      <div
-        style="
-          width: 200px;
-          height: 3px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
-          overflow: hidden;
-        "
-      >
-        <div
-          style="
-            width: 30%;
-            height: 100%;
-            background: linear-gradient(90deg, #7c3aed, #a855f7);
-            border-radius: 4px;
-            animation: prebootBar 1.5s ease-in-out infinite;
-          "
-        ></div>
-      </div>
-      <p
-        style="
-          margin-top: 18px;
-          font-size: 11px;
-          letter-spacing: 0.3em;
-          color: rgba(255, 255, 255, 0.3);
-          text-transform: uppercase;
-        "
-      >
-        Carregando…
-      </p>
-      <style>
-        @keyframes prebootBar {
-          0% {
-            transform: translateX(-100%);
-          }
-          50% {
-            transform: translateX(250%);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-      </style>
     </div>
     <script>
       // Remove preboot assim que React montar (MutationObserver no #root)

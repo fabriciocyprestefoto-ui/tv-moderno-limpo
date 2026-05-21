@@ -71,6 +71,10 @@ const Login: React.FC<{ onLogin: () => void; onAdminAccess?: () => void }> = ({
     }
   };
 
+  const completeUserLogin = () => {
+    window.setTimeout(onLogin, 0);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -108,7 +112,7 @@ const Login: React.FC<{ onLogin: () => void; onAdminAccess?: () => void }> = ({
         setIsLoading(false);
         const redirect = consumeSafePostLoginRedirect('redx_post_login_redirect', false);
         if (redirect) navigateWithinApp(redirect);
-        else onLogin();
+        else completeUserLogin();
         return;
       }
 
@@ -137,7 +141,7 @@ const Login: React.FC<{ onLogin: () => void; onAdminAccess?: () => void }> = ({
       if (redirect) {
         navigateWithinApp(redirect);
       } else {
-        onLogin();
+        completeUserLogin();
       }
     } catch (err) {
       logger.error('Login erro de conexão:', err);

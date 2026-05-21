@@ -1,3 +1,4 @@
+import './index.css';
 import ReactDOM from 'react-dom/client';
 import { installNativeHttpFetchForAndroidTV } from './services/nativeHttpFetch';
 import App from './App';
