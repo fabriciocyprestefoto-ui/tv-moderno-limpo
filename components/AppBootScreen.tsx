@@ -1,91 +1,139 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { isNativePlatform } from '@/services/nativePlayerService';
-import { platformBannerFallbackUrls } from '@/utils/publicAssetUrl';
 
 interface AppBootScreenProps {
   onComplete: () => void;
 }
 
-const VINHETA_URLS = platformBannerFallbackUrls('vinheta-tv.mp4', import.meta.env.VITE_APP_VERSION ?? '1');
-const MAX_BOOT_MS = 7000;
-const MIN_BOOT_MS = 1200;
+const TOTAL_FRAMES = 96;
+const FPS = 24;
+const FRAME_DURATION_MS = 1000 / FPS;
 
 const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const startedAtRef = useRef(Date.now());
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const doneRef = useRef(false);
-  const [sourceIndex, setSourceIndex] = useState(0);
+  const currentFrameRef = useRef(1);
+  const [images, setImages] = useState<HTMLImageElement[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   const nativeAndroid = typeof window !== 'undefined' && isNativePlatform();
   const skipBoot =
     typeof window !== 'undefined' &&
-    (nativeAndroid ||
-      (window as unknown as Record<string, unknown>).__REDX_SKIP_BOOT === true ||
+    ((window as unknown as Record<string, unknown>).__REDX_SKIP_BOOT === true ||
       (!nativeAndroid && localStorage.getItem('redx-skip-boot') === '1'));
 
   const finish = useCallback(() => {
     if (doneRef.current) return;
     doneRef.current = true;
-    const elapsed = Date.now() - startedAtRef.current;
-    const remaining = Math.max(0, MIN_BOOT_MS - elapsed);
-    window.setTimeout(onComplete, remaining);
+    onComplete();
   }, [onComplete]);
 
+  // Preload das imagens
   useEffect(() => {
     if (skipBoot) {
       onComplete();
       return;
     }
 
-    startedAtRef.current = Date.now();
-    doneRef.current = false;
-    setSourceIndex(0);
+    let loadedCount = 0;
+    const loadedImages: HTMLImageElement[] = [];
 
-    const hardTimeout = window.setTimeout(finish, MAX_BOOT_MS);
-    return () => window.clearTimeout(hardTimeout);
-  }, [finish, onComplete, skipBoot]);
+    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+      const img = new Image();
+      const frameNumber = String(i).padStart(3, '0');
+      img.src = `/boot-vinheta/frame_${frameNumber}.webp`;
+      
+      img.onload = () => {
+        loadedCount++;
+        // Assim que carregarmos os primeiros 10 frames (ou se a internet for rápida, todos), já podemos iniciar a animação
+        if (loadedCount >= 10 && !loaded) {
+          setLoaded(true);
+        }
+      };
+      
+      img.onerror = () => {
+        loadedCount++;
+      };
+      
+      loadedImages.push(img);
+    }
+    
+    setImages(loadedImages);
+    
+    // Failsafe absoluto de 12 segundos
+    const failsafe = window.setTimeout(finish, 12000);
+    return () => window.clearTimeout(failsafe);
+  }, [finish, onComplete, skipBoot, loaded]);
 
+  // Loop de animação no Canvas
   useEffect(() => {
-    if (skipBoot) return;
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = true;
-    video.defaultMuted = true;
-    video.volume = 0;
-    video.play().catch(() => {
-      window.setTimeout(finish, MIN_BOOT_MS);
-    });
-  }, [finish, skipBoot, sourceIndex]);
+    if (skipBoot || !loaded || !canvasRef.current || images.length === 0) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let lastDrawTime = performance.now();
+
+    const render = (time: number) => {
+      if (doneRef.current) return;
+
+      const elapsed = time - lastDrawTime;
+
+      if (elapsed >= FRAME_DURATION_MS) {
+        const frameIndex = currentFrameRef.current - 1;
+        const img = images[frameIndex];
+
+        if (img && img.complete && img.naturalWidth !== 0) {
+          // Mantém proporção da tela preenchendo a tela (object-fit cover equivalent)
+          const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+          const x = (canvas.width / 2) - (img.width / 2) * scale;
+          const y = (canvas.height / 2) - (img.height / 2) * scale;
+          
+          ctx.fillStyle = '#000';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+        }
+
+        currentFrameRef.current++;
+        lastDrawTime = time - (elapsed % FRAME_DURATION_MS);
+
+        if (currentFrameRef.current > TOTAL_FRAMES) {
+          finish();
+          return;
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    animationFrameId = requestAnimationFrame(render);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [skipBoot, loaded, images, finish]);
 
   if (skipBoot) return null;
 
   return (
     <div className="fixed inset-0 z-[99999] overflow-hidden bg-black select-none">
-      <video
-        key={sourceIndex}
-        ref={videoRef}
-        src={VINHETA_URLS[sourceIndex] ?? VINHETA_URLS[0]}
-        className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        playsInline
-        controls={false}
-        controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
-        disablePictureInPicture
-        disableRemotePlayback
-        preload="auto"
-        aria-hidden="true"
-        onEnded={finish}
-        onError={() => {
-          if (sourceIndex + 1 < VINHETA_URLS.length) {
-            setSourceIndex((current) => current + 1);
-            return;
+      <canvas
+        ref={(el) => {
+          canvasRef.current = el;
+          if (el) {
+            // Seta resolução nativa da TV para evitar borrões
+            el.width = window.innerWidth;
+            el.height = window.innerHeight;
           }
-          finish();
         }}
+        className="absolute inset-0 h-full w-full object-cover"
+        aria-hidden="true"
       />
     </div>
   );
 };
 
 export default AppBootScreen;
+
