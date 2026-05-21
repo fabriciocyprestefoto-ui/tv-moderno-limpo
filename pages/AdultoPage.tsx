@@ -1,14 +1,14 @@
 /**
  * AdultoPage — Layout full-screen estilo LiveTV (Pito)
  * Vídeo em tela cheia com overlay de lista de canais
- * Fonte única: M3U remoto, grupo "XXX ADULTOS"
+ * Fonte única: M3U local (public/adulto-data.m3u)
  */
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Hls from 'hls.js';
 
 import AdultPinModal, { isAdultUnlocked } from '@/pages/livetv/AdultPinModal';
-import { fetchAdultStreamsFromSupabase, type AdultStream } from '@/services/adultoService';
+import { fetchAdultStreamsFromM3U, type AdultStream } from '@/services/adultoService';
 import { useTvBackHandler } from '@/hooks/useTvBackHandler';
 import { logger } from '@/utils/logger';
 import { setSignal } from '@/utils/appSignals';
@@ -30,7 +30,7 @@ function adaptAdultStreams(streams: AdultStream[]): Array<{
     number: index + 1,
     name: s.title,
     logo: s.logo_url || 'https://i.imgur.com/PbZS1ej.png',
-    category: 'xxx-adultos',
+    category: (s.group_title || 'xxx-adultos').trim(),
     stream_url: s.stream_url,
   }));
 }
@@ -83,7 +83,7 @@ export default function AdultoPage() {
     };
   }, []);
 
-  // Carregar streams do Supabase (tabela adult_streams)
+  // Carregar streams do M3U local (public/adulto-data.m3u)
   useEffect(() => {
     let cancelled = false;
 
@@ -93,10 +93,10 @@ export default function AdultoPage() {
 
       let list: AdultStream[];
       try {
-        list = await fetchAdultStreamsFromSupabase({ limit: ADULT_LIMIT });
+        list = await fetchAdultStreamsFromM3U({ limit: ADULT_LIMIT });
       } catch (err) {
         if (cancelled) return;
-        logger.warn('[AdultoPage] Falha ao carregar adult_streams do Supabase:', err);
+        logger.warn('[AdultoPage] Falha ao carregar adulto-data.m3u:', err);
         setLoadError('Falha ao carregar streams.');
         setLoading(false);
         return;

@@ -103,6 +103,41 @@ export function parseAdultoTxt(raw: string): AdultStream[] {
   return items;
 }
 
+const ADULTO_M3U_PATH = '/adulto-data.m3u';
+
+export async function fetchAdultStreamsFromM3U(options?: {
+  groupTitle?: string | null;
+  query?: string | null;
+  limit?: number;
+}): Promise<AdultStream[]> {
+  const groupTitle = (options?.groupTitle || '').trim();
+  const query = (options?.query || '').trim().toLowerCase();
+  const limit = options?.limit ?? 400;
+
+  const res = await fetch(ADULTO_M3U_PATH);
+  if (!res.ok) {
+    throw new Error(`Falha ao carregar ${ADULTO_M3U_PATH}: HTTP ${res.status}`);
+  }
+
+  const raw = await res.text();
+  let streams = parseAdultoTxt(raw).map((s) => ({
+    ...s,
+    source: 'adulto-data.m3u',
+  }));
+
+  if (groupTitle) {
+    streams = streams.filter((s) => (s.group_title || '').trim() === groupTitle);
+  }
+  if (query) {
+    streams = streams.filter((s) => s.title.toLowerCase().includes(query));
+  }
+  if (limit > 0) {
+    streams = streams.slice(0, limit);
+  }
+
+  return streams;
+}
+
 export function getAdultGroupsFromStreams(streams: AdultStream[]): string[] {
   const set = new Set<string>();
   for (const s of streams) {

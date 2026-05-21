@@ -64,8 +64,23 @@ import HomeSkeleton from './components/HomeSkeleton';
 import { LoadingScreen } from './components/LoadingScreen';
 import { PlaybackRecoveryFallback } from './components/PlaybackRecoveryFallback';
 import { runtimeFlags } from './config/runtimeFlags';
+import { isNativePlatform, playNative } from './services/nativePlayerService';
+import { userService } from './services/userService';
+import { getMediaLogo, getMediaPoster } from './utils/mediaUtils';
+import { isFireTV, isLegacyHtml5OnlyTV } from './utils/tvBoxDetector';
+import { hasNativePlayer } from './utils/tvModernoBridge';
 
 const ACTIVE_PROFILE_KEY = 'redx-active-profile';
+const VOD_NATIVE_INTRO_URL = 'asset:///public/vinheta-tv.mp4';
+
+/** HTML5: vinheta global antes de montar Player (evita abrir /watch antes do bumper). */
+function shouldGateVinhetaBeforeHtml5Player(media: Media): boolean {
+  if (media.skipIntro) return false;
+  if (media.introVideoUrl) return false;
+  if (hasNativePlayer()) return false;
+  if (isLegacyHtml5OnlyTV()) return false;
+  return true;
+}
 
 // Quando VITE_FAKE_LOGIN=true, injeta um perfil fake no localStorage para
 // que a tela de seleção de perfil seja ignorada automaticamente.
@@ -454,7 +469,8 @@ const LegacyAppInner: React.FC = () => {
   const { showToast } = useToast();
   const [isNavigating, setIsNavigating] = useState(false);
   const [transitionMedia, setTransitionMedia] = useState<Media | null>(null);
-  const [pendingSectionPage, setPendingSectionPage] = useState<Page | null>(null);
+  const [playbackVinhetaActive, setPlaybackVinhetaActive] = useState(false);
+  const pendingPlaybackRef = React.useRef<{ media: Media; url: string } | null>(null);
   /** Se onComplete do overlay falhar, liberta loader/transição (evita bloqueio infinito). */
   const detailsTransitionSafetyRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -704,7 +720,7 @@ const LegacyAppInner: React.FC = () => {
         return;
       }
       // ADULTO é tratado como LIVE/FUTEBOL: navega direto via rota sem passar pelo
-      // switch interno (case Page.ADULTO). Evita double-mount do VinhetaGate causado
+      // switch interno (case Page.ADULTO). Evita double-mount causado
       // por setCurrentPage(Page.ADULTO) + v7_startTransition.
       if (page === Page.ADULTO) {
         setIsNavigating(false);
@@ -715,7 +731,13 @@ const LegacyAppInner: React.FC = () => {
       if (page === Page.MOVIES || page === Page.SERIES) {
         setIsNavigating(false);
         setTransitionMedia(null);
-        setPendingSectionPage(page);
+        const path = PAGE_TO_PATH[page];
+        if (path) routeNavigate(path);
+        scrollPositions.current.set(currentPage, window.scrollY);
+        navStack.current.push(currentPage);
+        if (navStack.current.length > 10) navStack.current.shift();
+        setPreviousPage(currentPage);
+        setCurrentPage(page);
         return;
       }
 
@@ -765,20 +787,6 @@ const LegacyAppInner: React.FC = () => {
     [routeNavigate, currentPage, activeProfile, isProfileSelected, markProfileSelected]
   );
 
-  const completeSectionVinheta = useCallback(() => {
-    if (!pendingSectionPage) return;
-    const targetPage = pendingSectionPage;
-    setPendingSectionPage(null);
-
-    const path = PAGE_TO_PATH[targetPage];
-    if (path) routeNavigate(path);
-    scrollPositions.current.set(currentPage, window.scrollY);
-    navStack.current.push(currentPage);
-    if (navStack.current.length > 10) navStack.current.shift();
-    setPreviousPage(currentPage);
-    setCurrentPage(targetPage);
-  }, [pendingSectionPage, routeNavigate, currentPage]);
-
   useEffect(() => {
     const pagesWithBanner = [
       Page.HOME,
@@ -807,6 +815,43 @@ const LegacyAppInner: React.FC = () => {
     return undefined;
   }, [currentPage]);
 
+  const openHtml5PlayerRoute = useCallback(
+    (playbackMedia: Media, streamUrl: string) => {
+      const pathNow = location.pathname.replace(/\/$/, '') || '/';
+      if (!/^\/watch\/[^/]+$/.test(pathNow)) {
+        prePlayerPathRef.current = pathNow;
+        prePlayerPageRef.current = currentPage;
+      }
+      const watchPath = buildWatchPathForMedia(playbackMedia);
+      const currentFull = `${pathNow}${location.search || ''}`;
+      watchConsumedRef.current = watchPath;
+      if (currentFull !== watchPath) routeNavigate(watchPath, { replace: false });
+      savePosition('player-return');
+      setPreviousPage(currentPage);
+      setSelectedMedia({ ...playbackMedia, stream_url: streamUrl });
+      setCurrentPage(Page.PLAYER);
+      setIsNavigating(false);
+    },
+    [currentPage, location.pathname, location.search, routeNavigate, savePosition]
+  );
+
+  const completePlaybackVinheta = useCallback(() => {
+    const pending = pendingPlaybackRef.current;
+    if (!pending) {
+      setPlaybackVinhetaActive(false);
+      return;
+    }
+    pendingPlaybackRef.current = null;
+    setPlaybackVinhetaActive(false);
+    openHtml5PlayerRoute(pending.media, pending.url);
+  }, [openHtml5PlayerRoute]);
+
+  const cancelPlaybackVinheta = useCallback(() => {
+    pendingPlaybackRef.current = null;
+    setPlaybackVinhetaActive(false);
+    setIsNavigating(false);
+  }, []);
+
   const handlePlayMedia = useCallback(
     async (media: Media) => {
       logger.log(
@@ -825,23 +870,77 @@ const LegacyAppInner: React.FC = () => {
           setIsNavigating(false);
           return;
         }
-        const pathNow = location.pathname.replace(/\/$/, '') || '/';
-        if (!/^\/watch\/[^/]+$/.test(pathNow)) {
-          prePlayerPathRef.current = pathNow;
-          prePlayerPageRef.current = currentPage;
+        if (
+          runtimeFlags.isTvBuild &&
+          runtimeFlags.nativeAndroidPlayerEnabled &&
+          !isFireTV() &&
+          !isLegacyHtml5OnlyTV() &&
+          isNativePlatform()
+        ) {
+          setIsNavigating(false);
+          setTransitionMedia(null);
+          setSignal('playerActive', true);
+
+          void (async () => {
+            try {
+              const mediaType = playbackMedia.type === 'series' ? 'series' : 'movie';
+              const tmdbId = playbackMedia.tmdb_id || playbackMedia.id || '';
+              let startPosition = 0;
+
+              if (tmdbId) {
+                try {
+                  startPosition = await userService.getProgress(
+                    tmdbId,
+                    playbackMedia.season_number,
+                    playbackMedia.episode_number
+                  );
+                  if (startPosition < 30) startPosition = 0;
+                } catch (progressErr) {
+                  logger.warn('[handlePlayMedia] Progresso indisponivel para player nativo', progressErr);
+                }
+              }
+
+              const result = await playNative({
+                url: streamUrl,
+                title: playbackMedia.episode_title || playbackMedia.title,
+                year: playbackMedia.year,
+                type: mediaType,
+                poster: getMediaPoster(playbackMedia) || undefined,
+                logo: getMediaLogo(playbackMedia) || undefined,
+                introUrl: playbackMedia.introVideoUrl || VOD_NATIVE_INTRO_URL,
+                position: startPosition,
+                isLive: false,
+              });
+
+              if (tmdbId && result.position > 0) {
+                await userService.saveProgress(
+                  tmdbId,
+                  mediaType === 'series' ? 'tv' : 'movie',
+                  result.position,
+                  undefined,
+                  playbackMedia.season_number,
+                  playbackMedia.episode_number
+                );
+              }
+            } catch (err) {
+              logger.error('[handlePlayMedia] Falha ao abrir player nativo', err);
+              showToast('Erro ao abrir o player nativo.', 'error');
+            } finally {
+              setSignal('playerActive', false);
+            }
+          })();
+          return;
         }
-        const watchPath = buildWatchPathForMedia(playbackMedia);
-        const currentFull = `${pathNow}${location.search || ''}`;
-        watchConsumedRef.current = watchPath;
-        if (currentFull !== watchPath) routeNavigate(watchPath, { replace: false });
-        savePosition('player-return');
-        setPreviousPage(currentPage);
-        // data-page='player' e playerActive são definidos pelo próprio Player.tsx
-        // via useLayoutEffect (antes do paint) — igual ao padrão do projeto de referência.
-        // Setar aqui era prematuro e causava flash de tela preta antes do Player montar.
-        setSelectedMedia({ ...playbackMedia, stream_url: streamUrl });
-        setCurrentPage(Page.PLAYER);
-        setIsNavigating(false);
+        if (shouldGateVinhetaBeforeHtml5Player(playbackMedia)) {
+          pendingPlaybackRef.current = {
+            media: { ...playbackMedia, stream_url: streamUrl, skipIntro: true },
+            url: streamUrl,
+          };
+          setPlaybackVinhetaActive(true);
+          setIsNavigating(false);
+          return;
+        }
+        openHtml5PlayerRoute(playbackMedia, streamUrl);
       };
 
       const brokenCandidateUrls: string[] = [];
@@ -988,7 +1087,7 @@ const LegacyAppInner: React.FC = () => {
       showToast('"' + media.title + '" nao possui uma URL de stream valida no momento.', 'error');
       setIsNavigating(false);
     },
-    [currentPage, showToast, savePosition, location.pathname, location.search, routeNavigate, setIsNavigating]
+    [currentPage, showToast, savePosition, location.pathname, location.search, routeNavigate, openHtml5PlayerRoute]
   );
 
   useWatchDeepLink({
@@ -1103,6 +1202,8 @@ const LegacyAppInner: React.FC = () => {
     }
     setIsNavigating(false);
     setTransitionMedia(null);
+    pendingPlaybackRef.current = null;
+    setPlaybackVinhetaActive(false);
     setSignal('canExitApp', false);
     playBackSound();
 
@@ -1252,21 +1353,18 @@ const LegacyAppInner: React.FC = () => {
     );
     const hasCatalogData = (movies?.length ?? 0) > 0 || (series?.length ?? 0) > 0;
 
-    // Home / Kids após login: aguardar fim do catálogo (não confiar só em hasCatalogData — cache antigo/trial podia mostrar feed antes do fetch do utilizador)
-    // pendingSectionPage !== null = vinheta ativa; não exibir LoadingScreen por baixo (VinhetaGate já cobre tudo em z=30000)
+    // Home / Kids apos login: aguardar fim do catalogo.
     const homeOrKidsAwaitingCatalog =
       !catalogTimeout &&
       loading &&
       needsCatalog &&
-      pendingSectionPage === null &&
       (currentPage === Page.HOME || currentPage === Page.KIDS);
     if (homeOrKidsAwaitingCatalog) {
       return <LoadingScreen text="Carregando início…" />;
     }
 
-    // Outras páginas com catálogo: skeleton até haver dados (ou timeout)
-    // Também suprimido enquanto vinheta de seção está ativa
-    if (loading && needsCatalog && !hasCatalogData && !catalogTimeout && pendingSectionPage === null) {
+    // Outras paginas com catalogo: skeleton ate haver dados (ou timeout)
+    if (loading && needsCatalog && !hasCatalogData && !catalogTimeout) {
       return <HomeSkeleton />;
     }
 
@@ -1699,6 +1797,12 @@ const LegacyAppInner: React.FC = () => {
           />
         )}
 
+        <VinhetaGate
+          active={playbackVinhetaActive}
+          onComplete={completePlaybackVinheta}
+          onCancel={cancelPlaybackVinheta}
+        />
+
         <div className={`${backgroundClass} w-full min-h-full text-white`}>
           <React.Suspense fallback={<LazyFallback />}>
             <AnimatePresence mode="wait" initial={false}>
@@ -1826,9 +1930,9 @@ const LegacyAppInner: React.FC = () => {
       )}
 
       <VinhetaGate
-        active={pendingSectionPage === Page.MOVIES || pendingSectionPage === Page.SERIES}
-        onComplete={completeSectionVinheta}
-        onCancel={() => setPendingSectionPage(null)}
+        active={playbackVinhetaActive}
+        onComplete={completePlaybackVinheta}
+        onCancel={cancelPlaybackVinheta}
       />
 
       <main

@@ -1,11 +1,27 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { playSelectSound } from '@/utils/soundEffects';
+import { publicAssetUrl } from '@/utils/publicAssetUrl';
 
-export const platforms = [
+export interface Platform {
+  name: string;
+  id: number | null;
+  logo: string;
+  banner?: string;
+  brandColor: string;
+  gradient: string;
+}
+
+const PLATFORM_BANNER_VERSION = '20260521';
+
+const platformBanner = (file: string) =>
+  publicAssetUrl(`redx_all_banners_webp/${file}`, PLATFORM_BANNER_VERSION);
+
+export const platforms: Platform[] = [
   {
     name: 'Netflix',
     id: 8,
     logo: '/logos/netflix.svg',
+    banner: platformBanner('netflix.webp'),
     brandColor: '#E50914',
     gradient: 'linear-gradient(135deg, #E50914 0%, #B81D24 100%)',
   },
@@ -13,6 +29,7 @@ export const platforms = [
     name: 'Prime Video',
     id: 119,
     logo: '/logos/primevideo.png',
+    banner: platformBanner('prime-video.webp'),
     brandColor: '#00A8E1',
     gradient: 'linear-gradient(135deg, #00A8E1 0%, #0077B6 100%)',
   },
@@ -20,6 +37,7 @@ export const platforms = [
     name: 'Disney+',
     id: 337,
     logo: '/logos/Logo_do_aplicativo_disney_unknown_001.svg',
+    banner: platformBanner('disney-plus.webp'),
     brandColor: '#0063E5',
     gradient: 'linear-gradient(135deg, #0063E5 0%, #001D5B 100%)',
   },
@@ -27,6 +45,7 @@ export const platforms = [
     name: 'Max',
     id: 1899,
     logo: '/logos/Logo_do_aplicativo_Max_unknown_005.svg',
+    banner: platformBanner('hbo-max.webp'),
     brandColor: '#002BE7',
     gradient: 'linear-gradient(135deg, #002BE7 0%, #001D5B 100%)',
   },
@@ -34,6 +53,7 @@ export const platforms = [
     name: 'Globoplay',
     id: 307,
     logo: '/logos/Logo_da_globoplay_banner_020.svg',
+    banner: platformBanner('globoplay.webp'),
     brandColor: '#FF6B00',
     gradient: 'linear-gradient(135deg, #FF6B00 0%, #CC5500 100%)',
   },
@@ -41,21 +61,23 @@ export const platforms = [
     name: 'Apple TV+',
     id: 350,
     logo: '/logos/appletv.svg',
+    banner: platformBanner('apple-tv-plus.webp'),
     brandColor: '#555555',
     gradient: 'linear-gradient(135deg, #555555 0%, #333333 100%)',
   },
-
   {
-    name: 'Pluto TV',
-    id: 300,
+    name: 'Paramount+',
+    id: 531,
     logo: '/logos/Logotipo_da_empresa_logo_044.png',
-    brandColor: '#FFD400',
-    gradient: 'linear-gradient(135deg, #FFD400 0%, #E6C200 100%)',
+    banner: platformBanner('paramount-plus.webp'),
+    brandColor: '#0064FF',
+    gradient: 'linear-gradient(135deg, #0064FF 0%, #003A99 100%)',
   },
   {
     name: 'Crunchyroll',
     id: 283,
     logo: '/logos/Logo_crunchyroll_logo_031.png',
+    banner: platformBanner('crunchyroll.webp'),
     brandColor: '#F47521',
     gradient: 'linear-gradient(135deg, #F47521 0%, #D65F1A 100%)',
   },
@@ -63,6 +85,7 @@ export const platforms = [
     name: 'Claro TV',
     id: 167,
     logo: '/logos/Logo_Claro_tv+_banner_012.svg',
+    banner: platformBanner('claro-tv-plus.webp'),
     brandColor: '#E60000',
     gradient: 'linear-gradient(135deg, #E60000 0%, #B30000 100%)',
   },
@@ -70,6 +93,7 @@ export const platforms = [
     name: 'Warner Bros',
     id: null,
     logo: '/logos/Logo_Warner_Channel_logo_164.png',
+    banner: platformBanner('wbtv.webp'),
     brandColor: '#0047AB',
     gradient: 'linear-gradient(135deg, #0047AB 0%, #003380 100%)',
   },
@@ -77,6 +101,7 @@ export const platforms = [
     name: 'Universal+',
     id: 2526,
     logo: '/logos/universal+_horizontal_005.png',
+    banner: platformBanner('universal-plus.webp'),
     brandColor: '#1A1A2E',
     gradient: 'linear-gradient(135deg, #1A1A2E 0%, #16213E 100%)',
   },
@@ -183,8 +208,6 @@ const StreamingPlatforms: React.FC<StreamingPlatformsProps> = ({ onSelectPlatfor
                       alt={platform.name}
                       loading={index < 4 ? 'eager' : 'lazy'}
                       className="platform-logo-img w-full h-full object-contain transition-opacity duration-300"
-                      // style inline força filter mesmo se Tailwind/CSS overrides zerarem `.filter`
-                      // ou se WebView Chromium não aplicar classes utilitárias antes do primeiro paint.
                       style={{
                         filter: 'brightness(0) invert(1)',
                         WebkitFilter: 'brightness(0) invert(1)',
@@ -218,3 +241,4 @@ const StreamingPlatforms: React.FC<StreamingPlatformsProps> = ({ onSelectPlatfor
 };
 
 export default React.memo(StreamingPlatforms);
+

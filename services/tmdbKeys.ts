@@ -6,15 +6,30 @@ import { logger } from '../utils/logger';
  * - nextToken() força pular um token (recuperação manual / compatibilidade).
  */
 
+function isBearerTokenLike(value: string): boolean {
+  return value.startsWith('eyJ');
+}
+
 function readTokensFromEnv(): string[] {
+  const legacyApiKey = (import.meta.env.VITE_TMDB_API_KEY as string | undefined)?.trim() || '';
   const single = import.meta.env.VITE_TMDB_READ_TOKEN?.trim();
   const pool =
     import.meta.env.VITE_TMDB_READ_TOKENS?.split(',')
       .map((token) => token.trim())
       .filter(Boolean) || [];
 
-  const tokens = [...pool, ...(single ? [single] : [])];
+  const tokens = [
+    ...pool,
+    ...(single ? [single] : []),
+    ...(legacyApiKey && isBearerTokenLike(legacyApiKey) ? [legacyApiKey] : []),
+  ];
   return Array.from(new Set(tokens));
+}
+
+/** API Key v3, usada apenas como compatibilidade quando não há Bearer token. */
+export function getApiKeyV3(): string {
+  const value = (import.meta.env.VITE_TMDB_API_KEY as string | undefined)?.trim() || '';
+  return value && !isBearerTokenLike(value) ? value : '';
 }
 
 /** Tokens de leitura (Bearer) vindos exclusivamente do ambiente */
@@ -53,7 +68,7 @@ function persistRoundRobin(): void {
 export function getCurrentToken(): string {
   if (READ_TOKENS.length === 0) {
     throw new Error(
-      'TMDB: Nenhum token configurado. Defina VITE_TMDB_READ_TOKENS (vários separados por vírgula) ou VITE_TMDB_READ_TOKEN no .env'
+      'TMDB: Nenhum token configurado. Defina VITE_TMDB_READ_TOKENS, VITE_TMDB_READ_TOKEN ou VITE_TMDB_API_KEY no .env'
     );
   }
   return READ_TOKENS[roundRobin % READ_TOKENS.length];
@@ -72,7 +87,7 @@ export function nextToken(): void {
 export function getFetchOptions(): { method: string; headers: Record<string, string> } {
   if (READ_TOKENS.length === 0) {
     throw new Error(
-      'TMDB: Nenhum token configurado. Defina VITE_TMDB_READ_TOKENS (ex.: token1,token2,token3) ou VITE_TMDB_READ_TOKEN'
+      'TMDB: Nenhum token configurado. Defina VITE_TMDB_READ_TOKENS, VITE_TMDB_READ_TOKEN ou VITE_TMDB_API_KEY'
     );
   }
   const n = READ_TOKENS.length;

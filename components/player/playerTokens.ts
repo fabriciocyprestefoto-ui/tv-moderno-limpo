@@ -4,19 +4,19 @@
  */
 
 export const G = {
-  surface: 'rgba(8,12,18,0.58)' as const,
-  surfaceDark: 'rgba(0,0,0,0.72)' as const,
-  border: 'rgba(255,255,255,0.16)' as const,
+  surface: 'rgba(24,10,45,0.58)' as const,
+  surfaceDark: 'rgba(10,4,22,0.74)' as const,
+  border: 'rgba(216,180,254,0.20)' as const,
   blur: 'blur(40px) saturate(180%)' as const,
   blurHeavy: 'blur(60px) saturate(200%)' as const,
   textPrimary: 'rgba(255,255,255,0.95)' as const,
   textSec: 'rgba(255,255,255,0.62)' as const,
-  accent: '#67e8f9' as const,
+  accent: '#c084fc' as const,
   btnIdle: 'rgba(255,255,255,0.10)' as const,
-  btnFocus: 'rgba(6,182,212,0.28)' as const,
+  btnFocus: 'rgba(168,85,247,0.32)' as const,
   progressTrack: 'rgba(255,255,255,0.18)' as const,
-  progressFill: '#06b6d4' as const,
-  shadow: '0 16px 48px rgba(0,0,0,0.48), 0 0 0 1px rgba(255,255,255,0.08)' as const,
+  progressFill: 'linear-gradient(90deg,#6d28d9,#a855f7,#ec4899)' as const,
+  shadow: '0 16px 48px rgba(0,0,0,0.50), 0 0 36px rgba(124,58,237,0.18), 0 0 0 1px rgba(255,255,255,0.08)' as const,
 };
 
 export const vGlass = (extra?: React.CSSProperties): React.CSSProperties => ({
@@ -59,22 +59,22 @@ export const PLAYER_CSS = `
   outline:none;cursor:pointer;flex-shrink:0;
 }
 .vision-btn.v-active,.vision-btn:focus-visible {
-  background:rgba(6,182,212,0.24);
-  box-shadow:0 0 0 2px rgba(103,232,249,0.65),0 0 18px rgba(6,182,212,0.32);
+  background:linear-gradient(135deg,rgba(109,40,217,0.46),rgba(168,85,247,0.34));
+  box-shadow:0 0 0 2px rgba(216,180,254,0.58),0 0 22px rgba(168,85,247,0.38);
   transform:scale(1.08);
 }
 .vision-play-btn {
   width:60px;height:60px;border-radius:50%;
-  background:rgba(6,182,212,0.18);
-  border:1.5px solid rgba(103,232,249,0.35);
+  background:linear-gradient(135deg,rgba(109,40,217,0.48),rgba(168,85,247,0.30),rgba(236,72,153,0.20));
+  border:1.5px solid rgba(216,180,254,0.38);
   backdrop-filter:blur(20px);
   display:flex;align-items:center;justify-content:center;
   transition:all 200ms;cursor:pointer;outline:none;
   color:rgba(255,255,255,0.95);flex-shrink:0;
 }
 .vision-play-btn.v-active,.vision-play-btn:focus-visible {
-  background:rgba(6,182,212,0.34);
-  box-shadow:0 0 0 2px rgba(103,232,249,0.72),0 8px 32px rgba(0,0,0,0.55);
+  background:linear-gradient(135deg,rgba(109,40,217,0.68),rgba(168,85,247,0.52),rgba(236,72,153,0.34));
+  box-shadow:0 0 0 2px rgba(216,180,254,0.72),0 8px 32px rgba(0,0,0,0.55),0 0 26px rgba(168,85,247,0.42);
   transform:scale(1.10);
 }
 .vision-progress-bar {
@@ -85,15 +85,15 @@ export const PLAYER_CSS = `
 .vision-progress-bar:hover { height:6px; }
 .vision-progress-fill {
   height:100%;border-radius:4px;
-  background:linear-gradient(90deg,#0891b2,#67e8f9);
+  background:linear-gradient(90deg,#6d28d9,#a855f7,#ec4899);
   pointer-events:none;
 }
 .vision-progress-thumb {
   position:absolute;top:50%;right:0;
   transform:translate(50%,-50%) scale(0);
   width:14px;height:14px;border-radius:50%;
-  background:#67e8f9;
-  box-shadow:0 2px 8px rgba(0,0,0,0.70),0 0 12px rgba(6,182,212,0.55);
+  background:#d8b4fe;
+  box-shadow:0 2px 8px rgba(0,0,0,0.70),0 0 14px rgba(168,85,247,0.60);
   transition:transform 150ms;pointer-events:none;
 }
 .vision-progress-bar:hover .vision-progress-thumb { transform:translate(50%,-50%) scale(1); }
@@ -109,7 +109,7 @@ export const PLAYER_CSS = `
   font-size:12px;font-weight:700;cursor:pointer;text-align:center;
   transition:all 150ms;outline:none;
 }
-.vision-speed-opt:hover,.vision-speed-opt.sel { background:rgba(6,182,212,0.24);color:#fff; }
+.vision-speed-opt:hover,.vision-speed-opt.sel { background:rgba(168,85,247,0.28);color:#fff; }
 .vision-hud-meta { font-size:11px;color:rgba(210,190,255,0.62);font-weight:600;letter-spacing:.04em; }
 .vision-scroll::-webkit-scrollbar { width:4px; }
 .vision-scroll::-webkit-scrollbar-track { background:transparent; }

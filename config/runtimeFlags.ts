@@ -22,12 +22,20 @@ const tvBuildEnabled = toBool(import.meta.env.VITE_TV_BUILD) || appBuildTarget =
 const webBuildEnabled = toBool(import.meta.env.VITE_WEB_BUILD) || appBuildTarget === 'web';
 const legacyBuildEnabled =
   toBool(import.meta.env.VITE_LEGACY_BUILD) || appBuildTarget === 'legacy';
+const rawNativeAndroidPlayer = (import.meta.env.VITE_NATIVE_ANDROID_PLAYER as string | undefined)
+  ?.trim()
+  .toLowerCase();
+const nativeAndroidPlayerEnabled = rawNativeAndroidPlayer
+  ? toBool(rawNativeAndroidPlayer)
+  : tvBuildEnabled;
 
 export const runtimeFlags = {
   appBuildTarget,
   isTvBuild: tvBuildEnabled,
   isWebBuild: webBuildEnabled,
   isLegacyBuild: legacyBuildEnabled,
+  /** TV moderno usa Media3 por padrão; VITE_NATIVE_ANDROID_PLAYER=false força HTML5. */
+  nativeAndroidPlayerEnabled,
   officialVodPlayerPipeline: 'NativePlayerPlugin',
   fakeLoginEnabled: import.meta.env.DEV && toBool(import.meta.env.VITE_FAKE_LOGIN),
   adminBypassEnabled: import.meta.env.DEV && toBool(import.meta.env.VITE_ADMIN_BYPASS),

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-  Play, Pause, Rewind, FastForward, ArrowLeft, Settings,
+  Play, Pause, Rewind, FastForward, ArrowLeft,
   Users, Volume2, VolumeX, Volume1, Check, SkipForward, ChevronRight, List, Tv,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,7 +18,7 @@ import { type ResumeAction } from '../utils/playerTvControls';
 import { useProgressHeartbeat } from './player/useProgressHeartbeat';
 import { usePlayerIntro } from './player/usePlayerIntro';
 import { usePlayerKeyboard } from './player/usePlayerKeyboard';
-import { isModernAndroidTVWebView, isLegacyHtml5OnlyTV, isTVBox } from '../utils/tvBoxDetector';
+import { isFireTV, isModernAndroidTVWebView, isLegacyHtml5OnlyTV, isTVBox } from '../utils/tvBoxDetector';
 import { playWhenVideoReady } from '../utils/videoAutoplay';
 import { normalizeRemoteKey } from '../hooks/useRemoteControl';
 import { hasNativePlayer } from '../utils/tvModernoBridge';
@@ -353,6 +353,7 @@ const PlayerImpl: React.FC<PlayerProps> = ({
   const [showIntro, setShowIntro] = useState(() => {
     // TV Moderno: pula vinheta web — playback acontece em ExoPlayerActivity nativo.
     if (hasNativePlayer()) return false;
+    if (media.skipIntro) return false;
     return isLegacyHtml5OnlyTV() ? false : Boolean(introVideoSrc);
   });
   const showIntroRef = useRef(showIntro);
@@ -434,7 +435,7 @@ const PlayerImpl: React.FC<PlayerProps> = ({
   const controlIds = React.useMemo(() => {
     const ids = ['back', 'play', 'rewind', 'forward'];
     if (canBrowseEpisodes) ids.push('episodes');
-    ids.push('cast', 'quality', 'speed', 'volume');
+    ids.push('cast', 'speed', 'volume');
     if (nextEpisode && hasEpisodeContext) ids.push('next');
     return ids;
   }, [canBrowseEpisodes, hasEpisodeContext, nextEpisode]);
@@ -883,6 +884,7 @@ const PlayerImpl: React.FC<PlayerProps> = ({
     defaultIntroConsumedRef,
     streamUrl: media?.stream_url,
     introVideoUrl: media.introVideoUrl,
+    skipIntro: Boolean(media.skipIntro),
     setShowIntro,
   });
 
@@ -975,18 +977,6 @@ const PlayerImpl: React.FC<PlayerProps> = ({
       setSelectedSeasonNum(seasons[focusedSeasonIdx].season_number);
     }
   }, [focusedSeasonIdx, focusArea, seasons]);
-
-  // ── Mark as watched ───────────────────────────────────────────────────────
-  const markAsWatched = async () => {
-    if (!tmdbId) return;
-    await userService.saveProgress(
-      tmdbId, media.type, 0,
-      videoRef.current?.duration || 0,
-      media.season_number,
-      media.episode_number
-    );
-    onClose();
-  };
 
   // ── Cast scroll ───────────────────────────────────────────────────────────
   useEffect(() => {
@@ -1317,18 +1307,6 @@ const PlayerImpl: React.FC<PlayerProps> = ({
                 : media.year ? `${media.year}` : ''}
             </span>
           </div>
-          <button
-            onClick={markAsWatched}
-            style={{
-              ...vGlass({ borderRadius: '999px', padding: '6px 14px' }),
-              fontSize: 10, fontWeight: 900, letterSpacing: '0.18em',
-              textTransform: 'uppercase', color: G.textSec,
-              display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0, cursor: 'pointer',
-            }}
-          >
-            <Check size={12} style={{ color: '#67e8f9' }} />
-            Assistido
-          </button>
         </div>
 
         {/* Row 2: Progress bar */}
@@ -1425,10 +1403,6 @@ const PlayerImpl: React.FC<PlayerProps> = ({
             >
               <Users size={18} />
             </button>
-            <button className={vBtn('quality')} onClick={() => { setShowSettings('quality'); setFocusArea('settings'); }} title="Qualidade">
-              <Settings size={18} />
-            </button>
-
             {/* Speed button */}
             <div style={{ position: 'relative' }}>
               {showSpeedPanel && (
@@ -1629,11 +1603,16 @@ const PlayerImpl: React.FC<PlayerProps> = ({
 
 /**
  * Player principal.
- * Em build TV nativo, VOD usa NativePlayerPlugin exclusivamente.
- * Em web/desktop, mantém fallback HTML5/HLS.js.
+ * TV moderno usa Media3; Firestick/Android antigo fica no HTML5/HLS.js.
  */
 const Player: React.FC<PlayerProps> = (props) => {
-  if (runtimeFlags.isTvBuild && isNativePlatform()) {
+  if (
+    runtimeFlags.isTvBuild &&
+    runtimeFlags.nativeAndroidPlayerEnabled &&
+    !isFireTV() &&
+    !isLegacyHtml5OnlyTV() &&
+    isNativePlatform()
+  ) {
     return <NativeVodPlayer {...props} />;
   }
   return <PlayerImpl {...props} />;

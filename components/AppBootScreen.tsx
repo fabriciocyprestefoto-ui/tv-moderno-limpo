@@ -5,8 +5,9 @@
  * Frases animadas com scale elástico letra-a-letra, sem dependências externas.
  */
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { runtimeFlags } from '@/config/runtimeFlags';
+import { isNativePlatform } from '@/services/nativePlayerService';
 import { getSignal } from '@/utils/appSignals';
-import { isLiteMode } from '@/utils/liteMode';
 
 // ── Moving Letters: frases que rotacionam durante o boot ───────────────────
 const PHRASES = ['Filmes', 'Séries', 'Canais ao Vivo', 'A Melhor IPTV do Brasil', 'Redflix'];
@@ -156,14 +157,16 @@ function genParticles(n: number): Particle[] {
   }));
 }
 const PARTICLES = genParticles(80);
+void MovingLetters;
+void PARTICLES;
 
 // ── Fases (ms desde mount) ─────────────────────────────────────────────────
 const T = {
   LOGO_RISE: 800, // logo sobe
   BAR_START: 1400, // barra começa
-  BAR_FULL: 5000, // barra visual 100% (mais lenta para dar tempo real de carga)
-  CHECK_START: 5500, // começa a verificar flags reais (após barra completa)
-  MIN_TOTAL: 7000, // tempo mínimo visual garantido (7s para garantir carga completa)
+  BAR_FULL: 3200, // barra visual 100%
+  CHECK_START: 3500, // começa a liberar a entrada após a vinheta inicial
+  MIN_TOTAL: 4500, // tempo mínimo visual garantido antes do login/home
   MAX_WAIT: 90000, // timeout de segurança (90s)
   EXIT_DUR: 350, // duração do zoom-out
   FLASH_DUR: 450, // duração do flash
@@ -172,12 +175,11 @@ const T = {
 // ── Componente ──────────────────────────────────────────────────────────────
 const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
   // E2E/test bypass: set window.__REDX_SKIP_BOOT=true or localStorage 'redx-skip-boot'='1'
-  // Lite mode (device antigo / rede lenta): pula animação pesada de 7s
+  // Nao pular em Android TV: a vinheta substitui o preload antes do login.
   const skipBoot =
     typeof window !== 'undefined' &&
     ((window as unknown as Record<string, unknown>).__REDX_SKIP_BOOT === true ||
-      localStorage.getItem('redx-skip-boot') === '1' ||
-      isLiteMode());
+      localStorage.getItem('redx-skip-boot') === '1');
 
   const [progress, setProgress] = useState(0);
   const [statusTxt, setStatus] = useState('Iniciando…');
@@ -258,8 +260,8 @@ const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
         if (!homeReady) setStatus('Carregando catálogo…');
         else setStatus('Pronto!');
 
-        // Abre quando o catálogo home estiver pronto (ou timeout de segurança)
-        if ((homeReady && timerOk) || maxExceeded) {
+        // A vinheta de boot sempre libera após o tempo mínimo, mesmo antes do login.
+        if (timerOk || maxExceeded) {
           triggerExit();
           return;
         }
@@ -294,6 +296,15 @@ const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
   }, [tick, skipBoot, onComplete]);
 
   if (skipBoot) return null;
+  void progress;
+  void logoScale;
+  void logoAlpha;
+  void glow;
+
+  const useStaticBoot =
+    runtimeFlags.isTvBuild &&
+    typeof window !== 'undefined' &&
+    isNativePlatform();
 
   // ── Estilos ───────────────────────────────────────────────────────────────
   const wrapCls = [
@@ -304,167 +315,63 @@ const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
   ].join(' ');
 
   return (
-    <div className={wrapCls} style={{ backgroundColor: '#060010' }}>
-      {/* ── Partículas ── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {PARTICLES.map((p) => (
-          <div
-            key={p.id}
-            className="absolute rounded-full"
-            style={{
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-              width: `${p.size}px`,
-              height: `${p.size}px`,
-              backgroundColor: p.color,
-              opacity: p.opacity,
-              animation: `bootFloat ${p.duration}s ease-in-out ${p.delay}s infinite alternate`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* ── Glow radial ── */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse 65% 55% at 50% 40%,
-          rgba(124,58,237,${(glow * 0.22).toFixed(2)}) 0%,
-          rgba(236,72,153,${(glow * 0.1).toFixed(2)}) 40%,
-          transparent 70%)`,
-        }}
-      />
-
-      {/* ── Grade sutil ── */}
-      <div
-        className="absolute inset-0 opacity-[0.02] pointer-events-none"
-        style={{
-          backgroundImage: `
-          linear-gradient(rgba(168,85,247,.6) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(168,85,247,.6) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
-        }}
-      />
-
-      {/* ── Conteúdo central ── */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-10">
-        {/* Halo externo do logo */}
-        <div
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            width: '300px',
-            height: '300px',
-            background: `radial-gradient(circle, rgba(124,58,237,${(glow * 0.14).toFixed(2)}) 0%, transparent 70%)`,
-            filter: 'blur(28px)',
-            transform: `scale(${(0.8 + glow * 0.35).toFixed(3)})`,
-          }}
-        />
-
-        {/* Logo */}
-        <img
-          src="/logored.png"
-          alt="RedFlix"
-          draggable={false}
-          style={{
-            height: '76px',
-            width: 'auto',
-            objectFit: 'contain',
-            transform: `scale(${logoScale})`,
-            opacity: logoAlpha,
-            filter: `drop-shadow(0 0 ${(glow * 42).toFixed(0)}px rgba(168,85,247,.85))
-                     drop-shadow(0 0 ${(glow * 20).toFixed(0)}px rgba(236,72,153,.55))`,
-          }}
-        />
-
-        {/* ── Moving Letters: frases animadas ── */}
-        <div style={{ opacity: logoAlpha, minHeight: '56px' }}>
-          <MovingLetters visible={logoAlpha > 0.7} />
-        </div>
-
-        {/* Barra de progresso */}
-        <div
-          style={{
-            width: '260px',
-            height: '3px',
-            background: 'rgba(255,255,255,0.07)',
-            borderRadius: '9999px',
-            overflow: 'hidden',
-            opacity: logoAlpha,
-            position: 'relative',
-          }}
-        >
-          {/* Trilha */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(90deg,#7c3aed,#a855f7,#ec4899)',
-              width: `${progress}%`,
-              transition: 'width 0.06s linear',
-              boxShadow: '0 0 14px rgba(168,85,247,.95), 0 0 4px rgba(236,72,153,.7)',
-              borderRadius: '9999px',
-            }}
-          />
-          {/* Pulso na ponta */}
-          {progress > 1 && progress < 99.5 && (
+    <div className={wrapCls} style={{ backgroundColor: '#000' }}>
+      {useStaticBoot ? (
+        <div className="absolute inset-0 overflow-hidden bg-black">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(168,85,247,0.28),rgba(0,0,0,0)_38%),linear-gradient(135deg,rgba(126,34,206,0.28),rgba(236,72,153,0.14)_42%,rgba(0,0,0,0.92)_78%)]" />
+          <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full border border-fuchsia-400/20 bg-purple-500/10 blur-3xl" />
+          <div className="absolute inset-0 flex items-center justify-center">
             <div
               style={{
-                position: 'absolute',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                left: `calc(${progress}% - 5px)`,
-                width: '10px',
-                height: '10px',
-                borderRadius: '50%',
-                background: '#f0abfc',
-                boxShadow: '0 0 8px #a855f7',
-                animation: 'bootPulse .55s ease-in-out infinite alternate',
+                transform: `scale(${logoScale})`,
+                opacity: logoAlpha,
+                filter: `drop-shadow(0 0 ${18 + glow * 24}px rgba(192,132,252,0.55))`,
+                transition: 'filter 120ms linear',
               }}
-            />
-          )}
+              className="text-center"
+            >
+              <div className="text-4xl font-black tracking-[0.28em] text-white sm:text-6xl">
+                RED<span className="bg-gradient-to-r from-fuchsia-400 to-red-500 bg-clip-text text-transparent">X</span>
+              </div>
+              <div className="mt-6 h-1 w-56 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 transition-[width] duration-150"
+                  style={{ width: `${Math.max(8, progress)}%` }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* Texto de status */}
+      ) : (
+        <video
+          src="/vinheta-tv.mp4"
+          className="absolute inset-0 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls={false}
+          controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
+          disablePictureInPicture
+          disableRemotePlayback
+          aria-hidden="true"
+        />
+      )}
+      <div className="absolute inset-0 pointer-events-none bg-black/10" />
+      <div className="absolute bottom-10 left-0 right-0 flex items-center justify-center">
         <p
           style={{
             fontSize: '10px',
-            letterSpacing: '0.38em',
-            color: `rgba(255,255,255,${(logoAlpha * 0.38).toFixed(2)})`,
-            fontWeight: 600,
+            letterSpacing: '0.34em',
+            color: 'rgba(255,255,255,0.62)',
+            fontWeight: 700,
             textTransform: 'uppercase',
+            textShadow: '0 2px 18px rgba(0,0,0,0.85)',
           }}
         >
           {statusTxt}
         </p>
       </div>
-
-      {/* ── Scanlines ── */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.04]"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.5) 2px,rgba(0,0,0,.5) 4px)',
-        }}
-      />
-
-      {/* ── Borda interior ── */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          boxShadow: `inset 0 0 80px rgba(124,58,237,${(glow * 0.07).toFixed(2)})`,
-        }}
-      />
-
-      <style>{`
-        @keyframes bootFloat {
-          from { transform: translate(0,0); }
-          to   { transform: translate(10px,-22px); }
-        }
-        @keyframes bootPulse {
-          from { transform: translateY(-50%) scale(1); opacity: 1; }
-          to   { transform: translateY(-50%) scale(1.7); opacity: .35; }
-        }
-      `}</style>
     </div>
   );
 };

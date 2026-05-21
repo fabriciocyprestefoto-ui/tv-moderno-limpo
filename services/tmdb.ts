@@ -1,5 +1,5 @@
 import { Media, SeriesDetail, Episode, HeroBannerAsset } from '../types';
-import { getFetchOptions, getFetchOptionsForHome } from './tmdbKeys';
+import { getApiKeyV3, getFetchOptions, getFetchOptionsForHome } from './tmdbKeys';
 import { logger } from '../utils/logger';
 import { toWebP } from '../utils/imageProxy';
 import { fetchWithTimeout } from '../utils/fetchUtils';
@@ -18,10 +18,16 @@ const TMDB_DIRECT_BASE_URL = 'https://api.themoviedb.org/3';
 //    supabase secrets set TMDB_READ_TOKEN=<seu_read_token>
 //
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 const TMDB_PROXY_BASE_URL = SUPABASE_URL ? `${SUPABASE_URL}/functions/v1/tmdb-proxy` : '';
 
-// Em produção, aponta para a Edge Function; em dev, usa o proxy local do Vite.
-const BASE_URL = import.meta.env.PROD ? TMDB_PROXY_BASE_URL : '/tmdb-proxy';
+// Roteamento:
+//  - DEV: proxy local do Vite (/tmdb-proxy).
+//  - PROD/APK: proxy Supabase para evitar CORS no WebView/Fire TV.
+//  - Fallback: TMDB direto apenas quando o proxy não estiver configurado.
+const BASE_URL = import.meta.env.DEV
+  ? '/tmdb-proxy'
+  : TMDB_PROXY_BASE_URL || TMDB_DIRECT_BASE_URL;
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
 
@@ -35,8 +41,25 @@ function getClientTmdbFetchOpts(preferHomeToken = false): RequestInit | null {
     }
     return getFetchOptions();
   } catch (error) {
-    logger.warn('[tmdb] Nenhum token local disponível para fallback direto:', error);
+    if (getApiKeyV3()) {
+      return { method: 'GET', headers: { Accept: 'application/json' } };
+    }
+    logger.warn('[tmdb] Nenhuma credencial local disponível para fallback direto:', error);
     return null;
+  }
+}
+
+function appendApiKeyV3(url: string, requestInit: RequestInit): string {
+  const apiKey = getApiKeyV3();
+  const headers = requestInit.headers as Record<string, string> | undefined;
+  if (!apiKey || headers?.Authorization) return url;
+  try {
+    const base = typeof window !== 'undefined' ? window.location.origin : TMDB_DIRECT_BASE_URL;
+    const parsed = new URL(url, base);
+    if (!parsed.searchParams.has('api_key')) parsed.searchParams.set('api_key', apiKey);
+    return parsed.toString();
+  } catch {
+    return url;
   }
 }
 
@@ -55,13 +78,18 @@ function shouldFallbackToDirectTmdb(response: Response): boolean {
   return [401, 404, 429, 500, 502, 503, 504].includes(response.status);
 }
 
-/** Retorna as opções de fetch adequadas para o ambiente atual.
- *  Em produção, nenhum header de autorização é necessário — o token fica
- *  na Edge Function. Em dev, usa o pool de tokens locais via tmdbKeys. */
+/** Headers para fetch TMDB — Bearer no cliente em PROD; proxy local em DEV. */
 function buildFetchOpts(): RequestInit {
-  if (import.meta.env.PROD) {
-    // Edge Function autentica server-side; cliente não precisa de Bearer token.
-    return { method: 'GET', headers: { accept: 'application/json' } };
+  if (BASE_URL === '/tmdb-proxy') {
+    return { method: 'GET', headers: { Accept: 'application/json' } };
+  }
+  if (TMDB_PROXY_BASE_URL && BASE_URL.startsWith(TMDB_PROXY_BASE_URL)) {
+    const headers: Record<string, string> = { Accept: 'application/json' };
+    if (SUPABASE_ANON_KEY) {
+      headers.apikey = SUPABASE_ANON_KEY;
+      headers.Authorization = `Bearer ${SUPABASE_ANON_KEY}`;
+    }
+    return { method: 'GET', headers };
   }
   return getFetchOptions();
 }
@@ -72,19 +100,20 @@ async function fetchTmdb(url: string, options?: { preferHomeToken?: boolean }): 
     requestUrl: string,
     requestInit: RequestInit
   ): Promise<Response> => {
-    let res = await fetchWithTimeout(requestUrl, requestInit, TMDB_TIMEOUT_MS);
+    const finalUrl = appendApiKeyV3(requestUrl, requestInit);
+    let res = await fetchWithTimeout(finalUrl, requestInit, TMDB_TIMEOUT_MS);
 
     // ERR-03: retry with backoff for 429 (rate limit) and 503 (service unavailable).
     // Em dev, getFetchOptions() reveza o token; em prod, a Edge Function gerencia.
     if (res.status === 429 || res.status === 503) {
       const delay1 = res.status === 429 ? 1000 : 2000;
       await new Promise((resolve) => setTimeout(resolve, delay1));
-      res = await fetchWithTimeout(requestUrl, requestInit, TMDB_TIMEOUT_MS);
+      res = await fetchWithTimeout(finalUrl, requestInit, TMDB_TIMEOUT_MS);
 
       if (res.status === 429 || res.status === 503) {
         const delay2 = res.status === 429 ? 3000 : 5000;
         await new Promise((resolve) => setTimeout(resolve, delay2));
-        res = await fetchWithTimeout(requestUrl, requestInit, TMDB_TIMEOUT_MS);
+        res = await fetchWithTimeout(finalUrl, requestInit, TMDB_TIMEOUT_MS);
       }
     }
 

@@ -14,7 +14,7 @@ import {
   HOME_GENRE_DISPLAY_ORDER,
   resolveGenreQueryParam,
 } from '../config/homeCatalog';
-import { filterMediaWithRequiredTmdbPoster } from '../utils/mediaUtils';
+import { filterMediaWithRequiredTmdbPoster, hasValidVideoUrl } from '../utils/mediaUtils';
 import { useSpatialNav } from '../hooks/useSpatialNavigation';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { isTVBox } from '../utils/tvBoxDetector';
@@ -111,7 +111,10 @@ const Movies: React.FC<MoviesProps> = ({
     return () => observer.disconnect();
   }, [genreFilter, filter]);
 
-  const tmdbMovies = useMemo(() => filterMediaWithRequiredTmdbPoster(moviesOnly), [moviesOnly]);
+  const tmdbMovies = useMemo(
+    () => filterMediaWithRequiredTmdbPoster(moviesOnly).filter((m) => hasValidVideoUrl(m)),
+    [moviesOnly]
+  );
   const tmdbMoviesByGenre = useMemo(() => {
     const m = new Map<HomeGenreLabel, Media[]>();
     moviesByGenre.forEach((items, g) => {

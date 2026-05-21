@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Media } from '../types';
 import MediaCard from '../components/MediaCard';
+import StreamingPlatforms from '../components/StreamingPlatforms';
 import {
   buildGenresPageBuckets,
   type GenresPageBucket,
@@ -31,6 +32,7 @@ import { playSelectSound } from '../utils/soundEffects';
 import { normalizeRemoteKey } from '../hooks/useRemoteControl';
 import { useSpatialNav } from '../hooks/useSpatialNavigation';
 import { stripDiacriticsSafe } from '../utils/safeUnicodeNormalize';
+import { matchesPlatform } from '../config/platformConfig';
 
 interface GenresProps {
   movies: Media[];
@@ -227,6 +229,7 @@ const Genres: React.FC<GenresProps> = ({ movies, series, onSelectMedia, onPlayMe
   const navigate = useNavigate();
   const { setPosition } = useSpatialNav();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [visibleResults, setVisibleResults] = useState(RESULT_BATCH);
   const [genreGridCols, setGenreGridCols] = useState(getGenreGridCols);
   const [resultsCols, setResultsCols] = useState(3);
@@ -236,8 +239,9 @@ const Genres: React.FC<GenresProps> = ({ movies, series, onSelectMedia, onPlayMe
 
   const catalogForGenres = useMemo(() => {
     const merged = [...(movies || []), ...(series || [])].filter((m) => hasPosterAndVideo(m));
-    return merged;
-  }, [movies, series]);
+    if (!selectedPlatform) return merged;
+    return merged.filter((m) => Boolean(m.platform && matchesPlatform(m.platform, selectedPlatform)));
+  }, [movies, series, selectedPlatform]);
 
   const buckets = useMemo(() => buildGenresPageBuckets(catalogForGenres), [catalogForGenres]);
 
@@ -340,6 +344,12 @@ const Genres: React.FC<GenresProps> = ({ movies, series, onSelectMedia, onPlayMe
     setSelectedKey((prev) => (prev === key ? null : key));
   }, []);
 
+  const selectPlatform = useCallback((platformName: string) => {
+    playSelectSound();
+    setSelectedKey(null);
+    setSelectedPlatform((prev) => (prev === platformName ? null : platformName));
+  }, []);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const k = normalizeRemoteKey(e);
@@ -361,8 +371,27 @@ const Genres: React.FC<GenresProps> = ({ movies, series, onSelectMedia, onPlayMe
           Categorias
         </h1>
         <p className="text-sm md:text-base font-bold text-white/45 uppercase tracking-[0.2em] mb-6">
-          Gêneros
+          Gêneros {selectedPlatform ? `· ${selectedPlatform}` : ''}
         </p>
+        <div className="rounded-3xl border border-white/[0.1] bg-white/[0.04] backdrop-blur-xl px-3 py-2">
+          <StreamingPlatforms onSelectPlatform={selectPlatform} />
+        </div>
+        {selectedPlatform && (
+          <button
+            type="button"
+            onClick={() => {
+              playSelectSound();
+              setSelectedPlatform(null);
+              setSelectedKey(null);
+            }}
+            data-nav-item
+            data-nav-row={2}
+            data-nav-col={0}
+            className="mt-3 px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider border border-white/15 text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            Limpar plataforma
+          </button>
+        )}
       </header>
 
       <section className="max-w-6xl mx-auto" aria-labelledby="genres-grid-title">

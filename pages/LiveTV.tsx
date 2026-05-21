@@ -23,6 +23,7 @@ import { getAdjacentLiveTvChannelIndex } from '@/utils/liveTvControls';
 import { normalizeRemoteKey } from '@/hooks/useRemoteControl';
 import { runtimeFlags } from '@/config/runtimeFlags';
 import { isNativePlatform, playNative } from '@/services/nativePlayerService';
+import { isFireTV, isLegacyHtml5OnlyTV } from '@/utils/tvBoxDetector';
 
 // PIN adulto gerenciado via AdultPinModal/Edge Function; PIN nunca deve ir no bundle.
 
@@ -36,6 +37,11 @@ const LIVETV_LOADING_SURFACE = {
   backgroundRepeat: 'no-repeat' as const,
   backgroundSize: 'cover' as const,
 };
+
+function isRemovedSbtSpChannel(name: string): boolean {
+  const normalized = name.trim().toUpperCase();
+  return /^SBT SP(?:\s|$|-)/.test(normalized);
+}
 
 interface LiveTVProps {
   onBack?: () => void;
@@ -78,7 +84,8 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
           setIsLoading(false);
           return;
         }
-        const adapted = adaptChannels(raw);
+        const visibleChannels = raw.filter((channel) => !isRemovedSbtSpChannel(channel.name));
+        const adapted = adaptChannels(visibleChannels);
         setAllChannels(adapted.channels);
         setCategories(adapted.categories);
         setIsLoading(false);
@@ -123,7 +130,12 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
   const hlsRef = useRef<any | null>(null);
   const [liveStreamError, setLiveStreamError] = useState<string | null>(null);
   const [isVideoReady, setIsVideoReady] = useState(false);
-  const useNativeLivePlayer = runtimeFlags.isTvBuild && isNativePlatform();
+  const useNativeLivePlayer =
+    runtimeFlags.isTvBuild &&
+    runtimeFlags.nativeAndroidPlayerEnabled &&
+    !isFireTV() &&
+    !isLegacyHtml5OnlyTV() &&
+    isNativePlatform();
   const nativeLiveLaunchRef = useRef(0);
 
   // ── Região padrão ────────────────────────────────────────────────────────

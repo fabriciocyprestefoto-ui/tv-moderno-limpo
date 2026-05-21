@@ -27,8 +27,13 @@ import androidx.media3.common.MediaItem;
 import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.Player;
+import androidx.media3.common.VideoSize;
+import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DefaultDataSource;
 import androidx.media3.datasource.DefaultHttpDataSource;
+import androidx.media3.datasource.cache.CacheDataSource;
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
+import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
@@ -36,14 +41,15 @@ import androidx.media3.ui.PlayerView;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
  * Player nativo fullscreen baseado em Media3 ExoPlayer.
  *
- * Substitui o WebView <video> em todas as reproduções de VOD (filmes, séries).
- * Canais ao vivo usam WebView HLS.js (rede do browser — provedores IPTV bloqueiam
- * HttpURLConnection do ExoPlayer).
+ * Substitui o WebView <video> nas reproduções encaminhadas pelo NativePlayerPlugin.
+ * Suporta VOD (filmes/séries) e Live/HLS no fluxo TV moderno, mantendo o fallback
+ * HTML5/WebView controlado no lado React para Firestick/Android antigo.
  *
  * Recebe via Intent extras:
  *   url           (String, obrigatório)  URL do stream (m3u8, mp4, mkv, etc.)
@@ -53,7 +59,7 @@ import java.util.Map;
  *   position      (int, segundos)        Posição inicial (ignorada se type=live).
  *   isLive        (boolean)              Legacy — sinônimo de type=live.
  *   introUrl      (String)               Vinheta tocada antes do main stream (file:// ou https).
- *   headers       (String[])             Pares chave/valor: [k1,v1,k2,v2,...]
+ *   headers       (String[] ou JSON)     Pares chave/valor ou objeto JSON simples.
  *
  * Devolve em RESULT_OK:
  *   position      (int, segundos)        Posição final para watchProgress.
@@ -74,6 +80,8 @@ public class ExoPlayerActivity extends Activity {
     public static final String EXTRA_HEADERS    = "headers";
     /** URL opcional de vinheta tocada antes do main stream (file:// ou https). */
     public static final String EXTRA_INTRO_URL  = "introUrl";
+    /** URL secundaria usada quando a primaria falhar (hibrido P2P->m3u8 ou m3u8->backup). */
+    public static final String EXTRA_FALLBACK_URL = "fallbackUrl";
     /** Força TextureView (fallback automático em retry após falha de renderização). */
     public static final String EXTRA_USE_TEXTURE_VIEW = "useTextureView";
 
@@ -82,8 +90,10 @@ public class ExoPlayerActivity extends Activity {
         String mfg  = android.os.Build.MANUFACTURER == null ? "" : android.os.Build.MANUFACTURER.toLowerCase();
         String brand = android.os.Build.BRAND == null ? "" : android.os.Build.BRAND.toLowerCase();
         String model = android.os.Build.MODEL == null ? "" : android.os.Build.MODEL.toLowerCase();
-        // TCL Android TV / Google TV: SurfaceView frequentemente dá tela preta com áudio.
-        if (mfg.contains("tcl") || brand.contains("tcl")) return true;
+        // TCL/Realtek: o decoder OMX.realtek.video.decoder TRAVA ao configurar contra
+        // uma surface de TextureView (player fica em STATE_BUFFERING para sempre, sem erro).
+        // SurfaceView funciona — a "tela preta" antiga é resolvida com setZOrderMediaOverlay
+        // aplicado no buildLayout. Portanto TCL NÃO deve usar TextureView.
         // FireStick / Fire TV: SurfaceView e overlays do WebView variam bastante por firmware.
         if (mfg.contains("amazon") || brand.contains("amazon") || model.startsWith("aft") || model.contains("fire tv")) return true;
         // Google TV reference devices (Chromecast com Google TV, Sabrina)
@@ -100,10 +110,29 @@ public class ExoPlayerActivity extends Activity {
     private static final int  MAX_RETRIES_LIVE      = 7;
     private static final long RETRY_BASE_DELAY_MS   = 1500L;
     private static final long RETRY_MAX_DELAY_MS    = 30_000L;
+    private static final long INTRO_STALL_TIMEOUT_MS = 9_000L;
+    private static final long MAIN_STALL_TIMEOUT_MS = 30_000L;
 
     private ExoPlayer   player;
     private PlayerView  playerView;
     private FrameLayout root;
+
+    // IMP-06 (PRD §15.2): cache HLS/progressivo compartilhado entre instâncias da Activity.
+    // 256 MB LRU. Só VOD usa (live não cacheia). Reduz re-download em back/resume.
+    private static final long CACHE_MAX_BYTES = 256L * 1024L * 1024L;
+    private static SimpleCache sharedCache;
+
+    private static synchronized SimpleCache getSharedCache(android.content.Context ctx) {
+        if (sharedCache == null) {
+            java.io.File cacheDir = new java.io.File(ctx.getCacheDir(), "media3-vod");
+            sharedCache = new SimpleCache(
+                    cacheDir,
+                    new LeastRecentlyUsedCacheEvictor(CACHE_MAX_BYTES),
+                    new StandaloneDatabaseProvider(ctx)
+            );
+        }
+        return sharedCache;
+    }
     private ImageView   posterView;
     private ProgressBar bufferingView;
     private TextView    loadingLabel;
@@ -128,6 +157,26 @@ public class ExoPlayerActivity extends Activity {
         @Override public void run() {
             updateHud();
             if (mainHandler != null) mainHandler.postDelayed(this, 500L);
+        }
+    };
+    private final Runnable introWatchdog = new Runnable() {
+        @Override public void run() {
+            if (!introQueuedForCurrentPlayback || player == null || isLive) return;
+            int item = player.getCurrentMediaItemIndex();
+            int state = player.getPlaybackState();
+            if (item == 0 && state != Player.STATE_ENDED) {
+                Log.w(TAG, "Vinheta travada/sem READY apos " + INTRO_STALL_TIMEOUT_MS + "ms; pulando para main stream");
+                skipIntroAndPlayMain("intro_watchdog_state_" + state);
+            }
+        }
+    };
+    private final Runnable mainBufferWatchdog = new Runnable() {
+        @Override public void run() {
+            if (player == null) return;
+            if (player.getPlaybackState() != Player.STATE_BUFFERING) return;
+            if (introQueuedForCurrentPlayback && player.getCurrentMediaItemIndex() == 0) return;
+            Log.w(TAG, "Main stream travado em BUFFERING apos " + MAIN_STALL_TIMEOUT_MS + "ms");
+            handleMainBufferStall();
         }
     };
     /** Auto-hide do HUD (delay unico de 6s, alinhado com sitepronto-novo):
@@ -166,6 +215,8 @@ public class ExoPlayerActivity extends Activity {
     private String              typeStr;
     private String              posterUrl;
     private String              introUrl;
+    private String              fallbackUrl;       // URL alternativa quando primaria falhar
+    private boolean             fallbackUsed = false; // marca se ja trocou pro fallback
     private long                startPositionMs;
     private boolean             isLive;
     private Map<String, String> customHeaders;
@@ -174,6 +225,18 @@ public class ExoPlayerActivity extends Activity {
     private boolean retriedAsHls  = false;
     /** True quando intro foi adicionada ao playlist na última chamada de preparePlayback. */
     private boolean introQueuedForCurrentPlayback = false;
+    /** IMP-07 (PRD §15.2): preserva intenção do usuário (play/pause) através de onPause/onResume.
+     *  Sem isso, voltar do home/background reativava play mesmo se usuário tinha pausado via HUD. */
+    private boolean wasPlayingBeforePause = true;
+
+    // Debug tracking fields
+    private boolean renderedFirstFrame = false;
+    private long firstBufferingTimestamp = 0;
+    private long readyTimestamp = 0;
+    private boolean terminalErrorShown = false;
+    private boolean debugOverlayEnabled = false;
+    private android.widget.TextView debugOverlayView = null;
+    private android.os.Handler debugUpdateHandler = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -218,12 +281,24 @@ public class ExoPlayerActivity extends Activity {
         if (typeStr == null) typeStr = "movie";
         posterUrl = getIntent().getStringExtra(EXTRA_POSTER);
         introUrl  = getIntent().getStringExtra(EXTRA_INTRO_URL);
+        introUrl = normalizeAndroidAssetUri(introUrl);
+        fallbackUrl = getIntent().getStringExtra(EXTRA_FALLBACK_URL);
+        // Se URL primaria for scheme nao suportado (tvbus, btp, p2p), troca imediatamente
+        // pra fallback (m3u8) — ExoPlayer falha instant em scheme desconhecido.
+        if (sourceUrl != null && fallbackUrl != null && !fallbackUrl.isEmpty()) {
+            String lower = sourceUrl.toLowerCase();
+            if (lower.startsWith("tvbus:") || lower.startsWith("btp:") || lower.startsWith("p2p:")) {
+                Log.i(TAG, "Primary scheme nao suportado, indo direto pro fallback m3u8");
+                sourceUrl = fallbackUrl;
+                fallbackUsed = true;
+            }
+        }
         startPositionMs = getIntent().getIntExtra(EXTRA_POSITION, 0) * 1000L;
         isLive = getIntent().getBooleanExtra(EXTRA_IS_LIVE, false) || "live".equalsIgnoreCase(typeStr);
         if ((logoUrl == null || logoUrl.isEmpty()) && isLive && posterUrl != null && !posterUrl.isEmpty()) {
             logoUrl = posterUrl;
         }
-        customHeaders = parseHeaders(getIntent().getStringArrayExtra(EXTRA_HEADERS));
+        customHeaders = parseHeadersFromIntent(getIntent());
         Log.i(TAG, "Intent extras OK type=" + typeStr
                 + " live=" + isLive
                 + " posMs=" + startPositionMs
@@ -231,10 +306,48 @@ public class ExoPlayerActivity extends Activity {
                 + " poster=" + (posterUrl != null && !posterUrl.isEmpty())
                 + " url=" + sourceUrl.substring(0, Math.min(120, sourceUrl.length())));
 
+        Log.i(TAG, "[RED_EXOPLAYER] onCreate");
+        Log.i(TAG, "[RED_EXOPLAYER]   device=" + android.os.Build.MODEL + " API=" + android.os.Build.VERSION.SDK_INT);
+        Log.i(TAG, "[RED_EXOPLAYER]   url=" + (sourceUrl != null ? sourceUrl.substring(0, Math.min(sourceUrl.length(), 100)) : "null"));
+        Log.i(TAG, "[RED_EXOPLAYER]   fallbackUrl=" + (fallbackUrl != null ? fallbackUrl.substring(0, Math.min(fallbackUrl.length(), 80)) : "null"));
+        Log.i(TAG, "[RED_EXOPLAYER]   introUrl=" + introUrl);
+        Log.i(TAG, "[RED_EXOPLAYER]   type=" + typeStr + " isLive=" + isLive + " position=" + startPositionMs);
+        Log.i(TAG, "[RED_PLAYBACK_CONTRACT]   streamType=" + (sourceUrl != null && sourceUrl.contains(".m3u8") ? "HLS" : sourceUrl != null && sourceUrl.startsWith("p2p://") ? "P2P" : "MP4/OTHER"));
+        debugOverlayEnabled = getIntent().getBooleanExtra("debug", false) && BuildConfig.DEBUG;
+
         try {
             Log.i(TAG, "buildLayout: inicio");
             buildLayout();
             Log.i(TAG, "buildLayout: fim");
+
+            // Debug overlay
+            if (debugOverlayEnabled) {
+                debugOverlayView = new android.widget.TextView(this);
+                debugOverlayView.setTextColor(0xFF00FF00); // green
+                debugOverlayView.setTextSize(11f);
+                debugOverlayView.setTypeface(android.graphics.Typeface.MONOSPACE);
+                debugOverlayView.setBackgroundColor(0x66000000); // 40% black
+                debugOverlayView.setPadding(16, 16, 16, 16);
+                debugOverlayView.setText("RED_DEBUG: initializing...");
+                android.widget.FrameLayout.LayoutParams dlp = new android.widget.FrameLayout.LayoutParams(
+                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                    android.view.Gravity.TOP | android.view.Gravity.START
+                );
+                dlp.setMargins(20, 20, 0, 0);
+                root.addView(debugOverlayView, dlp);
+
+                debugUpdateHandler = new android.os.Handler(getMainLooper());
+                Runnable debugUpdater = new Runnable() {
+                    @Override
+                    public void run() {
+                        updateDebugOverlay();
+                        if (debugUpdateHandler != null) debugUpdateHandler.postDelayed(this, 1000);
+                    }
+                };
+                debugUpdateHandler.postDelayed(debugUpdater, 1000);
+            }
+
             diag("buildPlayer: inicio");
             buildPlayer();
             diag("buildPlayer: fim");
@@ -273,8 +386,8 @@ public class ExoPlayerActivity extends Activity {
         }
 
         // Surface type: SurfaceView default (Android TV moderno). TextureView fallback
-        // automático em TCL / Google TV / fabricantes problemáticos OU quando intent
-        // EXTRA_USE_TEXTURE_VIEW=true (set pelo MainActivity em retry após falha).
+        // em fabricantes problemáticos OU quando EXTRA_USE_TEXTURE_VIEW=true
+        // (set pelo retry nativo após falha de renderização).
         boolean useTextureView = getIntent().getBooleanExtra(EXTRA_USE_TEXTURE_VIEW, false)
                 || shouldUseTextureViewForDevice();
         int layoutRes = useTextureView ? R.layout.redx_player_view_texture : R.layout.redx_player_view_surface;
@@ -294,13 +407,15 @@ public class ExoPlayerActivity extends Activity {
         playerView.setVisibility(View.VISIBLE);
         playerView.setTranslationZ(10f);
         playerView.setBackgroundColor(Color.BLACK);
+        // SurfaceView precisa de setZOrderMediaOverlay(true) para aparecer acima do
+        // fundo opaco da janela (decor preto) — sem isto a SurfaceView pode ficar
+        // escondida ("tela preta com áudio") em alguns firmwares de TV Box.
         try {
-            String mfg = android.os.Build.MANUFACTURER;
-            if (mfg != null && mfg.toLowerCase().contains("amazon")) {
+            if (!useTextureView) {
                 android.view.View inner = playerView.getVideoSurfaceView();
                 if (inner instanceof android.view.SurfaceView) {
                     ((android.view.SurfaceView) inner).setZOrderMediaOverlay(true);
-                    diag("Amazon detected: setZOrderMediaOverlay(true)");
+                    diag("setZOrderMediaOverlay(true) aplicado (SurfaceView)");
                 }
             }
         } catch (Exception e) {
@@ -451,7 +566,7 @@ public class ExoPlayerActivity extends Activity {
         titleWrap.addView(hudYear);
 
         TextView watchedChip = new TextView(this);
-        watchedChip.setText(isLive ? "  MENU  " : "  ASSISTIDO  ");
+        watchedChip.setText("  MENU  ");
         watchedChip.setTextColor(0xFFEAFBFF);
         watchedChip.setTextSize(11);
         watchedChip.setTypeface(Typeface.DEFAULT_BOLD);
@@ -459,7 +574,9 @@ public class ExoPlayerActivity extends Activity {
         watchedChip.setGravity(android.view.Gravity.CENTER);
         watchedChip.setPadding(dp(18), dp(8), dp(18), dp(8));
         watchedChip.setBackground(makePillBackground());
-        topRow.addView(watchedChip);
+        if (isLive) {
+            topRow.addView(watchedChip);
+        }
 
         // Live: card simples (so logo + titulo do canal). Sem timeline, seekbar e botoes
         // de controle — user pediu canal sem controles, equivalente ao info overlay do
@@ -795,7 +912,7 @@ public class ExoPlayerActivity extends Activity {
 
     private void buildPlayer() {
         Map<String, String> headers = buildRequestHeaders(sourceUrl);
-        if (customHeaders != null) headers.putAll(customHeaders);
+        if (customHeaders != null && !customHeaders.isEmpty()) headers.putAll(customHeaders);
 
         DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory()
                 .setUserAgent(headers.containsKey("User-Agent")
@@ -816,6 +933,12 @@ public class ExoPlayerActivity extends Activity {
         // file:///android_asset/* automaticamente — necessário para a vinheta empacotada.
         DefaultDataSource.Factory dsFactory = new DefaultDataSource.Factory(this, httpFactory);
 
+        // CacheDataSource removido: o wrapper de cache travava o carregamento (player
+        // ficava em STATE_BUFFERING sem nunca chegar a READY, tanto na vinheta local
+        // quanto no stream HTTP). DefaultDataSource direto resolve http/file/asset/
+        // content/rawresource sem o overhead/lock do SimpleCache.
+        androidx.media3.datasource.DataSource.Factory sourceFactory = dsFactory;
+
         // Decoder fallback: tenta próximo decoder se primário falha (HEVC em Firestick antigo, etc.)
         androidx.media3.exoplayer.DefaultRenderersFactory renderersFactory =
                 new androidx.media3.exoplayer.DefaultRenderersFactory(this)
@@ -824,7 +947,7 @@ public class ExoPlayerActivity extends Activity {
                                 androidx.media3.exoplayer.mediacodec.MediaCodecSelector.DEFAULT);
 
         player = new ExoPlayer.Builder(this, renderersFactory)
-                .setMediaSourceFactory(new DefaultMediaSourceFactory(dsFactory))
+                .setMediaSourceFactory(new DefaultMediaSourceFactory(sourceFactory))
                 .setLoadControl(loadControl)
                 .build();
 
@@ -840,6 +963,7 @@ public class ExoPlayerActivity extends Activity {
                 // Não afeta Live nem VOD sem vinheta (controller já configurado em buildLayout).
                 if (!isLive && player != null) {
                     if (introQueuedForCurrentPlayback && player.getCurrentMediaItemIndex() >= 1) {
+                        mainHandler.removeCallbacks(introWatchdog);
                         // Aplica seek de resume AQUI — a intro já tocou; agora voltamos para
                         // a posição salva no main stream.
                         // Seek feito em preparePlayback SALTARIA a intro completamente.
@@ -874,14 +998,30 @@ public class ExoPlayerActivity extends Activity {
 
             @Override
             public void onPlaybackStateChanged(int state) {
+                diag("STATE " + stateToString(state)
+                        + " item=" + (player != null ? player.getCurrentMediaItemIndex() : -1)
+                        + " playWhenReady=" + (player != null && player.getPlayWhenReady()));
                 if (state == Player.STATE_BUFFERING) {
+                    if (firstBufferingTimestamp == 0) firstBufferingTimestamp = System.currentTimeMillis();
+                    Log.i(TAG, "[RED_EXOPLAYER] STATE_BUFFERING pos=" + (player != null ? player.getCurrentPosition() : -1) + "ms buffered=" + (player != null ? player.getBufferedPosition() : -1) + "ms");
                     bufferingView.setVisibility(View.VISIBLE);
                     if (loadingLabel != null) loadingLabel.setVisibility(View.VISIBLE);
+                    if (!(introQueuedForCurrentPlayback && player != null && player.getCurrentMediaItemIndex() == 0)) {
+                        mainHandler.removeCallbacks(mainBufferWatchdog);
+                        mainHandler.postDelayed(mainBufferWatchdog, MAIN_STALL_TIMEOUT_MS);
+                    }
                 } else {
+                    mainHandler.removeCallbacks(mainBufferWatchdog);
                     bufferingView.setVisibility(View.GONE);
                     if (loadingLabel != null) loadingLabel.setVisibility(View.GONE);
                 }
                 if (state == Player.STATE_READY) {
+                    readyTimestamp = System.currentTimeMillis();
+                    long bufferToReady = firstBufferingTimestamp > 0 ? (readyTimestamp - firstBufferingTimestamp) : -1;
+                    Log.i(TAG, "[RED_EXOPLAYER] STATE_READY pos=" + (player != null ? player.getCurrentPosition() : -1) + "ms duration=" + (player != null ? player.getDuration() : -1) + "ms buffered=" + (player != null ? player.getBufferedPosition() : -1) + "ms bufferToReadyMs=" + bufferToReady);
+                    if (introQueuedForCurrentPlayback && player != null && player.getCurrentMediaItemIndex() == 0) {
+                        diag("Vinheta READY");
+                    }
                     playerView.setVisibility(View.VISIBLE);
                     if (posterView != null) {
                         posterView.animate().alpha(0f).setDuration(250).start();
@@ -896,16 +1036,38 @@ public class ExoPlayerActivity extends Activity {
                     updateHud();
                 }
                 if (state == Player.STATE_ENDED && !isLive) {
+                    mainHandler.removeCallbacks(introWatchdog);
                     returnResultAndFinish();
                 }
             }
 
             @Override
             public void onPlayerError(PlaybackException error) {
+                if (terminalErrorShown) {
+                    Log.w(TAG, "Ignorando erro apos tela terminal: " + error.getErrorCodeName());
+                    return;
+                }
                 Log.e(TAG, "ExoPlayer error: " + error.getErrorCodeName() + " (" + error.errorCode + ")", error);
+                mainHandler.removeCallbacks(mainBufferWatchdog);
                 Throwable cause = error.getCause();
                 String causeMsg = cause != null ? cause.getClass().getSimpleName() + ": " + cause.getMessage() : "";
                 handlePlaybackError(error);
+            }
+
+            @Override
+            public void onRenderedFirstFrame() {
+                renderedFirstFrame = true;
+                Log.i(TAG, "[RED_EXOPLAYER] onRenderedFirstFrame! First video frame rendered.");
+            }
+
+            @Override
+            public void onVideoSizeChanged(VideoSize videoSize) {
+                Log.i(TAG, "[RED_EXOPLAYER] onVideoSizeChanged: " + videoSize.width + "x" + videoSize.height);
+            }
+
+            @Override
+            public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
+                Log.i(TAG, "[RED_EXOPLAYER] onPlayWhenReadyChanged: playWhenReady=" + playWhenReady + " reason=" + reason);
             }
         });
     }
@@ -916,24 +1078,13 @@ public class ExoPlayerActivity extends Activity {
         if (introQueuedForCurrentPlayback && player != null
                 && player.getCurrentMediaItemIndex() == 0) {
             Log.w(TAG, "Intro falhou (" + error.getErrorCodeName() + ") — skip para main stream");
-            introQueuedForCurrentPlayback = false;
-            introUrl = null; // Evita re-enfileirar intro em retries futuros
-            player.stop();
-            player.clearMediaItems();
-            MediaItem main = buildMediaItem(sourceUrl, false);
-            player.addMediaItem(main);
-            if (!isLive && startPositionMs > 0) {
-                player.seekTo(0, startPositionMs);
-            }
-            playerView.setUseController(false);
-            updateHud();
-            player.setPlayWhenReady(true);
-            player.prepare();
+            skipIntroAndPlayMain("intro_error_" + error.getErrorCodeName());
             return;
         }
 
-        // Estratégia 1: força HLS uma vez (URLs sem extensão .m3u8 mas que são HLS).
-        if (!retriedAsHls && isPossibleHlsMimeMismatch(error)) {
+        // Estratégia 1: força HLS uma vez. O APK funcional fazia esse fallback
+        // quando a URL/servidor mascarava um manifest HLS como conteúdo comum.
+        if (!retriedAsHls && shouldRetryForceHls(error)) {
             retriedAsHls = true;
             Log.w(TAG, "Retry forçando HLS MIME");
             preparePlayback(true);
@@ -958,7 +1109,7 @@ public class ExoPlayerActivity extends Activity {
 
         // Estratégia 2: retry exponencial pra erros IO/rede.
         // Live streams recebem mais tentativas (7x) pois o live edge reconecta sozinho.
-        int maxRetries = isLive ? MAX_RETRIES_LIVE : MAX_RETRIES;
+        int maxRetries = getMaxRetriesForCurrentStream();
         if (retryCount < maxRetries && isTransientError(error)) {
             retryCount++;
             long delay = Math.min(RETRY_BASE_DELAY_MS * (long) Math.pow(2, retryCount - 1), RETRY_MAX_DELAY_MS);
@@ -977,7 +1128,21 @@ public class ExoPlayerActivity extends Activity {
             return;
         }
 
-        // Sem mais retries — mostrar overlay de erro.
+        // Sem mais retries na primaria — tenta fallback m3u8 antes de mostrar erro.
+        if (!fallbackUsed && fallbackUrl != null && !fallbackUrl.isEmpty()
+                && !fallbackUrl.equalsIgnoreCase(sourceUrl)) {
+            Log.w(TAG, "Primary esgotada; trocando pro fallback m3u8: " + fallbackUrl);
+            fallbackUsed = true;
+            sourceUrl = fallbackUrl;
+            retryCount = 0;
+            retriedAsHls = false;
+            if (errorOverlay != null) errorOverlay.setVisibility(View.GONE);
+            if (bufferingView != null) bufferingView.setVisibility(View.VISIBLE);
+            preparePlayback(false);
+            return;
+        }
+
+        // Sem mais retries e sem fallback — mostrar overlay de erro.
         showError("Falha ao reproduzir: " + error.getErrorCodeName());
     }
 
@@ -987,6 +1152,12 @@ public class ExoPlayerActivity extends Activity {
                 || code == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED
                 || code == PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED
                 || code == PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED;
+    }
+
+    private boolean shouldRetryForceHls(PlaybackException error) {
+        int code = error.errorCode;
+        return isPossibleHlsMimeMismatch(error)
+                || code == PlaybackException.ERROR_CODE_IO_INVALID_HTTP_CONTENT_TYPE;
     }
 
     private boolean isRendererError(PlaybackException error) {
@@ -1008,18 +1179,30 @@ public class ExoPlayerActivity extends Activity {
     }
 
     private void showError(String msg) {
+        mainHandler.removeCallbacks(mainBufferWatchdog);
+        terminalErrorShown = true;
+        Log.e(TAG, "showError: " + msg);
+        if (player != null) {
+            try { player.stop(); } catch (Exception ignored) {}
+        }
+        if (playerView != null) playerView.setVisibility(View.GONE);
         if (errorText != null) errorText.setText(msg);
         if (errorOverlay != null) errorOverlay.setVisibility(View.VISIBLE);
         if (bufferingView != null) bufferingView.setVisibility(View.GONE);
+        if (loadingLabel != null) loadingLabel.setVisibility(View.GONE);
         // Foca o botão de retry para que D-pad/ENTER funcione imediatamente
         if (retryButton != null) retryButton.requestFocus();
     }
 
     private void retryPlayback() {
+        mainHandler.removeCallbacks(mainBufferWatchdog);
+        terminalErrorShown = false;
         retryCount    = 0;
         retriedAsHls  = false;
+        if (playerView != null) playerView.setVisibility(View.VISIBLE);
         if (errorOverlay != null) errorOverlay.setVisibility(View.GONE);
         if (bufferingView != null) bufferingView.setVisibility(View.VISIBLE);
+        if (loadingLabel != null) loadingLabel.setVisibility(View.VISIBLE);
         preparePlayback(false);
     }
 
@@ -1029,12 +1212,20 @@ public class ExoPlayerActivity extends Activity {
                 || lower.endsWith(".m3u8")
                 || lower.contains(".m3u8?")
                 || lower.contains("m3u8");
+        // Raw MPEG-TS (continuous .ts stream) — Media3 lida via ProgressiveMediaSource + TsExtractor.
+        boolean isMpegTs = !isHls && (lower.endsWith(".ts") || lower.contains(".ts?"));
 
         MediaItem.Builder b = new MediaItem.Builder().setUri(Uri.parse(url));
         if (isHls) {
             b.setMimeType(MimeTypes.APPLICATION_M3U8);
             Log.d(TAG, "→ HLS: " + url.substring(0, Math.min(80, url.length())));
+        } else if (isMpegTs) {
+            b.setMimeType(MimeTypes.VIDEO_MP2T);
+            Log.d(TAG, "→ MPEG-TS: " + url.substring(0, Math.min(80, url.length())));
         } else {
+            if (lower.endsWith(".mp4") || lower.contains(".mp4?")) {
+                b.setMimeType(MimeTypes.VIDEO_MP4);
+            }
             Log.d(TAG, "→ progressive: " + url.substring(0, Math.min(80, url.length())));
         }
         return b.build();
@@ -1042,6 +1233,11 @@ public class ExoPlayerActivity extends Activity {
 
     private void preparePlayback(boolean forceHls) {
         if (player == null) return;
+        terminalErrorShown = false;
+        mainHandler.removeCallbacks(introWatchdog);
+        mainHandler.removeCallbacks(mainBufferWatchdog);
+        firstBufferingTimestamp = 0;
+        readyTimestamp = 0;
         MediaItem main = buildMediaItem(sourceUrl, forceHls);
         player.stop();
         player.clearMediaItems();
@@ -1050,10 +1246,11 @@ public class ExoPlayerActivity extends Activity {
         diag("introUrl=" + (introUrl == null ? "NULL" : introUrl));
         if (introUrl != null && !introUrl.isEmpty()) {
             try {
-                MediaItem intro = MediaItem.fromUri(Uri.parse(introUrl));
+                MediaItem intro = buildMediaItem(introUrl, false);
                 player.addMediaItem(intro);
                 introQueuedForCurrentPlayback = true;
                 diag("Vinheta enfileirada OK");
+                mainHandler.postDelayed(introWatchdog, INTRO_STALL_TIMEOUT_MS);
             } catch (Exception e) {
                 Log.w(TAG, "intro inválida — ignorando", e);
                 diag("Vinheta ERRO: " + e.getMessage());
@@ -1073,12 +1270,128 @@ public class ExoPlayerActivity extends Activity {
         player.prepare();
     }
 
+    private void skipIntroAndPlayMain(String reason) {
+        if (player == null) return;
+        mainHandler.removeCallbacks(introWatchdog);
+        mainHandler.removeCallbacks(mainBufferWatchdog);
+        firstBufferingTimestamp = 0;
+        readyTimestamp = 0;
+        diag("skipIntroAndPlayMain reason=" + reason);
+        introQueuedForCurrentPlayback = false;
+        introUrl = null; // Evita re-enfileirar intro em retries futuros.
+        player.stop();
+        player.clearMediaItems();
+        MediaItem main = buildMediaItem(sourceUrl, false);
+        player.addMediaItem(main);
+        if (!isLive && startPositionMs > 0) {
+            player.seekTo(0, startPositionMs);
+        }
+        playerView.setUseController(false);
+        updateHud();
+        player.setPlayWhenReady(true);
+        player.prepare();
+    }
+
+    private void handleMainBufferStall() {
+        if (player == null) return;
+        if (!fallbackUsed && fallbackUrl != null && !fallbackUrl.isEmpty()
+                && !fallbackUrl.equalsIgnoreCase(sourceUrl)) {
+            Log.w(TAG, "Buffer timeout; trocando para fallback: " + fallbackUrl);
+            fallbackUsed = true;
+            sourceUrl = fallbackUrl;
+            retryCount = 0;
+            retriedAsHls = false;
+            introUrl = null;
+            if (errorOverlay != null) errorOverlay.setVisibility(View.GONE);
+            if (bufferingView != null) bufferingView.setVisibility(View.VISIBLE);
+            preparePlayback(false);
+            return;
+        }
+
+        int maxRetries = getMaxRetriesForCurrentStream();
+        if (retryCount < maxRetries) {
+            retryCount++;
+            Log.w(TAG, "Buffer timeout; retry " + retryCount + "/" + maxRetries);
+            preparePlayback(retriedAsHls);
+            return;
+        }
+
+        showError("Tempo esgotado ao carregar o stream. Tente novamente.");
+    }
+
+    private String normalizeAndroidAssetUri(@Nullable String uri) {
+        if (uri == null || uri.isEmpty()) return uri;
+        if (uri.startsWith("asset:///")) {
+            return "file:///android_asset/" + uri.substring("asset:///".length());
+        }
+        // android.resource://<pkg>/<type>/<name> → rawresource:///<resId>.
+        // O scheme rawresource é resolvido de forma confiável pelo DefaultDataSource;
+        // a forma android.resource:// nomeada às vezes não é roteada e o player trava.
+        if (uri.startsWith("android.resource://")) {
+            try {
+                android.net.Uri u = android.net.Uri.parse(uri);
+                java.util.List<String> seg = u.getPathSegments();
+                if (seg != null && seg.size() >= 2) {
+                    int resId = getResources().getIdentifier(seg.get(1), seg.get(0), getPackageName());
+                    if (resId != 0) {
+                        String resolved = androidx.media3.datasource.RawResourceDataSource
+                                .buildRawResourceUri(resId).toString();
+                        Log.i(TAG, "introUrl normalizada: " + uri + " → " + resolved);
+                        return resolved;
+                    }
+                    Log.w(TAG, "introUrl: recurso não encontrado para " + uri);
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "normalizeAndroidAssetUri falhou para " + uri, e);
+            }
+        }
+        return uri;
+    }
+
+    private String stateToString(int state) {
+        switch (state) {
+            case Player.STATE_IDLE: return "IDLE";
+            case Player.STATE_BUFFERING: return "BUFFERING";
+            case Player.STATE_READY: return "READY";
+            case Player.STATE_ENDED: return "ENDED";
+            default: return String.valueOf(state);
+        }
+    }
+
     private Map<String, String> buildRequestHeaders(String url) {
         Map<String, String> h = new HashMap<>();
-        h.put("Accept", "*/*");
+        h.put("Accept", isLive
+                ? "application/x-mpegURL, application/vnd.apple.mpegurl, video/mp2t, video/*, */*"
+                : "*/*");
         h.put("Accept-Language", "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7");
         h.put("Connection", "keep-alive");
+        if (isLive) {
+            h.put("Cache-Control", "no-cache");
+            h.put("Pragma", "no-cache");
+            h.put("Icy-MetaData", "1");
+        }
         return h;
+    }
+
+    private int getMaxRetriesForCurrentStream() {
+        return isLive ? MAX_RETRIES_LIVE : MAX_RETRIES;
+    }
+
+    /** Headers chegam como String[] alternando key,value ou JSON string simples. */
+    private Map<String, String> parseHeadersFromIntent(Intent intent) {
+        if (intent == null) return new HashMap<>();
+        try {
+            Map<String, String> fromArray = parseHeaders(intent.getStringArrayExtra(EXTRA_HEADERS));
+            if (!fromArray.isEmpty()) return fromArray;
+        } catch (Exception e) {
+            Log.w(TAG, "EXTRA_HEADERS String[] invalido; tentando JSON/string", e);
+        }
+        try {
+            return parseHeadersJson(intent.getStringExtra(EXTRA_HEADERS));
+        } catch (Exception e) {
+            Log.w(TAG, "EXTRA_HEADERS JSON/string invalido; ignorando headers customizados", e);
+            return new HashMap<>();
+        }
     }
 
     /** Headers chegam como String[] alternando key,value. */
@@ -1093,25 +1406,62 @@ public class ExoPlayerActivity extends Activity {
         return out;
     }
 
+    private Map<String, String> parseHeadersJson(@Nullable String json) throws Exception {
+        Map<String, String> out = new HashMap<>();
+        if (json == null || json.trim().isEmpty()) return out;
+        org.json.JSONObject obj = new org.json.JSONObject(json);
+        Iterator<String> keys = obj.keys();
+        while (keys.hasNext()) {
+            String k = keys.next();
+            String v = obj.optString(k, null);
+            if (k != null && v != null) out.put(k, v);
+        }
+        return out;
+    }
+
     // ───────────────────────────── Lifecycle ─────────────────────────────
 
     @Override
+    protected void onStart() {
+        Log.i(TAG, "[RED_EXOPLAYER] onStart");
+        super.onStart();
+    }
+
+    @Override
     protected void onPause() {
+        Log.i(TAG, "[RED_EXOPLAYER] onPause");
         Log.i(TAG, "onPause");
         super.onPause();
-        if (player != null) player.setPlayWhenReady(false);
+        // IMP-07: salva intenção antes de pausar (live sempre retoma; VOD respeita user)
+        if (player != null) {
+            wasPlayingBeforePause = player.getPlayWhenReady();
+            player.setPlayWhenReady(false);
+        }
     }
 
     @Override
     protected void onResume() {
+        Log.i(TAG, "[RED_EXOPLAYER] onResume");
         Log.i(TAG, "onResume");
         super.onResume();
-        if (player != null) player.setPlayWhenReady(true);
+        if (player != null) {
+            // Live sempre retoma. VOD só retoma se estava tocando antes (preserva pausa do user).
+            player.setPlayWhenReady(isLive || wasPlayingBeforePause);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i(TAG, "[RED_EXOPLAYER] onStop");
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
+        Log.i(TAG, "[RED_EXOPLAYER] onDestroy");
         Log.i(TAG, "onDestroy");
+        if (debugUpdateHandler != null) { debugUpdateHandler.removeCallbacksAndMessages(null); debugUpdateHandler = null; }
+        if (mainHandler != null) mainHandler.removeCallbacks(introWatchdog);
         if (player != null) {
             player.release();
             player = null;
@@ -1133,12 +1483,25 @@ public class ExoPlayerActivity extends Activity {
             return true;
         }
 
-        // Live/Adulto: qualquer tecla do controle volta para a grade/menu React.
-        // A Activity nativa fica responsavel apenas pelo fullscreen; o menu de canais
-        // continua sendo a UI React por baixo.
+        // Live/Adulto: setas e ChannelUp/ChannelDown devolvem acao de zapping
+        // para o React abrir o canal vizinho; OK/BACK/MENU voltam para a grade.
         if (isLive) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                returnResultAndFinish();
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_CHANNEL_UP:
+                    case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    case KeyEvent.KEYCODE_DPAD_DOWN:
+                        returnLiveActionAndFinish("channelUp");
+                        return true;
+                    case KeyEvent.KEYCODE_CHANNEL_DOWN:
+                    case KeyEvent.KEYCODE_DPAD_LEFT:
+                    case KeyEvent.KEYCODE_DPAD_UP:
+                        returnLiveActionAndFinish("channelDown");
+                        return true;
+                    default:
+                        returnResultAndFinish();
+                        return true;
+                }
             }
             return true;
         }
@@ -1164,6 +1527,38 @@ public class ExoPlayerActivity extends Activity {
                     return true;
                 case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
                     seekBy(30_000L);
+                    return true;
+                // FIX-06 (PRD §15.1): media keys VOD dedicated handlers
+                case KeyEvent.KEYCODE_MEDIA_PLAY:
+                    if (player != null && !player.isPlaying()) player.setPlayWhenReady(true);
+                    return true;
+                case KeyEvent.KEYCODE_MEDIA_PAUSE:
+                    if (player != null && player.isPlaying()) player.setPlayWhenReady(false);
+                    return true;
+                case KeyEvent.KEYCODE_MEDIA_STOP:
+                    returnResultAndFinish();
+                    return true;
+                case KeyEvent.KEYCODE_MEDIA_NEXT:
+                    // Sem episódio next implementado no Activity: finaliza com action="next"
+                    // para o React abrir próximo episódio se aplicável.
+                    {
+                        Intent res = new Intent();
+                        res.putExtra(RESULT_ACTION, "next");
+                        int pos = (player != null && !isLive) ? (int) (player.getCurrentPosition() / 1000) : 0;
+                        res.putExtra(RESULT_POSITION, pos);
+                        setResult(RESULT_OK, res);
+                        finish();
+                    }
+                    return true;
+                case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                    {
+                        Intent res = new Intent();
+                        res.putExtra(RESULT_ACTION, "previous");
+                        int pos = (player != null && !isLive) ? (int) (player.getCurrentPosition() / 1000) : 0;
+                        res.putExtra(RESULT_POSITION, pos);
+                        setResult(RESULT_OK, res);
+                        finish();
+                    }
                     return true;
                 case KeyEvent.KEYCODE_DPAD_UP:
                     focusHudButton(2);
@@ -1210,5 +1605,24 @@ public class ExoPlayerActivity extends Activity {
         res.putExtra(RESULT_POSITION, positionSec);
         setResult(RESULT_OK, res);
         finish();
+    }
+
+    private void updateDebugOverlay() {
+        if (debugOverlayView == null || player == null) return;
+        String state = "UNKNOWN";
+        switch (player.getPlaybackState()) {
+            case Player.STATE_IDLE: state = "IDLE"; break;
+            case Player.STATE_BUFFERING: state = "BUFFERING"; break;
+            case Player.STATE_READY: state = "READY"; break;
+            case Player.STATE_ENDED: state = "ENDED"; break;
+        }
+        String info = "RED_DEBUG Native Player\n"
+            + "State: " + state + " | Playing: " + player.isPlaying() + "\n"
+            + "Position: " + (player.getCurrentPosition()/1000) + "s / " + (player.getDuration()/1000) + "s\n"
+            + "Buffered: " + (player.getBufferedPosition()/1000) + "s\n"
+            + "FirstFrame: " + renderedFirstFrame + "\n"
+            + "Video: " + player.getVideoSize().width + "x" + player.getVideoSize().height + "\n"
+            + "Error: " + (player.getPlayerError() != null ? player.getPlayerError().getMessage() : "none");
+        debugOverlayView.setText(info);
     }
 }

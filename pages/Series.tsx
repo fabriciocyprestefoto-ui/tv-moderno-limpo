@@ -241,6 +241,40 @@ const Series: React.FC<SeriesProps> = ({
     });
   }, [effectiveSeries, filter, providerIds, platformAliases]);
 
+  const orderedSeriesGenreRows = useMemo(() => {
+    const byGenre = new Map<string, Media[]>();
+    for (const item of tmdbSeries) {
+      for (const rawGenre of item.genre || []) {
+        const genre = String(rawGenre || '').trim();
+        if (!genre) continue;
+        const list = byGenre.get(genre) || [];
+        list.push(item);
+        byGenre.set(genre, list);
+      }
+    }
+
+    tmdbSeriesByGenre.forEach((items, genre) => {
+      if (items.length > 0 && !byGenre.has(String(genre))) byGenre.set(String(genre), items);
+    });
+
+    const rows: Array<[string, Media[]]> = [];
+    const used = new Set<string>();
+
+    HOME_GENRE_DISPLAY_ORDER.forEach((genre) => {
+      const items = byGenre.get(String(genre)) || [];
+      if (items.length === 0) return;
+      rows.push([genre, items]);
+      used.add(String(genre));
+    });
+
+    Array.from(byGenre.entries())
+      .filter(([genre, items]) => !used.has(String(genre)) && items.length > 0)
+      .sort(([a], [b]) => String(a).localeCompare(String(b), 'pt-BR'))
+      .forEach(([genre, items]) => rows.push([genre, items]));
+
+    return rows;
+  }, [tmdbSeries, tmdbSeriesByGenre]);
+
   const allSeriesCatalog = useMemo(() => {
     if (filter && filteredSeries) return filteredSeries;
     return effectiveSeries;
@@ -688,21 +722,8 @@ const Series: React.FC<SeriesProps> = ({
                 />
               )}
 
-              {effectiveSeries.length > 0 && (
-                <MovieRow
-                  title="Todas as Séries"
-                  items={effectiveSeries}
-                  onSelect={handleSelect}
-                  onPlay={onPlayMedia}
-                  rowIndex={5}
-                  maxItems={100}
-                />
-              )}
-
-              {/* Gêneros Prioritários */}
-              {HOME_GENRE_DISPLAY_ORDER.map((genre, idx) => {
-                const items = tmdbSeriesByGenre.get(genre as HomeGenreLabel) || [];
-                if (items.length === 0) return null;
+              {/* Séries separadas por gênero, como Home/Filmes */}
+              {orderedSeriesGenreRows.map(([genre, items], idx) => {
                 return (
                   <MovieRow
                     key={genre}
@@ -710,7 +731,7 @@ const Series: React.FC<SeriesProps> = ({
                     items={items}
                     onSelect={onSelectMedia}
                     onPlay={onPlayMedia}
-                    rowIndex={6 + idx}
+                    rowIndex={5 + idx}
                     maxItems={100}
                   />
                 );

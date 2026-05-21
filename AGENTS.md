@@ -1,53 +1,137 @@
-# Repository Guidelines
+FASE 1 — AUDITORIA DO PLAYER ANDROID TV
 
-## Project Structure & Module Organization
-This repository is a Vite + React + TypeScript codebase for Redflix TV/Android builds.
-- Core web app (main working area): root-level `App.tsx`, `index.tsx`, and folders like `components/`, `pages/`, `features/`, `services/`, `hooks/`, `utils/`, `contexts/`, `types/`.
-- Static assets: `public/`.
-- Android native wrapper: `android/` (Capacitor output and Gradle project).
-- Mobile variant: `appandroid/` (separate package/scripts).
-- Tooling/scripts: `scripts/`, `*.mjs`, `*.ts` helper scripts.
-- Avoid editing archived/backup trees unless required: `como/`, `tv/`, `Nova pasta*`, `_backup_restore_point/`.
+Atue como Engenheiro Android Sênior especialista em Android TV, Jetpack Media3, ExoPlayer, WebView/Capacitor, React/TypeScript e navegação por controle remoto.
 
-## Build, Test, and Development Commands
-From repository root:
-- `npm run dev`: start local Vite dev server (`http://localhost:5173`).
-- `npm run build`: create production bundle in `dist/`.
-- `npm run preview`: serve the built output locally.
-- `npm run build:android`: build web assets and sync Capacitor Android project (sempre após mudar o bundle web antes de gerar APK).
-- `npm run build:apk` / `npm run build:apk:debug`: produce release/debug APK via Gradle.
-- **AppValidator (release):** após assinar o APK de release, obtenha o SHA256 do certificado (`keytool -printcert -jarfile app-release.apk`) e defina `EXPECTED_SIGNATURE` em `android/app/src/main/java/com/redx/tvbox/AppValidator.java` (hex sem dois-pontos, maiúsculas). Enquanto for o placeholder, `MainActivity` não chama `validate()` e apenas registra aviso no logcat.
-- **Release signing:** `assembleRelease` uses `android/redx-release.jks`. Set `KEYSTORE_PASSWORD`, `KEY_PASSWORD`, and optionally `KEY_ALIAS` in `android/local.properties` (see `android/local.properties.example`) or export the same as environment variables. If the password does not match the keystore, the release build fails — use the password you chose when creating the JKS, or run `npm run create:keystore` for a fresh keystore and copy those values into `local.properties`.
-- `npx tsc --noEmit`: strict type-check (recommended before PR).
+Antes de qualquer coisa, leia o arquivo AGENTS.md da raiz do projeto.
 
-For mobile variant (`appandroid/`):
-- `cd appandroid && npm run dev|build|lint`.
+IMPORTANTE:
+Nesta fase você NÃO deve alterar nenhum código.
+Não instale dependências.
+Não rode refatoração.
+Não recrie UI.
+Não aplique Compose for TV.
+Não mexa em Supabase, login, layout ou P2P.
+Não remova fallback.
+Não quebre o fluxo legacy.
 
-## Coding Style & Naming Conventions
-- Language: TypeScript (`strict: true`) with React function components.
-- Indentation: 2 spaces; keep imports grouped and sorted logically.
-- Components/pages: PascalCase (`LiveTV.tsx`, `HeroBanner.tsx`).
-- Hooks: `useXxx` camelCase (`useRemoteControl.tsx`).
-- Utilities/services: camelCase file names (`mediaMapper.ts`, `catalogService.ts`).
-- Use alias `@/` for root-based imports where practical.
+Contexto real do projeto:
 
-## Testing Guidelines
-There is no single automated test suite configured at root. Use layered validation:
-- Required: `npm run build` and `npx tsc --noEmit`.
-- **Cypress E2E:** `npm run e2e` sobe o Vite dev server na porta **5173** e executa `cypress run`. `npm run e2e:ci` usa `vite build --mode e2e` (carrega `.env.e2e` com `VITE_E2E=1` para o teste do ErrorBoundary global), serve o bundle com `preview` na porta **4173** e corre `cy:run:ci` com `baseUrl` alinhado. Na CI, `.github/workflows/e2e.yml` pode gravar um `.env` mínimo e chamar `e2e:ci`; artefactos: screenshots (falha) e JUnit em `cypress/results/` quando configurado.
-- Stubs de rede vivem em `cypress/support/stubs.ts` e fixtures em `cypress/fixtures/e2e/` (auth, TMDB, catálogo de exemplo com `sampleCatalog`).
-- Feature checks: run targeted scripts/tests when touching related flows (for example `node test_admin_login.mjs` or HTML smoke files in root).
-- For playback/navigation changes, include manual TV/D-pad verification notes in PR.
+O aplicativo é híbrido:
 
-## Commit & Pull Request Guidelines
-Git history follows Conventional Commit style, mainly:
-- `fix: ...`
-- `feat: ...`
+React / TypeScript / Capacitor / WebView
++
+ponte nativa Android
++
+player nativo ExoPlayer/Media3 para Android novo quando disponível.
 
-Keep commit subjects imperative and scoped (example: `fix: handle invalid stream URL in LiveTV`).
+O projeto começou com a ideia de 2 APKs separados:
+1. Legacy para Fire Stick / Android antigo / TV Box fraca usando WebView + HLS.js + fallback.
+2. Moderno para TCL / Google TV / Android TV novo usando player nativo ExoPlayer/Media3.
 
-PRs should include:
-- Clear summary and affected areas/files.
-- Linked issue/task when available.
-- Validation evidence (`build`, `tsc`, manual checks).
-- Screenshots/video for UI changes (especially TV focus/navigation/player screens).
+Depois evoluiu para um único projeto com comportamento separado por flags/gates/runtime.
+
+Arquitetura correta atual:
+
+1. Fluxo Legacy:
+- Fire Stick antigo;
+- Android antigo;
+- TV Box fraca;
+- WebView + HLS.js + fallback;
+- deve continuar funcionando.
+
+2. Fluxo Moderno:
+- TCL;
+- Google TV;
+- Android TV novo;
+- deve usar player nativo ExoPlayer/Media3 quando disponível;
+- WebView deve servir apenas para UI, catálogo e navegação;
+- WebView/Chromium não deve assumir o vídeo indevidamente.
+
+Objetivo desta auditoria:
+
+Faça uma varredura na base de código e responda, sem alterar nada:
+
+1. Onde está a lógica que decide entre fluxo legacy e fluxo moderno?
+2. Quais flags, gates, runtime checks ou bridges fazem essa separação?
+3. Filmes estão corretamente roteados para ExoPlayer/Media3 no fluxo moderno?
+4. Séries/episódios estão corretamente roteados para ExoPlayer/Media3 no fluxo moderno?
+5. Canais ao vivo estão corretamente roteados para ExoPlayer/Media3 no fluxo moderno?
+6. Existe algum ponto onde filmes, séries ou canais ainda caem no WebView acidentalmente no Android novo?
+7. O projeto já utiliza androidx.media3:media3-exoplayer?
+8. Quais dependências atuais existem no build.gradle, libs.versions.toml ou arquivos equivalentes?
+9. Existe DefaultLoadControl customizado no código nativo?
+10. Os buffers estão adequados para TV Box com rede instável?
+   Referência desejada:
+   - buffer mínimo próximo de 32s;
+   - buffer máximo próximo de 64s;
+   - buffer para iniciar/reiniciar próximo de 5s.
+11. Existe DefaultRenderersFactory customizado?
+12. Existe uso de EXTENSION_RENDERER_MODE_PREFER ou alternativa parecida?
+13. O ciclo de vida do player está correto?
+   Verificar:
+   - onPause;
+   - onResume, se existir;
+   - onDestroy;
+   - release();
+   - pause();
+14. A tela é mantida ligada durante reprodução?
+   Verificar FLAG_KEEP_SCREEN_ON ou equivalente.
+15. O onShowCustomView, WebChromeClient ou equivalente está bloqueado/controlado no fluxo moderno?
+16. Existe risco do Chromium/WebView assumir fullscreen por cima do player nativo?
+17. Como está o comportamento do D-Pad/foco no player?
+18. Como está o comportamento do botão Voltar/Back quando o player nativo está aberto?
+19. Existe algum risco de loading infinito?
+20. Existe algum risco de uma correção no Android novo quebrar o Android antigo?
+
+Arquivos para verificar com atenção:
+
+- pages/Player.tsx
+- pages/LiveTV.tsx
+- pages/AdultoPage.tsx
+- components/LiveTVVideo.tsx
+- components/VinhetaGate.tsx
+- src/services/nativePlayerService.ts
+- src/services/tvModernoBridge.ts
+- src/config/runtimeFlags.ts
+- src/types.ts
+- android/app/build.gradle
+- android/build.gradle
+- gradle/libs.versions.toml
+- android/app/src/main/AndroidManifest.xml
+- android/app/src/main/java/
+- qualquer arquivo com:
+  - ExoPlayer
+  - Media3
+  - NativePlayer
+  - MainActivity
+  - WebView
+  - WebChromeClient
+  - onShowCustomView
+  - fullscreen
+  - HLS
+  - Hls.js
+  - fallback
+  - Capacitor bridge
+
+Formato obrigatório da resposta:
+
+1. Resumo geral da auditoria
+2. Mapa do fluxo legacy
+3. Mapa do fluxo moderno
+4. Onde o projeto decide entre legacy e moderno
+5. Situação de filmes
+6. Situação de séries/episódios
+7. Situação de canais ao vivo
+8. Dependências Media3/ExoPlayer encontradas
+9. Configuração atual de buffer
+10. Configuração atual de renderização/decoder
+11. Ciclo de vida do player
+12. WebView/onShowCustomView/fullscreen
+13. D-Pad/foco/back button
+14. Problemas encontrados
+15. Correção mínima recomendada
+16. Risco para Android antigo
+17. Próximo prompt seguro para aplicar a correção
+
+Não altere código nesta fase.
+Apenas audite e entregue o relatório.

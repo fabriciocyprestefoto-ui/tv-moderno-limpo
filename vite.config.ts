@@ -52,6 +52,84 @@ function stripCapacitorServiceWorker(rootDir: string, enabled: boolean): Plugin 
   };
 }
 
+function patchCapacitorTvIndex(enabled: boolean): Plugin {
+  return {
+    name: 'patch-capacitor-tv-index',
+    apply: 'build',
+    enforce: 'post',
+    transformIndexHtml(html) {
+      if (!enabled) return html;
+
+      return html
+        .replace(
+          /\s*<link[^>]+rel="(?:preload|stylesheet)"[^>]+fonts\.googleapis\.com[^>]*>\s*/gi,
+          '\n'
+        )
+        .replace(
+          /\s*<noscript>\s*<link[^>]+fonts\.googleapis\.com[^>]*>\s*<\/noscript>\s*/gi,
+          '\n'
+        )
+        .replace(/\s*<link[^>]+rel="modulepreload"[^>]*>\s*/gi, '\n')
+        .replace(/<script\s+crossorigin(\s+id="vite-legacy-[^"]+")/g, '<script$1')
+        .replace(/<script\s+crossorigin(\s+src="\.\/assets\/[^"]+legacy[^"]+\.js")/g, '<script$1')
+        .replace(/<script\s+crossorigin(\s+id="vite-legacy-entry")/g, '<script$1');
+    },
+  };
+}
+
+function inlineCapacitorLegacyBundle(rootDir: string, enabled: boolean): Plugin {
+  return {
+    name: 'inline-capacitor-legacy-bundle',
+    apply: 'build',
+    enforce: 'post',
+    async closeBundle() {
+      if (!enabled) return;
+
+      const outDir = path.join(rootDir, 'dist');
+      const indexPath = path.join(outDir, 'index.html');
+      let html = await fs.promises.readFile(indexPath, 'utf-8').catch(() => '');
+      if (!html) return;
+
+      const assetsDir = path.join(outDir, 'assets');
+      const entries = await fs.promises.readdir(assetsDir).catch(() => []);
+      const jsFiles = entries.filter((entry) => /-legacy-[\w-]+\.js$/.test(entry)).sort();
+      const polyfillFile = jsFiles.find((entry) => entry.startsWith('polyfills-legacy-'));
+      const indexFile = jsFiles.find((entry) => entry.startsWith('index-legacy-'));
+      if (!polyfillFile || !indexFile) return;
+
+      const readJs = async (file: string) => {
+        const source = await fs.promises.readFile(path.join(assetsDir, file), 'utf-8');
+        return source.replace(/<\/script/gi, '<\\/script');
+      };
+
+      const polyfills = await readJs(polyfillFile);
+      const modules: string[] = [];
+      for (const file of jsFiles) {
+        if (file === polyfillFile) continue;
+        let source = await readJs(file);
+        if (source.includes('System.register(')) {
+          source = source.replace('System.register(', `__redxRegister("./assets/${file}",`);
+        }
+        modules.push(`\n/* ./assets/${file} */\n${source}`);
+      }
+
+      const inlineScripts = [
+        `<script id="redx-inline-systemjs">\n${polyfills}\n</script>`,
+        `<script id="redx-inline-legacy-bundle">\n(function(){\n  var registry = Object.create(null);\n  window.__redxRegister = function(id, deps, declare) {\n    var key = new URL(id, window.location.href).href;\n    registry[key] = [deps, declare];\n    registry[id] = [deps, declare];\n  };\n  var instantiate = System.instantiate.bind(System);\n  System.instantiate = function(url, parent, meta) {\n    var key = new URL(url, window.location.href).href;\n    return registry[url] || registry[key] || instantiate(url, parent, meta);\n  };\n})();\n${modules.join('\n')}\nSystem.import("./assets/${indexFile}");\n</script>`,
+      ].join('\n');
+
+      html = html
+        .replace(
+          /\s*<script[^>]+id="vite-legacy-polyfill"[^>]*><\/script>\s*<script[^>]+id="vite-legacy-entry"[^>]*>[\s\S]*?<\/script>\s*/i,
+          () => `\n${inlineScripts}\n`
+        )
+        .replace(/\s*<script[^>]+id="vite-legacy-entry"[^>]*>[\s\S]*?<\/script>\s*/i, '\n');
+
+      await fs.promises.writeFile(indexPath, html, 'utf-8');
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => {
   const envDir = path.resolve(__dirname);
   const env = loadEnv(mode, envDir, '');
@@ -67,6 +145,21 @@ export default defineConfig(({ mode }) => {
         .trim()
         .toLowerCase()
     );
+  const tmdbTokenPool = String(env.VITE_TMDB_READ_TOKENS || '')
+    .split(',')
+    .map((token) => token.trim())
+    .filter(Boolean);
+  const tmdbSingleToken = String(env.VITE_TMDB_READ_TOKEN || '').trim();
+  const tmdbLegacyApiKey = String(env.VITE_TMDB_API_KEY || '').trim();
+  const tmdbBearerToken =
+    tmdbTokenPool[0] ||
+    tmdbSingleToken ||
+    (tmdbLegacyApiKey.startsWith('eyJ') ? tmdbLegacyApiKey : '');
+  const tmdbApiKeyV3 = tmdbLegacyApiKey && !tmdbLegacyApiKey.startsWith('eyJ') ? tmdbLegacyApiKey : '';
+  const appendTmdbApiKey = (pathname: string) => {
+    if (!tmdbApiKeyV3 || /[?&]api_key=/.test(pathname)) return pathname;
+    return `${pathname}${pathname.includes('?') ? '&' : '?'}api_key=${encodeURIComponent(tmdbApiKeyV3)}`;
+  };
 
   const tvTestLoginEnabled = isEnabled(env.VITE_TV_TEST_LOGIN);
   const lifecycle = String(process.env.npm_lifecycle_event || '');
@@ -223,32 +316,39 @@ export default defineConfig(({ mode }) => {
     base: './',
     plugins: [
       react(),
-      // Transpila sintaxe ES2017+ + polyfills core-js → roda em WebView Android 5
-      // (Chromium 37-39). Targets cobrem Fire OS 5 (Chrome 39) e Android TV velho.
-      legacy({
-        targets: ['Android >= 5', 'Chrome >= 38'],
-        modernPolyfills: true,
-        renderLegacyChunks: true,
-        polyfills: [
-          'es.promise',
-          'es.array.iterator',
-          'es.object.assign',
-          'es.symbol',
-          'es.string.includes',
-          'es.array.includes',
-          'es.array.find',
-          'es.array.find-index',
-          'es.array.from',
-          'es.array.flat',
-          'es.array.flat-map',
-          'es.object.entries',
-          'es.object.values',
-          'es.object.from-entries',
-          'es.string.replace-all',
-          'es.promise.all-settled',
-          'esnext.global-this',
-        ],
-      }),
+      // O player moderno continua nativo, mas algumas TCL/Android TV ainda usam
+      // WebView sem suporte confiavel a ES modules. No APK Capacitor, emitimos
+      // tambem o bundle nomodule para o shell React conseguir montar.
+      ...(isLegacyBuild || isCapacitorBuild
+        ? [
+            legacy({
+              targets: ['Android >= 5', 'Chrome >= 38'],
+              modernPolyfills: true,
+              renderLegacyChunks: true,
+              renderModernChunks: !isCapacitorBuild,
+              polyfills: [
+                'es.promise',
+                'es.array.iterator',
+                'es.object.assign',
+                'es.symbol',
+                'es.string.includes',
+                'es.array.includes',
+                'es.array.find',
+                'es.array.find-index',
+                'es.array.from',
+                'es.array.flat',
+                'es.array.flat-map',
+                'es.object.entries',
+                'es.object.values',
+                'es.object.from-entries',
+                'es.string.replace-all',
+                'es.promise.all-settled',
+                'esnext.global-this',
+              ],
+            }),
+          ]
+        : []),
+      patchCapacitorTvIndex(isCapacitorBuild),
       ...(!isCapacitorBuild
         ? [
             VitePWA({
@@ -324,6 +424,7 @@ export default defineConfig(({ mode }) => {
         : []),
       stripMistakenPublicCopies(envDir, ['futcard-main']),
       stripCapacitorServiceWorker(envDir, isCapacitorBuild),
+      inlineCapacitorLegacyBundle(envDir, isCapacitorBuild),
     ],
     envDir,
     define: {
@@ -375,6 +476,15 @@ export default defineConfig(({ mode }) => {
                 return 'vendor-react';
               }
               return 'vendor-misc';
+            }
+
+            // Android TV/WebView antigo e alguns firmwares TCL engasgam quando o
+            // bundle inicial depende de chunks internos circulares. No APK TV,
+            // deixar o Rollup agrupar o app evita o preboot preso em tela preta.
+            if (isCapacitorBuild) {
+              if (id.includes('/pages/admin/') || id.includes('/components/admin/'))
+                return 'pages-admin';
+              return undefined;
             }
 
             // ── App: admin isolado para carregar somente quando necessário ────────
@@ -461,7 +571,16 @@ export default defineConfig(({ mode }) => {
         '/tmdb-proxy': {
           target: 'https://api.themoviedb.org/3',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/tmdb-proxy/, ''),
+          secure: false,
+          rewrite: (path) => appendTmdbApiKey(path.replace(/^\/tmdb-proxy/, '')),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq) => {
+              if (tmdbBearerToken) {
+                proxyReq.setHeader('Authorization', `Bearer ${tmdbBearerToken}`);
+              }
+              proxyReq.setHeader('Accept', 'application/json');
+            });
+          },
         },
         '/img-proxy': {
           target: 'https://wsrv.nl',

@@ -26,7 +26,6 @@ import { userService } from '../services/userService';
 import { useToast } from '@/contexts/ToastContext';
 import { playSelectSound, playBackSound } from '../utils/soundEffects';
 import { getMediaBackdrop, getMediaLogo, hasValidVideoUrl } from '../utils/mediaUtils';
-import { isTVBox } from '../utils/tvBoxDetector';
 import { useSpatialNav } from '../hooks/useSpatialNavigation';
 import { pickFirstRealStreamUrlFromRow } from '../utils/streamUrlGuards';
 import {
@@ -81,11 +80,20 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
+function mapDbSeasonToSeason(season: SeasonDB): Season {
+  return {
+    id: season.id,
+    season_number: Number(season.season_number || 0),
+    name: season.title || `Temporada ${season.season_number}`,
+    poster_path: season.poster || null,
+  };
+}
+
 /* ------------------------------------------------------------------ */
 /*  Vision Pro / visionOS Glass — leve para TV Box (blur 12px)         */
 /* ------------------------------------------------------------------ */
 const visionGlass = (opacity = 0.05, blur?: number) => {
-  const b = blur !== undefined ? blur : isTVBox() ? 0 : 12;
+  const b = blur !== undefined ? blur : 12;
   return {
     background: `rgba(255,255,255,${opacity})`,
     backdropFilter: `blur(${b}px)`,
@@ -97,7 +105,7 @@ const visionGlass = (opacity = 0.05, blur?: number) => {
 
 /** Vision Pro: cards em cápsula — vidro transparente (frosted glass) */
 const visionProCapsuleStyle = (): React.CSSProperties => {
-  const b = isTVBox() ? 0 : 12;
+  const b = 12;
   return {
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: `blur(${b}px)`,
@@ -151,6 +159,7 @@ const EpisodeCard = React.memo(function EpisodeCard({
         }
       }}
       tabIndex={0}
+      data-episode-card
       data-nav-item
       data-nav-row={episodeGridStart + Math.floor(idx / 5)}
       data-nav-col={idx % 5}
@@ -223,7 +232,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
   const { setPosition, setCircularV, setCircularH, pushFocusTrap, popFocusTrap, setEnabled } =
     useSpatialNav();
   const { showToast } = useToast();
-  const glassBlurTv = isTVBox() ? 0 : 12;
+  const glassBlurTv = 12;
 
   // TV Box: wrap vertical e horizontal para setas funcionarem em todas as direções
   useEffect(() => {
@@ -403,6 +412,19 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
               const dbS = await getDBSeasons(dbSeries.id);
               if (cancelled) return;
               setDbSeasons(dbS);
+              if (dbS.length > 0) {
+                const normalizedDbSeasons = dbS
+                  .map(mapDbSeasonToSeason)
+                  .filter((s) => s.season_number > 0);
+                setSeasons((current) => {
+                  if (current.length > 0) return current;
+                  return normalizedDbSeasons;
+                });
+                setSelectedSeason((current) => {
+                  if (current > 0) return current;
+                  return normalizedDbSeasons[0]?.season_number || 1;
+                });
+              }
             }
           } else {
             const dbMovie = await getMovieByTmdbId(tmdbId);
@@ -510,6 +532,9 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
       return;
     }
     let cancelled = false;
+    const fallbackSeriesUrl =
+      pickFirstRealStreamUrlFromRow((dbItem || media) as unknown as Record<string, unknown>) ||
+      pickFirstRealStreamUrlFromRow(media as unknown as Record<string, unknown>);
     setEpisodesLoading(true);
     setEpisodes([]);
     fetchSeasonEpisodes(tmdbId, selectedSeason)
@@ -525,7 +550,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
               const resolvedStreamUrl =
                 pickFirstRealStreamUrlFromRow(match as unknown as Record<string, unknown>) ||
                 pickFirstRealStreamUrlFromRow(ep as unknown as Record<string, unknown>);
-              return { ...ep, stream_url: resolvedStreamUrl || ep.stream_url || '' };
+              return { ...ep, stream_url: resolvedStreamUrl || ep.stream_url || fallbackSeriesUrl || '' };
             });
           } catch {
             eps = eps.map((ep) => ({
@@ -533,6 +558,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
               stream_url:
                 pickFirstRealStreamUrlFromRow(ep as unknown as Record<string, unknown>) ||
                 ep.stream_url ||
+                fallbackSeriesUrl ||
                 '',
             }));
           }
@@ -542,6 +568,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
             stream_url:
               pickFirstRealStreamUrlFromRow(ep as unknown as Record<string, unknown>) ||
               ep.stream_url ||
+              fallbackSeriesUrl ||
               '',
           }));
         }
@@ -560,7 +587,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
     return () => {
       cancelled = true;
     };
-  }, [selectedSeason, tmdbId, isSeries, dbSeasons]);
+  }, [selectedSeason, tmdbId, isSeries, dbSeasons, dbItem, media]);
 
   useEffect(() => {
     if (!isSeries || !tmdbId) return;
@@ -677,12 +704,13 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
       );
       return {
         ...baseMedia,
-        stream_url: resolvedEpisodeUrl || ep.stream_url || '',
+        stream_url: resolvedEpisodeUrl || ep.stream_url || directSeriesUrl || '',
         season_number: ep.season_number || selectedSeason,
         episode_number: ep.episode_number,
+        episode_title: ep.name || ep.title,
       } as Media;
     },
-    [dbItem, media, selectedSeason]
+    [dbItem, media, selectedSeason, directSeriesUrl]
   );
 
   // Para séries, só considerar "playável" se a URL do episódio for realmente válida
@@ -697,14 +725,54 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
       pickFirstRealStreamUrlFromRow(media as unknown as Record<string, unknown>),
     [dbItem, media]
   );
-  const isDirectOnlySeriesPlayback = isSeries && Boolean(directSeriesUrl) && dbSeasons.length === 0;
+  const isDirectOnlySeriesPlayback =
+    isSeries && Boolean(directSeriesUrl) && dbSeasons.length === 0 && seasons.length === 0;
   // Séries podem ter stream_url direto na tabela (sem episódios cadastrados) — usar como fallback
   // FIX: verifica media E dbItem separadamente — dbItem presente mas sem URL não bloqueia o botão
 
+  const episodesSectionRef = useRef<HTMLElement>(null);
+  const focusEpisodesSection = useCallback(
+    (smoothScroll = true) => {
+      if (!isSeries) return;
+      const scrollBehavior: ScrollBehavior = smoothScroll ? 'smooth' : 'auto';
+      const targetTop = Math.max(
+        0,
+        (episodesSectionRef.current?.offsetTop || window.innerHeight) - 96
+      );
+      scrollRef.current?.scrollTo({ top: targetTop, behavior: scrollBehavior });
+      window.requestAnimationFrame(() => {
+        setPosition(2, 0);
+        const target =
+          episodesSectionRef.current?.querySelector<HTMLElement>('[data-season-pill]') ||
+          episodesSectionRef.current?.querySelector<HTMLElement>('[data-episode-card]');
+        target?.focus({ preventScroll: true });
+      });
+    },
+    [isSeries, setPosition]
+  );
+
   const [isPlaying, setIsPlaying] = useState(false);
+  const movieHasValidUrl = useMemo(
+    () => hasValidVideoUrl((dbItem || media) as unknown as Record<string, unknown>),
+    [dbItem, media]
+  );
+  const canPlayPrimary = isSeries
+    ? Boolean(directSeriesUrl || hasPlayableEpisode)
+    : movieHasValidUrl;
 
   const handlePlayPrimary = useCallback(() => {
     if (isPlaying) return;
+    if (!canPlayPrimary) {
+      playBackSound();
+      showToast(
+        isSeries
+          ? 'Nenhum episódio com URL válida foi encontrado para esta série.'
+          : 'Este filme ainda não possui URL de vídeo válida.',
+        'error'
+      );
+      if (isSeries) focusEpisodesSection(true);
+      return;
+    }
     // FIX: preserva stream_url do catalog (media) se dbItem existir mas não tiver URL
     const baseMedia = dbItem || media;
     const playMedia = {
@@ -729,13 +797,9 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
       } else if (directSeriesUrl) {
         playFn = () => onPlay(playMedia) as Promise<void>;
       } else {
-        const firstEpisode = episodes[0];
-        playFn = firstEpisode
-          ? () => onPlay(buildEpisodePlaybackMedia(firstEpisode)) as Promise<void>
-          : () => Promise.resolve();
+        setIsPlaying(false);
+        return;
       }
-    } else if (isSeries && !hasPlayableEpisode) {
-      playFn = () => onPlay(playMedia) as Promise<void>;
     } else if (!isSeries) {
       playFn = () => onPlay(playMedia) as Promise<void>;
     } else {
@@ -757,6 +821,9 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
     isPlaying,
     directSeriesUrl,
     isDirectOnlySeriesPlayback,
+    canPlayPrimary,
+    focusEpisodesSection,
+    showToast,
   ]);
 
   const handleSelectSimilar = useCallback(
@@ -1185,17 +1252,17 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                   <button
                     type="button"
                     onClick={() => {
-                      setSeasonDropdown((p) => !p);
+                      focusEpisodesSection(true);
                       playSelectSound();
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        setSeasonDropdown((p) => !p);
+                        focusEpisodesSection(true);
                         playSelectSound();
                       } else if (e.key === 'ArrowDown' && !seasonDropdown) {
                         e.preventDefault();
-                        setSeasonDropdown(true);
+                        focusEpisodesSection(true);
                         playSelectSound();
                       }
                     }}
@@ -1210,7 +1277,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                     <span>{detail?.number_of_seasons || media.seasons || 1} Temporadas</span>
                     <ChevronDown
                       size={14}
-                      className={`shrink-0 transition-transform duration-300 ${seasonDropdown ? 'rotate-180' : ''}`}
+                      className="shrink-0 transition-transform duration-300 -rotate-90"
                     />
                   </button>
 
@@ -1302,7 +1369,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
               {/* Assistir — botão play estilo detalhes-main */}
               <button
                 ref={playButtonRef}
-                disabled={isPlaying}
+                disabled={isPlaying || !canPlayPrimary}
                 onClick={() => {
                   if (isPlaying) return;
                   handlePlayPrimary();
@@ -1316,15 +1383,15 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                 data-nav-item
                 data-nav-col="0"
                 data-testid="details-play-btn"
-                className={`details-botao-play flex items-center justify-center gap-2 py-3 px-6 rounded-full font-bold text-base ${isPlaying ? 'opacity-50 cursor-not-allowed' : ''}`}
-                title="Assistir"
+                className={`details-botao-play flex items-center justify-center gap-2 py-3 px-6 rounded-full font-bold text-base ${isPlaying || !canPlayPrimary ? 'opacity-50 cursor-not-allowed' : ''}`}
+                title={canPlayPrimary ? 'Assistir' : 'Sem URL de video valida'}
               >
                 {isPlaying ? (
                   <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                 ) : (
                   <Play size={20} fill="currentColor" className="shrink-0" />
                 )}
-                <span>{isPlaying ? 'Carregando...' : 'Assistir'}</span>
+                <span>{isPlaying ? 'Carregando...' : canPlayPrimary ? 'Assistir' : 'Indisponível'}</span>
               </button>
 
               {/* Adicionar à lista */}
@@ -1407,6 +1474,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
         )}
         {isSeries && !isDirectOnlySeriesPlayback && seasons.length > 0 && (
           <motion.section
+            ref={episodesSectionRef}
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.25, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -1447,6 +1515,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                         : 'text-white/50'
                     }`}
                     data-nav-item
+                    data-season-pill
                     data-nav-col={sIdx}
                     tabIndex={0}
                   >

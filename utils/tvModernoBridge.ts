@@ -1,3 +1,6 @@
+import { runtimeFlags } from '@/config/runtimeFlags';
+import { isFireTV, isLegacyHtml5OnlyTV } from '@/utils/tvBoxDetector';
+
 /**
  * RedFlix TV Moderno — Bridge para player nativo Android (Media3/ExoPlayer).
  *
@@ -33,6 +36,9 @@ declare global {
 export function hasNativePlayer(): boolean {
   try {
     return (
+      runtimeFlags.nativeAndroidPlayerEnabled &&
+      !isFireTV() &&
+      !isLegacyHtml5OnlyTV() &&
       typeof window !== 'undefined' &&
       typeof window.Android?.openPlayer === 'function' &&
       window.Android.isAvailable?.() === true

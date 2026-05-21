@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.os.Build;
 
@@ -29,6 +30,7 @@ public class MainActivity extends BridgeActivity {
      */
     private final AtomicBoolean inputFocused = new AtomicBoolean(false);
     private final AtomicBoolean jsBridgeInstalled = new AtomicBoolean(false);
+    private final AtomicBoolean webChromeGuardInstalled = new AtomicBoolean(false);
     // Evita dupla injeção de deviceInfo em onResume + onWindowFocusChanged no mesmo ciclo
     private final AtomicBoolean deviceInfoInjectedOnResume = new AtomicBoolean(false);
 
@@ -222,10 +224,24 @@ public class MainActivity extends BridgeActivity {
                 }, "Android");
             }
 
-            // NOTA: WebChromeClient e WebViewClient NÃO são sobrescritos aqui — Capacitor precisa
-            // dos próprios pra bridge. Bloqueio de player WebView é feito 100% no lado web:
-            // - Nenhum <video> é montado quando window.Android.openPlayer existe.
-            // - Vídeo abre direto no ExoPlayerActivity nativo via bridge JS.
+            if (shouldForceNativePlayback() && webChromeGuardInstalled.compareAndSet(false, true)) {
+                webView.setWebChromeClient(new WebChromeClient() {
+                    @Override
+                    public void onShowCustomView(View view, CustomViewCallback callback) {
+                        android.util.Log.w("RED-X", "HTML5 fullscreen bloqueado: usar ExoPlayerActivity nativo");
+                        pauseAllHtmlVideos();
+                        try {
+                            if (callback != null) callback.onCustomViewHidden();
+                        } catch (Exception ignored) {}
+                    }
+
+                    @Override
+                    public void onHideCustomView() {
+                        android.util.Log.d("RED-X", "HTML5 fullscreen hide ignorado");
+                    }
+                });
+                android.util.Log.d("RED-X", "WebChromeClient guard instalado: fullscreen HTML5 bloqueado no Android TV moderno");
+            }
 
             return true;
 
@@ -234,6 +250,22 @@ public class MainActivity extends BridgeActivity {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private boolean shouldForceNativePlayback() {
+        // TV moderno usa Media3/ExoPlayer; WebView fica só para UI/catálogo.
+        // Fire TV e Android antigo preservam o caminho HTML5/HLS.js legado.
+        String mfg = Build.MANUFACTURER == null ? "" : Build.MANUFACTURER.toLowerCase();
+        String brand = Build.BRAND == null ? "" : Build.BRAND.toLowerCase();
+        String model = Build.MODEL == null ? "" : Build.MODEL.toLowerCase();
+        boolean isFireTv = mfg.contains("amazon") || brand.contains("amazon")
+                || model.startsWith("aft") || model.contains("fire tv");
+        boolean isLegacyAndroid = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1;
+        return !isFireTv && !isLegacyAndroid;
+    }
+
+    private void pauseAllHtmlVideos() {
+        runJS("(function(){try{document.querySelectorAll('video').forEach(function(v){try{v.pause();v.removeAttribute('src');v.load();}catch(e){}});}catch(e){}})();");
     }
 
     /**

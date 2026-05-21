@@ -1383,7 +1383,6 @@ export async function getSeriesPaginated(
     .select('*')
     .not('tmdb_id', 'is', null)
     .not('poster', 'is', null)
-    .gt('seasons_count', 0)
     .abortSignal(signal as any);
 
   // Aplicar filtros

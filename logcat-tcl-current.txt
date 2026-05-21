@@ -1,0 +1,622 @@
+--------- beginning of main
+05-21 06:34:32.895   815   998 D WifiScoreCard: network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -67 txSpeed 130
+05-21 06:34:32.895   815   998 D WifiScoreCard: SSID: "BOLSONARO2018"
+05-21 06:34:32.895   815   998 D WifiScoreCard:  LastRssiPollTime: 1436804918 LastRssiPoll: -67 LastTxSpeedPoll: 130
+05-21 06:34:32.895   815   998 D WifiScoreCard:  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 5179065 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-21 06:34:32.895   815   998 D WifiScoreCard:  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-21 06:34:32.895   815   998 D WifiScoreCard:  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-21 06:34:32.897   815   998 D WifiClientModeImpl:  L2ConnectedState screen=on 106 0 "BOLSONARO2018" f8:2d:c0:24:9e:d2 rssi=-67 f=2417 sc=60 link=130 tx=40,3, 0,0, 0,0  rx=20,7 bcn=0 [on:0 tx:0 rx:0 period:3012] from screen [on:0 period:1897480] score=60
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=8, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=9, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=381, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: com.tcl.ttvs] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=7885, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=7887, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=7888, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=7889, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=7891, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=7893, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10043 AdministratorUids: [] RequestorUid: 10043 RequestorPackageName: com.google.android.apps.mediashell] ]
+05-21 06:34:32.898   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=7899, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-21 06:34:32.899   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=8328, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10038 AdministratorUids: [] RequestorUid: 10038 RequestorPackageName: com.google.android.katniss] ]
+05-21 06:34:32.899   815   998 V WifiNetworkFactory: Accepted network request NetworkRequest [ TRACK_DEFAULT id=8329, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10159 AdministratorUids: [] RequestorUid: 10159 RequestorPackageName: com.redflix.tvmoderno] ]
+05-21 06:34:32.916   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.118   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 8 lines
+05-21 06:34:33.144   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.152  1052  1417 I TGuardMemoryManagerMemoryInfoManager: com.redflix.tvmoderno avgPss is 74062  predictSize is 74062
+05-21 06:34:33.152  1052  1417 I TGuardMemoryManagerMemoryStrategy: unit(kb),need=74062,lost=0,swapFree=141176,memAvail=366680,WarningThreshold=183994,realAvail=182686,realNeed=-108624
+05-21 06:34:33.152  1052  1404 I TGuardMemoryManagerKillHandler: kill max rank = 9
+05-21 06:34:33.152  1052  1417 D NativeJni: start GetKswapdHigh, zone info path = /proc/zoneinfo
+05-21 06:34:33.152  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 19]:skipped kill for children size is 0:
+05-21 06:34:33.152  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 18]:skipped kill for children size is 0:com.google.android.gms.persistent
+05-21 06:34:33.152  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 17]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
+05-21 06:34:33.152  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 16]:skipped kill for children size is 0:com.android.vending:quick_launch
+05-21 06:34:33.152  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 15]:skipped kill for children size is 0:android.process.media
+05-21 06:34:33.152  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 14]:skipped kill for children size is 0:com.google.android.webview:webview_apk
+05-21 06:34:33.152  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 13]:skipped kill for children size is 0:com.google.android.apps.tv.launcherx:coreservices
+05-21 06:34:33.152  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 12]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 11]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:1
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 10]:skipped kill for children size is 0:android:ui
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 9]:skipped kill for children size is 0:com.google.android.gms.unstable
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 8]:skipped kill for children size is 0:com.android.vending:background
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 7]:skipped kill for children size is 0:com.google.android.webview:webview_service
+05-21 06:34:33.153  1052  1417 D NativeJni: get high size = 7291 page
+05-21 06:34:33.153  1052  1417 D NativeJni: start GetKswapdLow, zone info path = /proc/zoneinfo
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 6]:skipped kill for children size is 0:com.google.android.youtube.tv.recommendations
+05-21 06:34:33.153  1052  1417 D NativeJni: get high size = 6710 page
+05-21 06:34:33.153  1052  1417 D NativeJni: start GetKswapdMin, zone info path = /proc/zoneinfo
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 5]:skipped kill for children size is 0:android.process.acore
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 4]:skipped kill for children size is 0:com.tcl.guard:ui
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 3]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:33.153  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 2]:skipped kill for children size is 0:com.google.android.apps.tv.dreamx:smarthome
+05-21 06:34:33.154  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 1]:skipped kill for children size is 0:com.google.process.gservices
+05-21 06:34:33.154  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 0]:skipped kill for children size is 0:system
+05-21 06:34:33.154  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 32]:skipped kill white list:com.android.providers.media.module,pss=9499
+05-21 06:34:33.154  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:33.154  1052  1404 D NativeJni: get -1 process level 2 memory failed(No such process)
+05-21 06:34:33.154  1052  1417 D NativeJni: get high size = 778 page
+05-21 06:34:33.154  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:2
+05-21 06:34:33.155  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.android.externalstorage, rank = 2, reason = tguard-kill-SystemApp, isUseHighCpu = false
+05-21 06:34:33.155  1052  1417 I TGuardMemoryManagerMemoryStrategy: free=40040,wartermark=(29164,26840,3112),swapfree=141176
+05-21 06:34:33.155  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:1
+05-21 06:34:33.155  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:33.156  1052  1404 I TGuardMemoryManagerKillHandler: res = -1 noneExist:0 allToKill:2
+05-21 06:34:33.156  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 24]: skipped kill as auto restart:com.android.bluetooth,pss=10443
+05-21 06:34:33.156  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 23]:skipped kill white list:com.google.android.tungsten.setupwraith,pss=26149
+05-21 06:34:33.156  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 22]:skipped kill white list:com.google.android.permissioncontroller,pss=15971
+05-21 06:34:33.156  1052  1404 I TGuardMemoryManagerKillHandler: memory, finish kill total size:0 realNeed:0 cacheFreed:0
+05-21 06:34:33.169   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.397   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 9 lines
+05-21 06:34:33.422   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.433   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:33.433   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:33.448   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.474   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 1 line
+05-21 06:34:33.499   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.522  1160  1160 D wpa_supplicant: wlan_traffic_statistics rx_byte = 385400859 rx rate = 2 Kb/s
+05-21 06:34:33.522  1160  1160 D wpa_supplicant: wlan_traffic_statistics tx_byte = 1409099610 tx rate = 2 Kb/s
+05-21 06:34:33.524   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.677   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 6 lines
+05-21 06:34:33.702   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.720  3672  3685 W apps.mediashel: Reducing the number of considered missed Gc histogram windows from 231 to 100
+05-21 06:34:33.728   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.732  1052  1196 I TGuardMemoryManagerMemoryStrategy: handleEvent type = 1
+05-21 06:34:33.732  1052  1417 I TGuardMemoryManagerMemoryInfoManager: com.redflix.tvmoderno avgPss is 74062  predictSize is 74062
+05-21 06:34:33.732  1052  1417 I TGuardMemoryManagerMemoryStrategy: unit(kb),need=74062,lost=0,swapFree=143736,memAvail=364372,WarningThreshold=183994,realAvail=180378,realNeed=-106316
+05-21 06:34:33.732  1052  1417 D NativeJni: start GetKswapdHigh, zone info path = /proc/zoneinfo
+05-21 06:34:33.732  1052  1404 I TGuardMemoryManagerKillHandler: kill max rank = 9
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 19]:skipped kill for children size is 0:
+05-21 06:34:33.733  1052  1417 D NativeJni: get high size = 7291 page
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 18]:skipped kill for children size is 0:com.google.android.gms.persistent
+05-21 06:34:33.733  1052  1417 D NativeJni: start GetKswapdLow, zone info path = /proc/zoneinfo
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 17]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 16]:skipped kill for children size is 0:com.android.vending:quick_launch
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 15]:skipped kill for children size is 0:android.process.media
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 14]:skipped kill for children size is 0:com.google.android.webview:webview_apk
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 13]:skipped kill for children size is 0:com.google.android.apps.tv.launcherx:coreservices
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 12]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 11]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:1
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 10]:skipped kill for children size is 0:android:ui
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 9]:skipped kill for children size is 0:com.google.android.gms.unstable
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 8]:skipped kill for children size is 0:com.android.vending:background
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 7]:skipped kill for children size is 0:com.google.android.webview:webview_service
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 6]:skipped kill for children size is 0:com.google.android.youtube.tv.recommendations
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 5]:skipped kill for children size is 0:android.process.acore
+05-21 06:34:33.733  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 4]:skipped kill for children size is 0:com.tcl.guard:ui
+05-21 06:34:33.733  1052  1417 D NativeJni: get high size = 6710 page
+05-21 06:34:33.733  1052  1417 D NativeJni: start GetKswapdMin, zone info path = /proc/zoneinfo
+05-21 06:34:33.734  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 3]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:33.734  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 2]:skipped kill for children size is 0:com.google.android.apps.tv.dreamx:smarthome
+05-21 06:34:33.734  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 1]:skipped kill for children size is 0:com.google.process.gservices
+05-21 06:34:33.734  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 0]:skipped kill for children size is 0:system
+05-21 06:34:33.734  1052  1417 D NativeJni: get high size = 778 page
+05-21 06:34:33.734  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 32]:skipped kill white list:com.android.providers.media.module,pss=9499
+05-21 06:34:33.734  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:33.734  1052  1404 D NativeJni: get -1 process level 2 memory failed(No such process)
+05-21 06:34:33.734  1052  1417 I TGuardMemoryManagerMemoryStrategy: free=36708,wartermark=(29164,26840,3112),swapfree=143736
+05-21 06:34:33.735  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:2
+05-21 06:34:33.735  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.android.externalstorage, rank = 2, reason = tguard-kill-SystemApp, isUseHighCpu = false
+05-21 06:34:33.735  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:1
+05-21 06:34:33.735  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:33.736  1052  1404 I TGuardMemoryManagerKillHandler: res = -1 noneExist:0 allToKill:2
+05-21 06:34:33.736  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 24]: skipped kill as auto restart:com.android.bluetooth,pss=10443
+05-21 06:34:33.736  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 23]:skipped kill white list:com.google.android.tungsten.setupwraith,pss=26149
+05-21 06:34:33.736  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 22]:skipped kill white list:com.google.android.permissioncontroller,pss=15971
+05-21 06:34:33.736  1052  1404 I TGuardMemoryManagerKillHandler: memory, finish kill total size:0 realNeed:0 cacheFreed:0
+05-21 06:34:33.753   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:33.905   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 6 lines
+05-21 06:34:33.931   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+--------- beginning of system
+05-21 06:34:33.934   821  2012 D TVKitService: getProjectID
+05-21 06:34:33.934   821  2012 D DeviceInfoImpl: getProjectID from map is 4357
+05-21 06:34:33.934  2458  2458 I TCL_DeviceInfo: id = 4357
+05-21 06:34:33.934  2458  2458 E TCL_DeviceInfo: from sita get client type is TCL-LA-RTD51A-S1
+05-21 06:34:33.935   821  2012 D TVKitService: getSoftwareVersion
+05-21 06:34:33.935   821  2012 D DeviceInfoImpl: getSoftwareVersion is V8-R51AT01-LF1V126
+05-21 06:34:33.935  2458  2458 I TCL_DeviceInfo: ret  = V8-R51AT01-LF1V126
+05-21 06:34:33.935   815   970 I WifiService: getConnectionInfo uid=1000
+05-21 06:34:33.956   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:34.386   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 17 lines
+05-21 06:34:34.412   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:34.433   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:34.433   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:34.437   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:34.614   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 7 lines
+05-21 06:34:34.640   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:34.640  3672  3842 I cast_shell: [0521/063434.640361:INFO:metrics_recorder.cc(193)] Record action: Setup.eureka_info.Unknown
+05-21 06:34:34.640  3672  3842 W cast_shell: [0521/063434.640607:WARNING:setup_api_registry.cc(123)] Insecure fallback for API: eureka_info
+05-21 06:34:34.640  3672  3842 W cast_shell: [0521/063434.640676:WARNING:api_eureka_info.cc(1003)] Insecure access to eureka_info. Parameters have been stripped.
+05-21 06:34:34.642  3672  3842 I cast_shell: [0521/063434.642063:INFO:setup_state.cc(541)] EurekaInfoCalled: wifi_state=0, is_usable_ip_address=1, connected=1, is_initial_setup=0
+05-21 06:34:34.642  3672  3842 I cast_shell: [0521/063434.642479:INFO:metrics_recorder.cc(193)] Record action: Setup.eureka_info.Unknown.200
+05-21 06:34:34.665   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:34.792   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 5 lines
+05-21 06:34:34.817   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:34.819  1160  1160 D wpa_supplicant: nl80211: Drv Event 56 (NL80211_CMD_CANCEL_REMAIN_ON_CHANNEL) received for p2p0
+05-21 06:34:34.819  1160  1160 D wpa_supplicant: nl80211: Remain-on-channel event (cancel=1 freq=2417 channel_type=0 duration=0 cookie=0x71690 (match))
+05-21 06:34:34.819  1160  1160 D wpa_supplicant: p2p0: Event CANCEL_REMAIN_ON_CHANNEL (20) received
+05-21 06:34:34.819  1160  1160 D wpa_supplicant: P2P: Cancel remain-on-channel callback (p2p_long_listen=1905767704 ms pending_action_tx=0x0)
+05-21 06:34:34.819  1160  1160 D wpa_supplicant: p2p0: Radio work 'p2p-listen'@0xaa9c36d0 done in 5.035828 seconds
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: p2p0: radio_work_free('p2p-listen'@0xaa9c36d0): num_active_works --> 0
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: Driver ended Listen state (freq=2417)
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: Continuing long Listen state
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: Going to listen(only) state
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: STA wpa_state=9 freq=2417
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: cfg reg_class(81) channel(2)
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: cfg reg_class(81) channel(2)
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: Set Listen channel: reg_class 81 channel 2
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: Defer setting listen channel
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: p2p listen class(81)/channel(2)
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: WPS:  * Version (hardcoded 0x10)
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: WPS:  * UUID-E
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: WPS:  * Version2 (0x20)
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: * P2P IE header
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: * Capability dev=25 group=00
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: * Listen Channel: Regulatory Class 81 Channel 2
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: * Device Info
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: p2p0: Add radio work 'p2p-listen'@0xaa9c36d0
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: p2p0: First radio work item in the queue - schedule start immediately
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: P2P: State LISTEN_ONLY -> LISTEN_ONLY
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: p2p0: Starting radio work 'p2p-listen'@0xaa9c36d0 after 0.000073 second wait
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: nl80211: Probe Request reporting already on! nl_preq=0x2228a769
+05-21 06:34:34.820  1160  1160 D wpa_supplicant: nl80211: Remain-on-channel cookie 0x71691 for freq=2417 MHz duration=5000
+05-21 06:34:34.830  1160  1160 D wpa_supplicant: P2P: Timeout (state=LISTEN_ONLY)
+05-21 06:34:34.843   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:34.846  1160  1160 D wpa_supplicant: nl80211: Drv Event 55 (NL80211_CMD_REMAIN_ON_CHANNEL) received for p2p0
+05-21 06:34:34.846  1160  1160 D wpa_supplicant: nl80211: Remain-on-channel event (cancel=0 freq=2417 channel_type=0 duration=5000 cookie=0x71691 (match))
+05-21 06:34:34.846  1160  1160 D wpa_supplicant: p2p0: Event REMAIN_ON_CHANNEL (19) received
+05-21 06:34:34.846  1160  1160 D wpa_supplicant: Off-channel: Send Action callback (without_roc=0 pending_action_tx=0x0 pending_action_tx_done=0)
+05-21 06:34:34.846  1160  1160 D wpa_supplicant: P2P: remain-on-channel callback (off_channel_freq=2417 pending_listen_freq=2417 roc_waiting_drv_freq=0 freq=2417 duration=5000)
+05-21 06:34:34.846  1160  1160 D wpa_supplicant: STA wpa_state=9 freq=2417
+05-21 06:34:34.846  1160  1160 D wpa_supplicant: P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-21 06:34:34.846  1160  1160 D wpa_supplicant: P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-21 06:34:34.868   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:34.969   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 4 lines
+05-21 06:34:34.995   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:35.003  3672  3845 W cast_shell: [0521/063435.003786:WARNING:https_ssl_server_socket.cc(347)] HttpsSslServerSocket timed out while handshaking
+05-21 06:34:35.020   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:35.400   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 15 lines
+05-21 06:34:35.425   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:35.434   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:35.434   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:35.451   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:35.477   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 1 line
+05-21 06:34:35.502   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:35.523  1160  1160 D wpa_supplicant: wlan_traffic_statistics rx_byte = 385406933 rx rate = 23 Kb/s
+05-21 06:34:35.523  1160  1160 D wpa_supplicant: wlan_traffic_statistics tx_byte = 1409105056 tx rate = 21 Kb/s
+05-21 06:34:35.527   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:35.857   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 13 lines
+05-21 06:34:35.882   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:35.900   815   998 E WifiVendorHal: getWifiLinkLayerStats_1_3_Internal(l.978) failed {.code = ERROR_NOT_SUPPORTED, .description = }
+05-21 06:34:35.907   815   998 D WifiClientModeImpl: fetchRssiLinkSpeedAndFrequencyNative rssi=-69 TxLinkspeed=156 freq=2417 RxLinkSpeed=0
+05-21 06:34:35.907   815   998 V WifiConfigManager: Updating scan detail cache freq=2417 BSSID=f8:2d:c0:24:9e:d2 RSSI=-69 for "BOLSONARO2018"WPA_PSK
+05-21 06:34:35.907   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:35.908   815   998 D WifiThroughputPredictor:  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-21 06:34:35.908   815   998 D WifiThroughputPredictor:  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-21 06:34:35.909   815   998 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 398514962 SSID: BOLSONARO2018, BSSID: f8:2d:c0:24:9e:d2, MAC: 64:57:25:8c:68:c1, Supplicant state: COMPLETED, Wi-Fi standard: 0, RSSI: -69, Link speed: 156Mbps, Tx Link speed: 156Mbps, Max Supported Tx Link speed: -1Mbps, Rx Link speed: -1Mbps, Max Supported Rx Link speed: -1Mbps, Frequency: 2417MHz, Net ID: 0, Metered hint: false, score: 60
+05-21 06:34:35.909   815   998 D WifiScoreCard: txRate: 27 txSpeed: 156
+05-21 06:34:35.909   815   998 D WifiScoreCard: network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -69 txSpeed 156
+05-21 06:34:35.909   815   998 D WifiScoreCard: SSID: "BOLSONARO2018"
+05-21 06:34:35.909   815   998 D WifiScoreCard:  LastRssiPollTime: 1436807932 LastRssiPoll: -69 LastTxSpeedPoll: 156
+05-21 06:34:35.909   815   998 D WifiScoreCard:  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 5179065 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-21 06:34:35.909   815   998 D WifiScoreCard:  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-21 06:34:35.909   815   998 D WifiScoreCard:  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-21 06:34:35.911   815   998 D WifiClientModeImpl:  L2ConnectedState screen=on 106 0 "BOLSONARO2018" f8:2d:c0:24:9e:d2 rssi=-69 f=2417 sc=60 link=156 tx=27,0, 0,0, 0,0  rx=22,3 bcn=0 [on:0 tx:0 rx:0 period:3014] from screen [on:0 period:1900494] score=60
+05-21 06:34:35.933   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:36.110   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 7 lines
+05-21 06:34:36.135   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:36.142  2458  3731 D TCastPublishOverUdp: ad4635c@sendOnline
+05-21 06:34:36.161   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:36.201   815  1049 D FreezeManager: doFreeze 3682 is died,skip freeze proCurent null
+05-21 06:34:36.389   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 9 lines
+05-21 06:34:36.414   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:36.434   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:36.434   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:36.439   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:37.402   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 38 lines
+05-21 06:34:37.428   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:37.434   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:37.434   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:37.453   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:37.478   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 1 line
+05-21 06:34:37.504   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:37.525  1160  1160 D wpa_supplicant: wlan_traffic_statistics rx_byte = 385410853 rx rate = 15 Kb/s
+05-21 06:34:37.525  1160  1160 D wpa_supplicant: wlan_traffic_statistics tx_byte = 1409109030 tx rate = 15 Kb/s
+05-21 06:34:37.529   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:38.390   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 34 lines
+05-21 06:34:38.415   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:38.435   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:38.435   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:38.441   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:38.694   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 10 lines
+05-21 06:34:38.720   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:38.724  1052  1196 I TGuardMemoryManagerMemoryStrategy: handleEvent type = 1
+05-21 06:34:38.724  1052  1417 I TGuardMemoryManagerMemoryInfoManager: com.redflix.tvmoderno avgPss is 74062  predictSize is 74062
+05-21 06:34:38.724  1052  1417 I TGuardMemoryManagerMemoryStrategy: unit(kb),need=74062,lost=0,swapFree=144580,memAvail=363368,WarningThreshold=183994,realAvail=179374,realNeed=-105312
+05-21 06:34:38.724  1052  1417 D NativeJni: start GetKswapdHigh, zone info path = /proc/zoneinfo
+05-21 06:34:38.725  1052  1417 D NativeJni: get high size = 7291 page
+05-21 06:34:38.725  1052  1417 D NativeJni: start GetKswapdLow, zone info path = /proc/zoneinfo
+05-21 06:34:38.725  1052  1417 D NativeJni: get high size = 6710 page
+05-21 06:34:38.725  1052  1417 D NativeJni: start GetKswapdMin, zone info path = /proc/zoneinfo
+05-21 06:34:38.726  1052  1417 D NativeJni: get high size = 778 page
+05-21 06:34:38.726  1052  1417 I TGuardMemoryManagerMemoryStrategy: free=35932,wartermark=(29164,26840,3112),swapfree=144836
+05-21 06:34:38.726  1052  1404 I TGuardMemoryManagerKillHandler: kill max rank = 9
+05-21 06:34:38.726  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 19]:skipped kill for children size is 0:
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 18]:skipped kill for children size is 0:com.google.android.gms.persistent
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 17]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 16]:skipped kill for children size is 0:com.android.vending:quick_launch
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 15]:skipped kill for children size is 0:android.process.media
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 14]:skipped kill for children size is 0:com.google.android.webview:webview_apk
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 13]:skipped kill for children size is 0:com.google.android.apps.tv.launcherx:coreservices
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 12]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 11]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:1
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 10]:skipped kill for children size is 0:android:ui
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 9]:skipped kill for children size is 0:com.google.android.gms.unstable
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 8]:skipped kill for children size is 0:com.android.vending:background
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 7]:skipped kill for children size is 0:com.google.android.webview:webview_service
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 6]:skipped kill for children size is 0:com.google.android.youtube.tv.recommendations
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 5]:skipped kill for children size is 0:android.process.acore
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 4]:skipped kill for children size is 0:com.tcl.guard:ui
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 3]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 2]:skipped kill for children size is 0:com.google.android.apps.tv.dreamx:smarthome
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 1]:skipped kill for children size is 0:com.google.process.gservices
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 0]:skipped kill for children size is 0:system
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 32]:skipped kill white list:com.android.providers.media.module,pss=9499
+05-21 06:34:38.727  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:38.728  1052  1404 D NativeJni: get -1 process level 2 memory failed(No such process)
+05-21 06:34:38.729  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:2
+05-21 06:34:38.729  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.android.externalstorage, rank = 2, reason = tguard-kill-SystemApp, isUseHighCpu = false
+05-21 06:34:38.729  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:1
+05-21 06:34:38.729  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:38.730  1052  1404 I TGuardMemoryManagerKillHandler: res = -1 noneExist:0 allToKill:2
+05-21 06:34:38.730  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 24]: skipped kill as auto restart:com.android.bluetooth,pss=10443
+05-21 06:34:38.730  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 23]:skipped kill white list:com.google.android.tungsten.setupwraith,pss=26149
+05-21 06:34:38.730  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 22]:skipped kill white list:com.google.android.permissioncontroller,pss=15971
+05-21 06:34:38.730  1052  1404 I TGuardMemoryManagerKillHandler: memory, finish kill total size:0 realNeed:0 cacheFreed:0
+05-21 06:34:38.745   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:38.873   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 5 lines
+05-21 06:34:38.898   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:38.913   815   998 E WifiVendorHal: getWifiLinkLayerStats_1_3_Internal(l.978) failed {.code = ERROR_NOT_SUPPORTED, .description = }
+05-21 06:34:38.920   815   998 D WifiClientModeImpl: fetchRssiLinkSpeedAndFrequencyNative rssi=-70 TxLinkspeed=156 freq=2417 RxLinkSpeed=0
+05-21 06:34:38.920   815   998 V WifiConfigManager: Updating scan detail cache freq=2417 BSSID=f8:2d:c0:24:9e:d2 RSSI=-69 for "BOLSONARO2018"WPA_PSK
+05-21 06:34:38.921   815   998 D WifiThroughputPredictor:  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-21 06:34:38.921   815   998 D WifiThroughputPredictor:  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-21 06:34:38.922   815   998 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 398514962 SSID: BOLSONARO2018, BSSID: f8:2d:c0:24:9e:d2, MAC: 64:57:25:8c:68:c1, Supplicant state: COMPLETED, Wi-Fi standard: 0, RSSI: -70, Link speed: 156Mbps, Tx Link speed: 156Mbps, Max Supported Tx Link speed: -1Mbps, Rx Link speed: -1Mbps, Max Supported Rx Link speed: -1Mbps, Frequency: 2417MHz, Net ID: 0, Metered hint: false, score: 60
+05-21 06:34:38.922   815   998 D WifiScoreCard: txRate: 22 txSpeed: 156
+05-21 06:34:38.922   815   998 D WifiScoreCard: network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -70 txSpeed 156
+05-21 06:34:38.922   815   998 D WifiScoreCard: SSID: "BOLSONARO2018"
+05-21 06:34:38.922   815   998 D WifiScoreCard:  LastRssiPollTime: 1436810945 LastRssiPoll: -70 LastTxSpeedPoll: 156
+05-21 06:34:38.922   815   998 D WifiScoreCard:  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 5179065 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-21 06:34:38.922   815   998 D WifiScoreCard:  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-21 06:34:38.922   815   998 D WifiScoreCard:  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-21 06:34:38.924   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:38.925   815   998 D WifiClientModeImpl:  L2ConnectedState screen=on 106 0 "BOLSONARO2018" f8:2d:c0:24:9e:d2 rssi=-70 f=2417 sc=60 link=156 tx=21,7, 0,0, 0,0  rx=20,8 bcn=0 [on:0 tx:0 rx:0 period:3013] from screen [on:0 period:1903508] score=60
+05-21 06:34:38.944   821  2012 D TVKitService: getProjectID
+05-21 06:34:38.944   821  2012 D DeviceInfoImpl: getProjectID from map is 4357
+05-21 06:34:38.944  2458  2458 I TCL_DeviceInfo: id = 4357
+05-21 06:34:38.945  2458  2458 E TCL_DeviceInfo: from sita get client type is TCL-LA-RTD51A-S1
+05-21 06:34:38.945   821  2012 D TVKitService: getSoftwareVersion
+05-21 06:34:38.946   821  2012 D DeviceInfoImpl: getSoftwareVersion is V8-R51AT01-LF1V126
+05-21 06:34:38.946  2458  2458 I TCL_DeviceInfo: ret  = V8-R51AT01-LF1V126
+05-21 06:34:38.946   815  1990 I WifiService: getConnectionInfo uid=1000
+05-21 06:34:38.949   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:38.960  3981  3994 I gle.android.gm: Background concurrent copying GC freed 39585(2081KB) AllocSpace objects, 7(332KB) LOS objects, 49% free, 7056KB/13MB, paused 123us total 270.514ms
+05-21 06:34:38.975   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:39.406   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 17 lines
+05-21 06:34:39.431   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:39.435   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:39.435   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:39.457   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:39.482   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 1 line
+05-21 06:34:39.507   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:39.527  1160  1160 D wpa_supplicant: wlan_traffic_statistics rx_byte = 385411737 rx rate = 3 Kb/s
+05-21 06:34:39.527  1160  1160 D wpa_supplicant: wlan_traffic_statistics tx_byte = 1409109754 tx rate = 2 Kb/s
+05-21 06:34:39.533   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:39.837   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 12 lines
+05-21 06:34:39.862   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: Timeout (state=LISTEN_ONLY)
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: Driver is still in listen state - stop it
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: nl80211: Cancel remain-on-channel with cookie 0x71691
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: nl80211: Disable Probe Request reporting nl_preq=0x2228a769
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: p2p0: Radio work 'p2p-listen'@0xaa9c36d0 done in 5.047116 seconds
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: p2p0: radio_work_free('p2p-listen'@0xaa9c36d0): num_active_works --> 0
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: nl80211: Drv Event 56 (NL80211_CMD_CANCEL_REMAIN_ON_CHANNEL) received for p2p0
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: nl80211: Remain-on-channel event (cancel=1 freq=2417 channel_type=0 duration=0 cookie=0x71691 (match))
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: p2p0: Event CANCEL_REMAIN_ON_CHANNEL (20) received
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: Cancel remain-on-channel callback (p2p_long_listen=1905762704 ms pending_action_tx=0x0)
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: Driver ended Listen state (freq=2417)
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: Continuing long Listen state
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: Going to listen(only) state
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: STA wpa_state=9 freq=2417
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: cfg reg_class(81) channel(2)
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: cfg reg_class(81) channel(2)
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: Set Listen channel: reg_class 81 channel 2
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: Defer setting listen channel
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: p2p listen class(81)/channel(2)
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: WPS:  * Version (hardcoded 0x10)
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: WPS:  * UUID-E
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: WPS:  * Version2 (0x20)
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: * P2P IE header
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: * Capability dev=25 group=00
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: * Listen Channel: Regulatory Class 81 Channel 2
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: * Device Info
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: p2p0: Add radio work 'p2p-listen'@0xaa9c36d0
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: p2p0: First radio work item in the queue - schedule start immediately
+05-21 06:34:39.867  1160  1160 D wpa_supplicant: P2P: State LISTEN_ONLY -> LISTEN_ONLY
+05-21 06:34:39.868  1160  1160 D wpa_supplicant: p2p0: Starting radio work 'p2p-listen'@0xaa9c36d0 after 0.000058 second wait
+05-21 06:34:39.868  1160  1160 D wpa_supplicant: nl80211: Enable Probe Request reporting nl_preq=0xaaa02fe0
+05-21 06:34:39.868  1160  1160 D wpa_supplicant: nl80211: Register frame type=0x40 (WLAN_FC_STYPE_PROBE_REQ) nl_handle=0xaaa02fe0 match= multicast=0
+05-21 06:34:39.868  1160  1160 D wpa_supplicant: nl80211: Remain-on-channel cookie 0x71692 for freq=2417 MHz duration=5000
+05-21 06:34:39.888   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:39.893  1160  1160 D wpa_supplicant: nl80211: Drv Event 55 (NL80211_CMD_REMAIN_ON_CHANNEL) received for p2p0
+05-21 06:34:39.893  1160  1160 D wpa_supplicant: nl80211: Remain-on-channel event (cancel=0 freq=2417 channel_type=0 duration=5000 cookie=0x71692 (match))
+05-21 06:34:39.893  1160  1160 D wpa_supplicant: p2p0: Event REMAIN_ON_CHANNEL (19) received
+05-21 06:34:39.893  1160  1160 D wpa_supplicant: Off-channel: Send Action callback (without_roc=0 pending_action_tx=0x0 pending_action_tx_done=0)
+05-21 06:34:39.893  1160  1160 D wpa_supplicant: P2P: remain-on-channel callback (off_channel_freq=2417 pending_listen_freq=2417 roc_waiting_drv_freq=0 freq=2417 duration=5000)
+05-21 06:34:39.893  1160  1160 D wpa_supplicant: STA wpa_state=9 freq=2417
+05-21 06:34:39.893  1160  1160 D wpa_supplicant: P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-21 06:34:39.893  1160  1160 D wpa_supplicant: P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-21 06:34:39.913   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:40.394   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 19 lines
+05-21 06:34:40.420   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:40.435   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:40.435   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:40.445   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:41.408   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 38 lines
+05-21 06:34:41.433   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:41.436   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:41.436   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:41.458   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:41.484   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 1 line
+05-21 06:34:41.509   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:41.528  1160  1160 D wpa_supplicant: wlan_traffic_statistics rx_byte = 385412783 rx rate = 4 Kb/s
+05-21 06:34:41.528  1160  1160 D wpa_supplicant: wlan_traffic_statistics tx_byte = 1409110436 tx rate = 2 Kb/s
+05-21 06:34:41.534   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:41.543  2458  3731 D TCastPublishOverUdp: ad4635c@sendOnline
+05-21 06:34:41.560   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:41.889   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 13 lines
+05-21 06:34:41.914   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:41.925   815   998 E WifiVendorHal: getWifiLinkLayerStats_1_3_Internal(l.978) failed {.code = ERROR_NOT_SUPPORTED, .description = }
+05-21 06:34:41.932   815   998 D WifiClientModeImpl: fetchRssiLinkSpeedAndFrequencyNative rssi=-69 TxLinkspeed=130 freq=2417 RxLinkSpeed=0
+05-21 06:34:41.932   815   998 V WifiConfigManager: Updating scan detail cache freq=2417 BSSID=f8:2d:c0:24:9e:d2 RSSI=-69 for "BOLSONARO2018"WPA_PSK
+05-21 06:34:41.933   815   998 D WifiThroughputPredictor:  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-21 06:34:41.933   815   998 D WifiThroughputPredictor:  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-21 06:34:41.933   815   998 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 398514962 SSID: BOLSONARO2018, BSSID: f8:2d:c0:24:9e:d2, MAC: 64:57:25:8c:68:c1, Supplicant state: COMPLETED, Wi-Fi standard: 0, RSSI: -69, Link speed: 130Mbps, Tx Link speed: 130Mbps, Max Supported Tx Link speed: -1Mbps, Rx Link speed: -1Mbps, Max Supported Rx Link speed: -1Mbps, Frequency: 2417MHz, Net ID: 0, Metered hint: false, score: 60
+05-21 06:34:41.933   815   998 D WifiScoreCard: txRate: 12 txSpeed: 130
+05-21 06:34:41.933   815   998 D WifiScoreCard: network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -69 txSpeed 130
+05-21 06:34:41.934   815   998 D WifiScoreCard: SSID: "BOLSONARO2018"
+05-21 06:34:41.934   815   998 D WifiScoreCard:  LastRssiPollTime: 1436813957 LastRssiPoll: -69 LastTxSpeedPoll: 130
+05-21 06:34:41.934   815   998 D WifiScoreCard:  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 5179065 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-21 06:34:41.934   815   998 D WifiScoreCard:  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-21 06:34:41.934   815   998 D WifiScoreCard:  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-21 06:34:41.936   815   998 D WifiClientModeImpl:  L2ConnectedState screen=on 106 0 "BOLSONARO2018" f8:2d:c0:24:9e:d2 rssi=-69 f=2417 sc=60 link=130 tx=11,5, 0,0, 0,0  rx=11,8 bcn=0 [on:0 tx:0 rx:0 period:3009] from screen [on:0 period:1906518] score=60
+05-21 06:34:41.940   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:42.396   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 18 lines
+05-21 06:34:42.421   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:42.436   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:42.436   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:42.447   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.409   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 38 lines
+05-21 06:34:43.434   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.436   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:43.436   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:43.460   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.485   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 1 line
+05-21 06:34:43.510   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.528  1160  1160 D wpa_supplicant: wlan_traffic_statistics rx_byte = 385413483 rx rate = 2 Kb/s
+05-21 06:34:43.529  1160  1160 D wpa_supplicant: wlan_traffic_statistics tx_byte = 1409111150 tx rate = 2 Kb/s
+05-21 06:34:43.536   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.637   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 4 lines
+05-21 06:34:43.662   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.669  2458  2458 I ProtocolService: 6959770@onLowMemory
+05-21 06:34:43.688   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.815   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 5 lines
+05-21 06:34:43.840   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.844  1052  1196 I TGuardMemoryManagerMemoryStrategy: handleEvent type = 1
+05-21 06:34:43.844  1052  1417 I TGuardMemoryManagerMemoryInfoManager: com.redflix.tvmoderno avgPss is 74062  predictSize is 74062
+05-21 06:34:43.844  1052  1417 I TGuardMemoryManagerMemoryStrategy: unit(kb),need=74062,lost=0,swapFree=150012,memAvail=364024,WarningThreshold=183994,realAvail=180030,realNeed=-105968
+05-21 06:34:43.844  1052  1417 D NativeJni: start GetKswapdHigh, zone info path = /proc/zoneinfo
+05-21 06:34:43.845  1052  1404 I TGuardMemoryManagerKillHandler: kill max rank = 9
+05-21 06:34:43.845  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 19]:skipped kill for children size is 0:
+05-21 06:34:43.845  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 18]:skipped kill for children size is 0:com.google.android.gms.persistent
+05-21 06:34:43.845  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 17]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
+05-21 06:34:43.845  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 16]:skipped kill for children size is 0:com.android.vending:quick_launch
+05-21 06:34:43.845  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 15]:skipped kill for children size is 0:android.process.media
+05-21 06:34:43.845  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 14]:skipped kill for children size is 0:com.google.android.webview:webview_apk
+05-21 06:34:43.845  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 13]:skipped kill for children size is 0:com.google.android.apps.tv.launcherx:coreservices
+05-21 06:34:43.845  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 12]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 11]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:1
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 10]:skipped kill for children size is 0:android:ui
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 9]:skipped kill for children size is 0:com.google.android.gms.unstable
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 8]:skipped kill for children size is 0:com.android.vending:background
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 7]:skipped kill for children size is 0:com.google.android.webview:webview_service
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 6]:skipped kill for children size is 0:com.google.android.youtube.tv.recommendations
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 5]:skipped kill for children size is 0:android.process.acore
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 4]:skipped kill for children size is 0:com.tcl.guard:ui
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 3]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 2]:skipped kill for children size is 0:com.google.android.apps.tv.dreamx:smarthome
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 1]:skipped kill for children size is 0:com.google.process.gservices
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 0]:skipped kill for children size is 0:system
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 32]:skipped kill white list:com.android.providers.media.module,pss=9499
+05-21 06:34:43.846  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:43.846  1052  1404 D NativeJni: get -1 process level 2 memory failed(No such process)
+05-21 06:34:43.848  1052  1417 D NativeJni: get high size = 7291 page
+05-21 06:34:43.848  1052  1417 D NativeJni: start GetKswapdLow, zone info path = /proc/zoneinfo
+05-21 06:34:43.848  1052  1417 D NativeJni: get high size = 6710 page
+05-21 06:34:43.848  1052  1417 D NativeJni: start GetKswapdMin, zone info path = /proc/zoneinfo
+05-21 06:34:43.849  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:2
+05-21 06:34:43.849  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.android.externalstorage, rank = 2, reason = tguard-kill-SystemApp, isUseHighCpu = false
+05-21 06:34:43.850  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:1
+05-21 06:34:43.850  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:43.851  1052  1417 D NativeJni: get high size = 778 page
+05-21 06:34:43.851  1052  1417 I TGuardMemoryManagerMemoryStrategy: free=32952,wartermark=(29164,26840,3112),swapfree=150012
+05-21 06:34:43.851  1052  1404 I TGuardMemoryManagerKillHandler: res = -1 noneExist:0 allToKill:2
+05-21 06:34:43.851  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 24]: skipped kill as auto restart:com.android.bluetooth,pss=10443
+05-21 06:34:43.851  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 23]:skipped kill white list:com.google.android.tungsten.setupwraith,pss=26149
+05-21 06:34:43.851  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 22]:skipped kill white list:com.google.android.permissioncontroller,pss=15971
+05-21 06:34:43.851  1052  1404 I TGuardMemoryManagerKillHandler: memory, finish kill total size:0 realNeed:0 cacheFreed:0
+05-21 06:34:43.856  2458  2477 I com.tcl.ttvs: Background concurrent copying GC freed 49136(2763KB) AllocSpace objects, 49(1108KB) LOS objects, 49% free, 5384KB/10MB, paused 150us total 186.518ms
+05-21 06:34:43.866   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.917   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 2 lines
+05-21 06:34:43.942   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:43.949   821  2012 D TVKitService: getProjectID
+05-21 06:34:43.949   821  2012 D DeviceInfoImpl: getProjectID from map is 4357
+05-21 06:34:43.950  2458  2458 I TCL_DeviceInfo: id = 4357
+05-21 06:34:43.950  2458  2458 E TCL_DeviceInfo: from sita get client type is TCL-LA-RTD51A-S1
+05-21 06:34:43.950   821  2012 D TVKitService: getSoftwareVersion
+05-21 06:34:43.951   821  2012 D DeviceInfoImpl: getSoftwareVersion is V8-R51AT01-LF1V126
+05-21 06:34:43.951  2458  2458 I TCL_DeviceInfo: ret  = V8-R51AT01-LF1V126
+05-21 06:34:43.951   815  3143 I WifiService: getConnectionInfo uid=1000
+05-21 06:34:43.968   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:44.398   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 17 lines
+05-21 06:34:44.424   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:44.437   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:44.437   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:44.449   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:44.855   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 16 lines
+05-21 06:34:44.880   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:44.895  1160  1160 D wpa_supplicant: nl80211: Drv Event 56 (NL80211_CMD_CANCEL_REMAIN_ON_CHANNEL) received for p2p0
+05-21 06:34:44.895  1160  1160 D wpa_supplicant: nl80211: Remain-on-channel event (cancel=1 freq=2417 channel_type=0 duration=0 cookie=0x71692 (match))
+05-21 06:34:44.895  1160  1160 D wpa_supplicant: p2p0: Event CANCEL_REMAIN_ON_CHANNEL (20) received
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: Cancel remain-on-channel callback (p2p_long_listen=1905757704 ms pending_action_tx=0x0)
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: p2p0: Radio work 'p2p-listen'@0xaa9c36d0 done in 5.028003 seconds
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: p2p0: radio_work_free('p2p-listen'@0xaa9c36d0): num_active_works --> 0
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: Driver ended Listen state (freq=2417)
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: Continuing long Listen state
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: Going to listen(only) state
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: STA wpa_state=9 freq=2417
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: cfg reg_class(81) channel(2)
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: cfg reg_class(81) channel(2)
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: Set Listen channel: reg_class 81 channel 2
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: Defer setting listen channel
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: p2p listen class(81)/channel(2)
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: WPS:  * Version (hardcoded 0x10)
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: WPS:  * UUID-E
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: WPS:  * Version2 (0x20)
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: * P2P IE header
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: * Capability dev=25 group=00
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: * Listen Channel: Regulatory Class 81 Channel 2
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: * Device Info
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: p2p0: Add radio work 'p2p-listen'@0xaa9c36d0
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: p2p0: First radio work item in the queue - schedule start immediately
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: P2P: State LISTEN_ONLY -> LISTEN_ONLY
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: p2p0: Starting radio work 'p2p-listen'@0xaa9c36d0 after 0.000066 second wait
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: nl80211: Probe Request reporting already on! nl_preq=0x2228a769
+05-21 06:34:44.896  1160  1160 D wpa_supplicant: nl80211: Remain-on-channel cookie 0x71693 for freq=2417 MHz duration=5000
+05-21 06:34:44.905   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:44.913  1160  1160 D wpa_supplicant: P2P: Timeout (state=LISTEN_ONLY)
+05-21 06:34:44.922  1160  1160 D wpa_supplicant: nl80211: Drv Event 55 (NL80211_CMD_REMAIN_ON_CHANNEL) received for p2p0
+05-21 06:34:44.922  1160  1160 D wpa_supplicant: nl80211: Remain-on-channel event (cancel=0 freq=2417 channel_type=0 duration=5000 cookie=0x71693 (match))
+05-21 06:34:44.922  1160  1160 D wpa_supplicant: p2p0: Event REMAIN_ON_CHANNEL (19) received
+05-21 06:34:44.922  1160  1160 D wpa_supplicant: Off-channel: Send Action callback (without_roc=0 pending_action_tx=0x0 pending_action_tx_done=0)
+05-21 06:34:44.922  1160  1160 D wpa_supplicant: P2P: remain-on-channel callback (off_channel_freq=2417 pending_listen_freq=2417 roc_waiting_drv_freq=0 freq=2417 duration=5000)
+05-21 06:34:44.922  1160  1160 D wpa_supplicant: STA wpa_state=9 freq=2417
+05-21 06:34:44.922  1160  1160 D wpa_supplicant: P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-21 06:34:44.922  1160  1160 D wpa_supplicant: P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-21 06:34:44.931   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:44.937   815   998 E WifiVendorHal: getWifiLinkLayerStats_1_3_Internal(l.978) failed {.code = ERROR_NOT_SUPPORTED, .description = }
+05-21 06:34:44.944   815   998 D WifiClientModeImpl: fetchRssiLinkSpeedAndFrequencyNative rssi=-68 TxLinkspeed=130 freq=2417 RxLinkSpeed=0
+05-21 06:34:44.944   815   998 V WifiConfigManager: Updating scan detail cache freq=2417 BSSID=f8:2d:c0:24:9e:d2 RSSI=-68 for "BOLSONARO2018"WPA_PSK
+05-21 06:34:44.945   815   998 D WifiThroughputPredictor:  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-21 06:34:44.945   815   998 D WifiThroughputPredictor:  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-21 06:34:44.945   815   998 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 398514962 SSID: BOLSONARO2018, BSSID: f8:2d:c0:24:9e:d2, MAC: 64:57:25:8c:68:c1, Supplicant state: COMPLETED, Wi-Fi standard: 0, RSSI: -68, Link speed: 130Mbps, Tx Link speed: 130Mbps, Max Supported Tx Link speed: -1Mbps, Rx Link speed: -1Mbps, Max Supported Rx Link speed: -1Mbps, Frequency: 2417MHz, Net ID: 0, Metered hint: false, score: 60
+05-21 06:34:44.945   815   998 D WifiScoreCard: txRate: 17 txSpeed: 130
+05-21 06:34:44.946   815   998 D WifiScoreCard: network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -68 txSpeed 130
+05-21 06:34:44.946   815   998 D WifiScoreCard: SSID: "BOLSONARO2018"
+05-21 06:34:44.946   815   998 D WifiScoreCard:  LastRssiPollTime: 1436816969 LastRssiPoll: -68 LastTxSpeedPoll: 130
+05-21 06:34:44.946   815   998 D WifiScoreCard:  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 5179065 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-21 06:34:44.946   815   998 D WifiScoreCard:  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-21 06:34:44.946   815   998 D WifiScoreCard:  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-21 06:34:44.947   815   998 D WifiClientModeImpl:  L2ConnectedState screen=on 106 0 "BOLSONARO2018" f8:2d:c0:24:9e:d2 rssi=-68 f=2417 sc=60 link=130 tx=16,6, 0,0, 0,0  rx=18,8 bcn=0 [on:0 tx:0 rx:0 period:3011] from screen [on:0 period:1909530] score=60
+05-21 06:34:44.956   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:45.387   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 17 lines
+05-21 06:34:45.413   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:45.437   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:45.437   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:45.438   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:45.489   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 2 lines
+05-21 06:34:45.514   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:45.529  1160  1160 D wpa_supplicant: wlan_traffic_statistics rx_byte = 385419029 rx rate = 21 Kb/s
+05-21 06:34:45.530  1160  1160 D wpa_supplicant: wlan_traffic_statistics tx_byte = 1409116248 tx rate = 19 Kb/s
+05-21 06:34:45.539   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:45.920   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 15 lines
+05-21 06:34:45.945   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:45.963  3061  1657 I AlarmManager: setExactAndAllowWhileIdle [name: GCM_HB_ALARM type: 2 triggerAtMillis: 1437117984]
+05-21 06:34:45.967   815  1764 I system_server: The ClassLoaderContext is a special shared library.
+05-21 06:34:45.967   815  1764 W PackageManager: Non System Server process reporting dex loads as system server. uid=10037
+05-21 06:34:45.971   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:45.996   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 1 line
+05-21 06:34:46.019   815  1764 I AlarmManager: Change Wakeup Alarm type to non Wakeup type, current type=[2] packageName = com.google.android.gms @1437117984 and next wakeup alarm is @Thu May 21 06:40:30 GMT-03:00 2026
+05-21 06:34:46.022   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:46.024  1052  1196 I TGuardMemoryManagerMemoryStrategy: handleEvent type = 1
+05-21 06:34:46.024  1052  1417 I TGuardMemoryManagerMemoryStrategy: revise trend to 3
+05-21 06:34:46.024  1052  1417 I TGuardMemoryManagerMemoryInfoManager: com.redflix.tvmoderno avgPss is 74062  predictSize is 74062
+05-21 06:34:46.024  1052  1417 I TGuardMemoryManagerMemoryStrategy: unit(kb),need=74062,lost=0,swapFree=149904,memAvail=368336,WarningThreshold=183994,realAvail=184342,realNeed=-110280
+05-21 06:34:46.024  1052  1417 D NativeJni: start GetKswapdHigh, zone info path = /proc/zoneinfo
+05-21 06:34:46.025  1052  1417 D NativeJni: get high size = 7291 page
+05-21 06:34:46.025  1052  1417 D NativeJni: start GetKswapdLow, zone info path = /proc/zoneinfo
+05-21 06:34:46.025  1052  1417 D NativeJni: get high size = 6710 page
+05-21 06:34:46.025  1052  1417 D NativeJni: start GetKswapdMin, zone info path = /proc/zoneinfo
+05-21 06:34:46.026  1052  1417 D NativeJni: get high size = 778 page
+05-21 06:34:46.026  1052  1417 I TGuardMemoryManagerMemoryStrategy: free=36872,wartermark=(29164,26840,3112),swapfree=149904
+05-21 06:34:46.026  1052  1404 I TGuardMemoryManagerKillHandler: kill max rank = 9
+05-21 06:34:46.026  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 19]:skipped kill for children size is 0:
+05-21 06:34:46.026  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 18]:skipped kill for children size is 0:com.google.android.gms.persistent
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 17]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 16]:skipped kill for children size is 0:com.android.vending:quick_launch
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 15]:skipped kill for children size is 0:android.process.media
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 14]:skipped kill for children size is 0:com.google.android.webview:webview_apk
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 13]:skipped kill for children size is 0:com.google.android.apps.tv.launcherx:coreservices
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 12]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 11]:skipped kill for children size is 0:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:1
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 10]:skipped kill for children size is 0:android:ui
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 9]:skipped kill for children size is 0:com.google.android.gms.unstable
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 8]:skipped kill for children size is 0:com.android.vending:background
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 7]:skipped kill for children size is 0:com.google.android.webview:webview_service
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 6]:skipped kill for children size is 0:com.google.android.youtube.tv.recommendations
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 5]:skipped kill for children size is 0:android.process.acore
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 4]:skipped kill for children size is 0:com.tcl.guard:ui
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 3]:skipped kill for children size is 0:com.redflix.tvmoderno
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 2]:skipped kill for children size is 0:com.google.android.apps.tv.dreamx:smarthome
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 1]:skipped kill for children size is 0:com.google.process.gservices
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[0, 0]:skipped kill for children size is 0:system
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 32]:skipped kill white list:com.android.providers.media.module,pss=9499
+05-21 06:34:46.027  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:46.027  1052  1404 D NativeJni: get -1 process level 2 memory failed(No such process)
+05-21 06:34:46.028  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:2
+05-21 06:34:46.028  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.android.externalstorage, rank = 2, reason = tguard-kill-SystemApp, isUseHighCpu = false
+05-21 06:34:46.029  1052  1404 I TGuardMemoryManagerKillHandler: res = 0 noneExist:0 allToKill:1
+05-21 06:34:46.029  1052  1404 I TGuardMemoryManagerKillHandler: prepare package: com.google.android.gms, rank = 2, reason = tguard-kill-Gms, isUseHighCpu = false
+05-21 06:34:46.029  1052  1404 I TGuardMemoryManagerKillHandler: res = -1 noneExist:0 allToKill:2
+05-21 06:34:46.029  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 24]: skipped kill as auto restart:com.android.bluetooth,pss=10443
+05-21 06:34:46.029  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 23]:skipped kill white list:com.google.android.tungsten.setupwraith,pss=26149
+05-21 06:34:46.029  1052  1404 I TGuardMemoryManagerKillHandler: rank[2, 22]:skipped kill white list:com.google.android.permissioncontroller,pss=15971
+05-21 06:34:46.029  1052  1404 I TGuardMemoryManagerKillHandler: memory, finish kill total size:0 realNeed:0 cacheFreed:0
+05-21 06:34:46.047   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:46.380   445   939 I chatty  : uid=0(root) DBC_backlight_c identical 13 lines
+05-21 06:34:46.406   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:46.411  3061  3061 W GCM     : broadcast intent callback: result=CANCELLED forIntent { act=com.google.android.c2dm.intent.RECEIVE pkg=com.google.android.apps.tv.launcherx (has extras) }
+05-21 06:34:46.429  1052  1197 I TGuardMemoryManagerPackageRecord: skipped save pss as zero pkg:com.redflix.tvmoderno
+05-21 06:34:46.432   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed
+05-21 06:34:46.437   405   785 I HdmieArc: earc status newStatus 0, oldStatus=EN_TOS_CEC_EARC_STATUS_HANDSHAKE
+05-21 06:34:46.437   405   785 I HdmieArc: rhal earc status: 0, error code: 0 
+05-21 06:34:46.457   445   939 E VPQ     : VPQEX : ioctl KADP_VPQ_HDR_Histogram_MaxRGB failed

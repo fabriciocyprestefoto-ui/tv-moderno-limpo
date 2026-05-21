@@ -1,0 +1,67 @@
+--------- beginning of main
+--------- beginning of system
+--------- beginning of perf
+05-21 09:07:10.758  1099  1704 I RED-X-Plugin: NativePlayer.play() invocado
+05-21 09:07:10.758  1099  1704 I RED-X-Plugin: URL: http://fontez.cc:80/movie/myfilmestest100/jkZwXZ4K4F/7431862.mp4
+05-21 09:07:10.762  1099  1704 I RED-X-Plugin: Lançando ExoPlayerActivity (Media3) via NativePlayer
+05-21 09:07:10.763  1099  1099 I RED-X-Plugin: startActivityForResult: antes
+05-21 09:07:10.900  1099  1099 I RED-X-Plugin: startActivityForResult: depois
+05-21 09:07:11.116  1099  1099 I RED-X-Player: Activity onCreate (Media3) task=4222 device=TCL/TCL/Smart TV
+05-21 09:07:11.136  1099  1099 I RED-X-Player: Intent extras OK type=movie live=false posMs=0 intro=true poster=true url=http://fontez.cc:80/movie/myfilmestest100/jkZwXZ4K4F/7431862.mp4
+05-21 09:07:11.137  1099  1099 I RED-X-Player: buildLayout: inicio
+05-21 09:07:11.140  1099  1099 I RED-X-Player: DIAG PlayerView surface_type=surface_view
+05-21 09:07:11.999  1099  1099 I RED-X-Player: buildLayout: fim
+05-21 09:07:11.999  1099  1099 I RED-X-Player: DIAG buildPlayer: inicio
+05-21 09:07:12.401  1099  1099 I RED-X-Player: DIAG buildPlayer: fim
+05-21 09:07:12.401  1099  1099 I RED-X-Player: DIAG preparePlayback: inicio
+05-21 09:07:12.402  1099  1099 D RED-X-Player: → progressive: http://fontez.cc:80/movie/myfilmestest100/jkZwXZ4K4F/7431862.mp4
+05-21 09:07:12.408  1099  1099 I RED-X-Player: DIAG introUrl=asset:///public/vinheta-tv.mp4
+05-21 09:07:12.408  1099  1099 I RED-X-Player: Intro media: file:///android_asset/public/vinheta-tv.mp4
+05-21 09:07:12.428  1099  1099 D EventLogger: timeline [eventTime=0.03, mediaPos=0.00, window=0, periodCount=1, windowCount=1, reason=PLAYLIST_CHANGED
+05-21 09:07:12.428  1099  1099 D EventLogger:   period [?]
+05-21 09:07:12.428  1099  1099 D EventLogger:   window [?, seekable=false, dynamic=true]
+05-21 09:07:12.428  1099  1099 D EventLogger: ]
+05-21 09:07:12.430  1099  1099 D EventLogger: mediaItem [eventTime=0.03, mediaPos=0.00, window=0, reason=PLAYLIST_CHANGED]
+05-21 09:07:12.431  1099  1099 I RED-X-Player: DIAG Vinheta enfileirada OK
+05-21 09:07:12.436  1099  1099 D EventLogger: timeline [eventTime=0.04, mediaPos=0.00, window=0, periodCount=2, windowCount=2, reason=PLAYLIST_CHANGED
+05-21 09:07:12.436  1099  1099 D EventLogger:   period [?]
+05-21 09:07:12.436  1099  1099 D EventLogger:   period [?]
+05-21 09:07:12.436  1099  1099 D EventLogger:   window [?, seekable=false, dynamic=true]
+05-21 09:07:12.436  1099  1099 D EventLogger:   window [?, seekable=false, dynamic=true]
+05-21 09:07:12.436  1099  1099 D EventLogger: ]
+05-21 09:07:12.441  1099  1099 D EventLogger: playWhenReady [eventTime=0.04, mediaPos=0.00, window=0, true, USER_REQUEST]
+05-21 09:07:12.445  1099  1099 D EventLogger: state [eventTime=0.05, mediaPos=0.00, window=0, BUFFERING]
+05-21 09:07:12.446  1099  1099 I RED-X-Player: DIAG state=BUFFERING item=0 playWhenReady=true
+05-21 09:07:12.447  1099  1099 I RED-X-Player: DIAG preparePlayback: fim
+05-21 09:07:12.468  1099  1099 I RED-X-Player: onResume
+05-21 09:07:12.643  1099  1099 D EventLogger: surfaceSize [eventTime=0.25, mediaPos=0.00, window=0, 1920, 1080]
+05-21 09:07:12.805  1099  1099 D EventLogger: loading [eventTime=0.41, mediaPos=0.00, window=0, period=0, true]
+05-21 09:07:12.806  1099  1099 I RED-X-Player: DIAG isLoading=true bufferedPos=0ms item=0
+05-21 09:07:12.810  1099  1099 D EventLogger: timeline [eventTime=0.41, mediaPos=0.00, window=0, period=0, periodCount=2, windowCount=2, reason=SOURCE_UPDATE
+05-21 09:07:12.810  1099  1099 D EventLogger:   period [?]
+05-21 09:07:12.810  1099  1099 D EventLogger:   period [?]
+05-21 09:07:12.810  1099  1099 D EventLogger:   window [?, seekable=false, dynamic=false]
+05-21 09:07:12.811  1099  1099 D EventLogger:   window [?, seekable=false, dynamic=true]
+05-21 09:07:12.811  1099  1099 D EventLogger: ]
+05-21 09:07:13.043  1099  1099 D EventLogger: timeline [eventTime=0.64, mediaPos=0.00, window=0, period=0, periodCount=2, windowCount=2, reason=SOURCE_UPDATE
+05-21 09:07:13.043  1099  1099 D EventLogger:   period [8.00]
+05-21 09:07:13.043  1099  1099 D EventLogger:   period [?]
+05-21 09:07:13.044  1099  1099 D EventLogger:   window [8.00, seekable=true, dynamic=false]
+05-21 09:07:13.044  1099  1099 D EventLogger:   window [?, seekable=false, dynamic=true]
+05-21 09:07:13.044  1099  1099 D EventLogger: ]
+05-21 09:07:20.447  1099  1099 W RED-X-Player: Pulando vinheta: timeout 8000ms state=2
+05-21 09:07:20.447  1099  1099 I RED-X-Player: DIAG vinheta skip: timeout 8000ms state=2
+05-21 09:07:20.452  1099  1099 D EventLogger: state [eventTime=8.05, mediaPos=0.00, window=0, period=0, IDLE]
+05-21 09:07:20.454  1099  1099 I RED-X-Player: DIAG state=IDLE item=0 playWhenReady=true
+05-21 09:07:20.460  1099  1099 D EventLogger: timeline [eventTime=8.06, mediaPos=0.00, window=0, periodCount=0, windowCount=0, reason=PLAYLIST_CHANGED
+05-21 09:07:20.460  1099  1099 D EventLogger: ]
+05-21 09:07:20.463  1099  1099 D EventLogger: positionDiscontinuity [eventTime=8.06, mediaPos=0.00, window=0, reason=REMOVE, PositionInfo:old [mediaItem=0, period=0, pos=0], PositionInfo:new [mediaItem=0, period=-1, pos=0]]
+05-21 09:07:20.464  1099  1099 D EventLogger: mediaItem [eventTime=8.07, mediaPos=0.00, window=0, reason=PLAYLIST_CHANGED]
+05-21 09:07:20.464  1099  1099 D RED-X-Player: → progressive: http://fontez.cc:80/movie/myfilmestest100/jkZwXZ4K4F/7431862.mp4
+05-21 09:07:20.468  1099  1099 D EventLogger: timeline [eventTime=8.07, mediaPos=0.00, window=0, periodCount=1, windowCount=1, reason=PLAYLIST_CHANGED
+05-21 09:07:20.469  1099  1099 D EventLogger:   period [?]
+05-21 09:07:20.469  1099  1099 D EventLogger:   window [?, seekable=false, dynamic=true]
+05-21 09:07:20.469  1099  1099 D EventLogger: ]
+05-21 09:07:20.470  1099  1099 D EventLogger: mediaItem [eventTime=8.07, mediaPos=0.00, window=0, reason=PLAYLIST_CHANGED]
+05-21 09:07:20.475  1099  1099 D EventLogger: state [eventTime=8.08, mediaPos=0.00, window=0, BUFFERING]
+05-21 09:07:20.477  1099  1099 I RED-X-Player: DIAG state=BUFFERING item=0 playWhenReady=true

@@ -30,6 +30,8 @@ interface UsePlayerIntroOptions {
   streamUrl: string | null | undefined;
   /** Valor de `media.introVideoUrl` — mudança dispara reset da intro */
   introVideoUrl: string | null | undefined;
+  /** Vinheta global já exibida em VinhetaGate antes de montar o Player. */
+  skipIntro?: boolean;
   setShowIntro: (value: boolean) => void;
 }
 
@@ -54,6 +56,7 @@ export function usePlayerIntro({
   defaultIntroConsumedRef,
   streamUrl,
   introVideoUrl,
+  skipIntro = false,
   setShowIntro,
 }: UsePlayerIntroOptions): void {
   const lastIntroPlaybackKeyRef = useRef<string | null>(null);
@@ -124,6 +127,11 @@ export function usePlayerIntro({
     if (lastIntroPlaybackKeyRef.current === playbackKey) return;
     lastIntroPlaybackKeyRef.current = playbackKey;
 
+    if (skipIntro) {
+      setShowIntro(false);
+      return;
+    }
+
     if (explicit) {
       // Intro dedicada (Kids, etc.) — exibe sempre que trocar
       setShowIntro(true);
@@ -140,5 +148,5 @@ export function usePlayerIntro({
       setShowIntro(true);
     }
     // Se já consumida (troca de episódio), não repete a vinheta global
-  }, [streamUrl, introVideoUrl, introVideoSrc, defaultIntroConsumedRef, setShowIntro]);
+  }, [streamUrl, introVideoUrl, introVideoSrc, skipIntro, defaultIntroConsumedRef, setShowIntro]);
 }
