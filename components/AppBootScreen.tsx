@@ -5,8 +5,8 @@ interface AppBootScreenProps {
   onComplete: () => void;
 }
 
-const TOTAL_FRAMES = 96;
-const FPS = 24;
+const TOTAL_FRAMES_RENDERED = 48; // Reduzido pela metade para poupar memória na TCL
+const FPS = 12; // Metade do frame rate para manter a duração de 4 segundos
 const FRAME_DURATION_MS = 1000 / FPS;
 
 const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
@@ -38,9 +38,11 @@ const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
     let loadedCount = 0;
     const loadedImages: HTMLImageElement[] = [];
 
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    for (let i = 1; i <= TOTAL_FRAMES_RENDERED; i++) {
       const img = new Image();
-      const frameNumber = String(i).padStart(3, '0');
+      // Pega frames ímpares (1, 3, 5, 7...) para pular quadros e salvar memória
+      const fileIndex = i * 2 - 1;
+      const frameNumber = String(fileIndex).padStart(3, '0');
       img.src = `/boot-vinheta/frame_${frameNumber}.webp`;
       
       img.onload = () => {
@@ -99,7 +101,7 @@ const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
         currentFrameRef.current++;
         lastDrawTime = time - (elapsed % FRAME_DURATION_MS);
 
-        if (currentFrameRef.current > TOTAL_FRAMES) {
+        if (currentFrameRef.current > TOTAL_FRAMES_RENDERED) {
           finish();
           return;
         }
