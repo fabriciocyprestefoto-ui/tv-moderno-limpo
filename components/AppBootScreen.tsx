@@ -1,20 +1,34 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { isNativePlatform } from '@/services/nativePlayerService';
+import { getSignal } from '@/utils/appSignals';
 
 interface AppBootScreenProps {
   onComplete: () => void;
 }
 
-const TOTAL_FRAMES_RENDERED = 48; // Reduzido pela metade para poupar memória na TCL
-const FPS = 12; // Metade do frame rate para manter a duração de 4 segundos
+// Assets disponíveis: frame_000…frame_071 (72 arquivos). Renderiza os 36 ímpares
+// (1,3,5…71) — metade dos quadros economiza RAM na TCL sem pedir frames inexistentes.
+const TOTAL_FRAMES_RENDERED = 36;
+const FPS = 12;
 const FRAME_DURATION_MS = 1000 / FPS;
+/** Sequência webp completa: 48 frames / 12fps ≈ 4s. O splash nunca sai antes disso. */
+const MIN_TOTAL_MS = TOTAL_FRAMES_RENDERED * FRAME_DURATION_MS;
+/** Teto de segurança: se o catálogo (homeReady) nunca sinalizar, sai assim mesmo. */
+const MAX_TOTAL_MS = 12000;
 
 const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const doneRef = useRef(false);
   const currentFrameRef = useRef(1);
-  const [images, setImages] = useState<HTMLImageElement[]>([]);
+  const startTimeRef = useRef(performance.now());
+  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const preloadStartedRef = useRef(false);
+  const onCompleteRef = useRef(onComplete);
   const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   const nativeAndroid = typeof window !== 'undefined' && isNativePlatform();
   const skipBoot =
@@ -25,97 +39,102 @@ const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
   const finish = useCallback(() => {
     if (doneRef.current) return;
     doneRef.current = true;
-    onComplete();
-  }, [onComplete]);
+    onCompleteRef.current();
+  }, []);
 
-  // Preload das imagens
+  // Preload — roda UMA vez (ref guard). Sem `loaded` nas deps: a sequência nunca reinicia.
   useEffect(() => {
+    if (preloadStartedRef.current) return;
+    preloadStartedRef.current = true;
+
     if (skipBoot) {
-      onComplete();
+      finish();
       return;
     }
 
     let loadedCount = 0;
+    let animationUnlocked = false;
     const loadedImages: HTMLImageElement[] = [];
 
     for (let i = 1; i <= TOTAL_FRAMES_RENDERED; i++) {
       const img = new Image();
-      // Pega frames ímpares (1, 3, 5, 7...) para pular quadros e salvar memória
-      const fileIndex = i * 2 - 1;
-      const frameNumber = String(fileIndex).padStart(3, '0');
-      img.src = `/boot-vinheta/frame_${frameNumber}.webp`;
-      
-      img.onload = () => {
+      const fileIndex = i * 2 - 1; // 1,3,5…95
+      img.src = `/boot-vinheta/frame_${String(fileIndex).padStart(3, '0')}.webp`;
+      const onSettled = () => {
         loadedCount++;
-        // Assim que carregarmos os primeiros 10 frames (ou se a internet for rápida, todos), já podemos iniciar a animação
-        if (loadedCount >= 10 && !loaded) {
+        // Começa a animar quando há frames suficientes em buffer.
+        if (loadedCount >= 10 && !animationUnlocked) {
+          animationUnlocked = true;
           setLoaded(true);
         }
       };
-      
-      img.onerror = () => {
-        loadedCount++;
-      };
-      
+      img.onload = onSettled;
+      img.onerror = onSettled;
       loadedImages.push(img);
     }
-    
-    setImages(loadedImages);
-    
-    // Failsafe absoluto de 12 segundos
-    const failsafe = window.setTimeout(finish, 12000);
+
+    imagesRef.current = loadedImages;
+
+    // Failsafe absoluto: se as imagens nunca carregarem (rede/decodificação falha),
+    // o loop de animação não roda — este timer garante a saída do splash.
+    const failsafe = window.setTimeout(finish, MAX_TOTAL_MS + 1000);
     return () => window.clearTimeout(failsafe);
-  }, [finish, onComplete, skipBoot, loaded]);
+  }, [skipBoot, finish]);
 
-  // Loop de animação no Canvas
+  // Loop: desenha a sequência 1x, depois aguarda o catálogo (homeReady) — fluxo do desktop.
   useEffect(() => {
-    if (skipBoot || !loaded || !canvasRef.current || images.length === 0) return;
-
+    if (skipBoot || !loaded) return;
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
 
-    let animationFrameId: number;
+    let rafId = 0;
     let lastDrawTime = performance.now();
+
+    const drawFrame = (img: HTMLImageElement | undefined) => {
+      if (!img || !img.complete || img.naturalWidth === 0) return;
+      // object-fit: cover — preenche a tela mantendo proporção
+      const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+      const x = canvas.width / 2 - (img.width / 2) * scale;
+      const y = canvas.height / 2 - (img.height / 2) * scale;
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+    };
 
     const render = (time: number) => {
       if (doneRef.current) return;
+      const images = imagesRef.current;
+      const sequenceDone = currentFrameRef.current > TOTAL_FRAMES_RENDERED;
 
-      const elapsed = time - lastDrawTime;
-
-      if (elapsed >= FRAME_DURATION_MS) {
-        const frameIndex = currentFrameRef.current - 1;
-        const img = images[frameIndex];
-
-        if (img && img.complete && img.naturalWidth !== 0) {
-          // Mantém proporção da tela preenchendo a tela (object-fit cover equivalent)
-          const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-          const x = (canvas.width / 2) - (img.width / 2) * scale;
-          const y = (canvas.height / 2) - (img.height / 2) * scale;
-          
-          ctx.fillStyle = '#000';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+      if (!sequenceDone) {
+        if (time - lastDrawTime >= FRAME_DURATION_MS) {
+          drawFrame(images[currentFrameRef.current - 1]);
+          currentFrameRef.current++;
+          lastDrawTime = time - ((time - lastDrawTime) % FRAME_DURATION_MS);
         }
-
-        currentFrameRef.current++;
-        lastDrawTime = time - (elapsed % FRAME_DURATION_MS);
-
-        if (currentFrameRef.current > TOTAL_FRAMES_RENDERED) {
-          finish();
-          return;
-        }
+      } else {
+        // Sequência terminou: segura o último frame enquanto espera o catálogo.
+        drawFrame(images[TOTAL_FRAMES_RENDERED - 1]);
       }
 
-      animationFrameId = requestAnimationFrame(render);
+      const elapsed = time - startTimeRef.current;
+      // Sai quando: sequência completa + catálogo pronto + tempo mínimo,
+      // OU teto de segurança atingido. Mesmo critério do boot do desktop.
+      if (
+        (sequenceDone && getSignal('homeReady') && elapsed >= MIN_TOTAL_MS) ||
+        elapsed >= MAX_TOTAL_MS
+      ) {
+        finish();
+        return;
+      }
+
+      rafId = requestAnimationFrame(render);
     };
 
-    animationFrameId = requestAnimationFrame(render);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [skipBoot, loaded, images, finish]);
+    rafId = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(rafId);
+  }, [skipBoot, loaded, finish]);
 
   if (skipBoot) return null;
 
@@ -125,7 +144,7 @@ const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
         ref={(el) => {
           canvasRef.current = el;
           if (el) {
-            // Seta resolução nativa da TV para evitar borrões
+            // Resolução nativa da TV — evita borrões
             el.width = window.innerWidth;
             el.height = window.innerHeight;
           }
@@ -138,4 +157,3 @@ const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
 };
 
 export default AppBootScreen;
-

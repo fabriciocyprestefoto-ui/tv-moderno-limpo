@@ -9,6 +9,27 @@ interface FutebolTabelaProps {
   getBadge: (teamName: string | null, explicitBadge?: string | null) => string;
 }
 
+// ── Zonas da tabela do Brasileirão Série A ──────────────────────────────────
+// Pos 1       → Campeão
+// Pos 2–4     → Copa Libertadores (fase de grupos)
+// Pos 5–6     → Copa Libertadores (pré)
+// Pos 7–8     → Copa Sul-Americana
+// Pos 17–20   → Rebaixamento para Série B
+const ZONA: Record<number, { label: string; color: string; borderColor: string }> = {
+  1:  { label: 'Campeão', color: '#facc14', borderColor: 'rgba(250,204,21,0.70)' },
+  2:  { label: 'Libertadores', color: '#4ade80', borderColor: 'rgba(74,222,128,0.55)' },
+  3:  { label: 'Libertadores', color: '#4ade80', borderColor: 'rgba(74,222,128,0.55)' },
+  4:  { label: 'Libertadores', color: '#4ade80', borderColor: 'rgba(74,222,128,0.55)' },
+  5:  { label: 'Libertadores (pré)', color: '#86efac', borderColor: 'rgba(134,239,172,0.40)' },
+  6:  { label: 'Libertadores (pré)', color: '#86efac', borderColor: 'rgba(134,239,172,0.40)' },
+  7:  { label: 'Sul-Americana', color: '#38bdf8', borderColor: 'rgba(56,189,248,0.45)' },
+  8:  { label: 'Sul-Americana', color: '#38bdf8', borderColor: 'rgba(56,189,248,0.45)' },
+  17: { label: 'Rebaixamento', color: '#f87171', borderColor: 'rgba(248,113,113,0.55)' },
+  18: { label: 'Rebaixamento', color: '#f87171', borderColor: 'rgba(248,113,113,0.55)' },
+  19: { label: 'Rebaixamento', color: '#f87171', borderColor: 'rgba(248,113,113,0.55)' },
+  20: { label: 'Rebaixamento', color: '#f87171', borderColor: 'rgba(248,113,113,0.55)' },
+};
+
 const posColor: Record<number, string> = {
   1: 'text-yellow-400',
   2: 'text-slate-300',
@@ -68,6 +89,8 @@ const FutebolTabelaComponent: React.FC<FutebolTabelaProps> = ({
         const rankColorClass = posColor[pos] ?? 'text-white/40';
         const rowBg = posBg[pos] ?? 'transparent';
 
+        const zona = ZONA[pos] ?? null;
+
         return (
           <div
             key={`${row.nomeTime}-${idx}`}
@@ -80,12 +103,14 @@ const FutebolTabelaComponent: React.FC<FutebolTabelaProps> = ({
                   : idx % 2 === 0
                     ? 'rgba(255,255,255,0.03)'
                     : 'rgba(255,255,255,0.015)',
-              borderColor:
-                pos === 1
+              borderColor: zona
+                ? zona.borderColor
+                : pos === 1
                   ? 'rgba(250,204,21,0.20)'
                   : pos <= 3
                     ? 'rgba(255,255,255,0.08)'
                     : 'rgba(255,255,255,0.05)',
+              borderLeft: zona ? `3px solid ${zona.color}` : undefined,
             }}
             tabIndex={0}
             data-nav-item
@@ -158,6 +183,28 @@ const FutebolTabelaComponent: React.FC<FutebolTabelaProps> = ({
       {!tabela.length && !loadingTabela && (
         <div className="px-4 py-8 text-center text-white/40 text-sm font-semibold">
           Tabela indisponível no momento.
+        </div>
+      )}
+
+      {/* Legenda de zonas */}
+      {tabela.length > 0 && (
+        <div className="flex flex-wrap gap-x-5 gap-y-2 px-2 pt-3 text-[10px] font-bold uppercase tracking-[0.14em]">
+          <span className="flex items-center gap-1.5 text-yellow-400">
+            <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 inline-block" />
+            Campeão
+          </span>
+          <span className="flex items-center gap-1.5 text-emerald-400">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block" />
+            Libertadores
+          </span>
+          <span className="flex items-center gap-1.5 text-sky-400">
+            <span className="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block" />
+            Sul-Americana
+          </span>
+          <span className="flex items-center gap-1.5 text-red-400">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-400 inline-block" />
+            Rebaixamento
+          </span>
         </div>
       )}
     </div>

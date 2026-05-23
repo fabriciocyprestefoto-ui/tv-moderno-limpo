@@ -6,6 +6,7 @@ import {
   ClassificacaoTime,
   ElencoTime,
   HeroTime,
+  HistoriaTime,
   ProximosJogosTime,
   ResultadosTime,
 } from '@/components/Futebol/Time';
@@ -21,6 +22,7 @@ const FutebolTimePage: React.FC<FutebolTimeProps> = ({ teamId }) => {
 
   const {
     detalhesTime,
+    dadosLocais,
     classificacaoAtual,
     classificacaoIndisponivel,
     proximosJogos,
@@ -106,11 +108,14 @@ const FutebolTimePage: React.FC<FutebolTimeProps> = ({ teamId }) => {
         </>
       )}
 
+      <HistoriaTime dadosLocais={dadosLocais} rowBase={20} />
+
       <ElencoTime
         elencoPorPosicao={elencoPorPosicao}
         artilheiro={artilheiro}
         loading={loadingElenco}
         error={erroElenco}
+        espnSquad={dadosLocais?.squad}
       />
 
       {!loadingElenco && erroElenco ? (

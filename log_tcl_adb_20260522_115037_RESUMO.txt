@@ -1,0 +1,36 @@
+# TCL ADB — Resumo (22/05/2026 11:50)
+Dispositivo: 192.168.0.4:5555 (TCL Smart TV, Android 11)
+NOTA: AI_HANDOFF.md cita 192.168.0.7 — IP atual da TCL é .4 (0.7 recusou conexão)
+
+APK: redflix-tvmoderno.apk
+Instalação: Success
+Pacote: com.redflix.tvmoderno
+PID app: 2611
+
+## Resultado geral
+- Sem FATAL EXCEPTION / sem crash AndroidRuntime
+- App abriu: NativeBootActivity → MainActivity em ~2,4s
+- Plugin NativePlayer registrado (Capacitor)
+- Supabase: todas requisições capturadas com status 200
+- Bypass de teste ativo: AppValidator.validate() bypass temporário (VITE_SKIP_AUTH / VITE_TV_TEST_LOGIN)
+
+## Erros relevantes do app (não fatal)
+1. E/cr_AwSupervisedUserDel: TimeoutException (WebView supervised user — ruído comum)
+2. W/Capacitor: Unable to read file at path public/plugins
+3. W/Looper Slow dispatch/delivery 1189–2425ms na abertura (UI pesada no boot)
+4. E/BufferQueueProducer: NativeBootActivity disconnect not connected (transição boot→main)
+5. E/dflix.tvmodern: Unknown bits set in runtime_flags: 0x800000
+6. E/libc: Access denied finding property ro.vendor.api_level
+
+## Ruído do firmware TCL (ignorar para debug app)
+- E/RHWC2 rtk_gdma_post (compositor Realtek)
+- E/IpelEngine IOCTL failures
+- E/WifiVendorHal ERROR_NOT_SUPPORTED
+
+## Player
+- Nenhuma abertura de ExoPlayerActivity nesta captura (45s só boot + home/catálogo)
+- Para log de player: reproduzir filme/canal e rodar logcat de novo
+
+## Arquivos completos
+- log_tcl_adb_20260522_115037.txt (6632 linhas)
+- log_tcl_adb_20260522_115037_errors.txt (3619 linhas filtradas)

@@ -92,14 +92,6 @@ const MAX_BANNER_RETRIES = 3;
 
 const DEFAULT_MAX_SLIDES = 1;
 
-const PRIORITY_HERO_ASSETS: Record<number, Partial<Media>> = {
-  71446: {
-    title: 'La casa de papel',
-    backdrop_path: '/gFZriCkpJYsApPZEF3jhxL4yLzG.jpg',
-    poster_path: '/yVUAfbrP5HDJugXraB7KQS0yz6Z.jpg',
-  },
-};
-
 const HeroBanner: React.FC<HeroBannerProps> = ({
   mediaType = 'all',
   onPlayMedia,
@@ -170,14 +162,12 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
     const seenTmdb = new Set(validCandidates.map((m) => Number(m.tmdb_id)));
     priorityIdList.forEach((id, index) => {
       if (!seenTmdb.has(id)) {
-        const preset = PRIORITY_HERO_ASSETS[id] || {};
         seenTmdb.add(id);
         validCandidates.push({
-          ...preset,
           id: `__hero_priority_${id}`,
           tmdb_id: id,
           type: priorityTmdbMediaType,
-          title: String(priorityTitles?.[index] || preset.title || '').trim(),
+          title: String(priorityTitles?.[index] || '').trim(),
           stream_url: 'https://example.com/',
         } as Media);
       }

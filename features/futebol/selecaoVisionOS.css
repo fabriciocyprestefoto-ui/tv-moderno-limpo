@@ -1,0 +1,499 @@
+/* ════════════════════════════════════════════════════════════════════
+   Seleção Brasileira — gradiente descoado + visionOS glassmorphism
+   Paleta: Verde #009C3B · Amarelo #FFDF00 · Azul #002776
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── Root ─────────────────────────────────────────────────────────── */
+
+.selecao-root {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* ── Gradiente descoado de fundo ─────────────────────────────────── */
+
+.selecao-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 85% 65% at 10% 55%, rgba(0, 156, 59, 0.11) 0%, transparent 62%),
+    radial-gradient(ellipse 65% 85% at 50% -5%,  rgba(255, 223, 0, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 75% 55% at 92% 65%,  rgba(0, 39, 118, 0.10) 0%, transparent 58%),
+    radial-gradient(ellipse 40% 40% at 50% 50%,  rgba(255, 223, 0, 0.03) 0%, transparent 70%);
+}
+
+.selecao-ambient-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(7, 9, 13, 0.95) 100%);
+}
+
+/* ── visionOS glass base ─────────────────────────────────────────── */
+
+.selecao-glass-panel {
+  background: rgba(255, 255, 255, 0.042);
+  backdrop-filter: blur(36px) saturate(210%) brightness(1.05);
+  -webkit-backdrop-filter: blur(36px) saturate(210%) brightness(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.17),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+    0 12px 48px rgba(0, 0, 0, 0.50),
+    0 4px 12px rgba(0, 0, 0, 0.28);
+}
+
+.selecao-glass-dark {
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14);
+}
+
+.selecao-glass-card {
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.07),
+    0 6px 24px rgba(0, 0, 0, 0.36),
+    0 2px 6px rgba(0, 0, 0, 0.18);
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 240ms ease,
+    border-color 240ms ease,
+    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.selecao-glass-card:hover,
+.selecao-glass-card:focus-visible {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 223, 0, 0.26);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 16px 50px rgba(0, 0, 0, 0.50),
+    0 0 0 1px rgba(255, 223, 0, 0.12),
+    0 0 28px rgba(255, 223, 0, 0.05);
+  outline: none;
+}
+
+/* ── Hero card ───────────────────────────────────────────────────── */
+
+.selecao-hero-card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  padding: 28px 24px 22px;
+  z-index: 1;
+}
+
+/* Stripe bandeira no topo */
+.selecao-flag-stripe {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    #009C3B 0%, #009C3B 33.3%,
+    #FFDF00 33.3%, #FFDF00 66.6%,
+    #002776 66.6%, #002776 100%
+  );
+  opacity: 0.55;
+}
+
+/* ── Header hero ─────────────────────────────────────────────────── */
+
+.selecao-hero-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.selecao-trophy-badge {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  background: rgba(255, 223, 0, 0.11);
+  border: 1.5px solid rgba(255, 223, 0, 0.28);
+  box-shadow:
+    0 0 24px rgba(255, 223, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  flex-shrink: 0;
+}
+
+.selecao-hero-info { flex: 1; min-width: 0; }
+
+.selecao-hero-title {
+  margin: 6px 0 0;
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: #fff;
+}
+
+.selecao-hero-sub {
+  margin: 4px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ── Chips ───────────────────────────────────────────────────────── */
+
+.selecao-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.selecao-chip-verde,
+.selecao-chip-amarelo,
+.selecao-chip-azul,
+.selecao-chip-live,
+.selecao-chip-sched {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 11px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
+}
+
+.selecao-chip-verde {
+  background: rgba(0, 156, 59, 0.18);
+  border: 1px solid rgba(0, 156, 59, 0.32);
+  color: #4ade80;
+}
+.selecao-chip-amarelo {
+  background: rgba(255, 223, 0, 0.11);
+  border: 1px solid rgba(255, 223, 0, 0.28);
+  color: #fde047;
+}
+.selecao-chip-azul {
+  background: rgba(0, 39, 118, 0.22);
+  border: 1px solid rgba(96, 165, 250, 0.28);
+  color: #93c5fd;
+}
+.selecao-chip-live {
+  background: rgba(74, 222, 128, 0.14);
+  border: 1px solid rgba(74, 222, 128, 0.30);
+  color: #4ade80;
+}
+.selecao-chip-sched {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.selecao-live-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.8);
+  animation: selecao-pulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes selecao-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Stats row ───────────────────────────────────────────────────── */
+
+.selecao-stats-row {
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.selecao-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 6px;
+}
+
+.selecao-stat-num {
+  font-size: clamp(20px, 3.5vw, 28px);
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, #fde047 0%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.selecao-stat-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+  margin-top: 4px;
+}
+
+.selecao-stat-divider {
+  width: 1px;
+  align-self: stretch;
+  background: linear-gradient(
+    180deg,
+    transparent 8%,
+    rgba(255, 255, 255, 0.11) 50%,
+    transparent 92%
+  );
+}
+
+/* ── Copa countdown ──────────────────────────────────────────────── */
+
+.selecao-copa-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 16px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.selecao-copa-info { min-width: 0; }
+
+.selecao-copa-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 4px;
+}
+
+.selecao-copa-paises {
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.selecao-copa-datas {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.40);
+  margin-top: 2px;
+}
+
+/* ── Countdown ───────────────────────────────────────────────────── */
+
+.selecao-countdown {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.selecao-cd-digit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px 12px;
+  min-width: 48px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.selecao-cd-num {
+  font-size: clamp(18px, 3vw, 24px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.selecao-cd-lbl {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 3px;
+}
+
+.selecao-cd-sep {
+  font-size: 20px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.22);
+  margin-bottom: 16px;
+  align-self: flex-end;
+}
+
+/* ── Próximos jogos ──────────────────────────────────────────────── */
+
+.selecao-jogos-section { margin-top: 4px; }
+
+.selecao-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 8px;
+}
+
+.selecao-jogos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.selecao-jogo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  outline: none;
+  transition:
+    background 220ms ease,
+    border-color 220ms ease,
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.selecao-jogo-row:hover,
+.selecao-jogo-row:focus-visible {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 223, 0, 0.20);
+  transform: translateX(3px);
+}
+
+.selecao-flag-pill {
+  font-size: 22px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+.selecao-jogo-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.selecao-jogo-teams {
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.90);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.selecao-vs {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+  margin: 0 5px;
+}
+
+.selecao-jogo-meta {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.38);
+  font-weight: 600;
+}
+
+/* ── Convocados grid ─────────────────────────────────────────────── */
+
+.selecao-convocados-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 480px) {
+  .selecao-convocados-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.selecao-player-card {
+  border-radius: 16px;
+  padding: 14px 10px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: default;
+}
+
+.selecao-player-emoji {
+  font-size: 26px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+.selecao-player-nome {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.90);
+  margin-top: 4px;
+}
+
+.selecao-player-pos {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.38);
+  font-weight: 600;
+}
+
+.selecao-player-stripe {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  opacity: 0.50;
+  border-radius: 0 0 16px 16px;
+}

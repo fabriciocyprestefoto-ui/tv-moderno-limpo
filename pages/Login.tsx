@@ -56,8 +56,21 @@ const Login: React.FC<{ onLogin: () => void; onAdminAccess?: () => void }> = ({
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(focusToFirstRow, 100);
-    return () => clearTimeout(t);
+    // Em Android TV, a transição da vinheta nativa (NativeBootActivity) para a MainActivity
+    // pode atrasar o ganho de foco real da WebView. Tentativas em cascata garantem a captura do D-Pad.
+    const handleWindowFocus = () => focusToFirstRow();
+    window.addEventListener('focus', handleWindowFocus);
+
+    const timers = [
+      setTimeout(focusToFirstRow, 100),
+      setTimeout(focusToFirstRow, 600),
+      setTimeout(focusToFirstRow, 1500),
+      setTimeout(focusToFirstRow, 2500)
+    ];
+    return () => {
+      window.removeEventListener('focus', handleWindowFocus);
+      timers.forEach(clearTimeout);
+    };
   }, [focusToFirstRow, authMode]);
 
   const handleModeSwitch = (mode: AuthMode) => {

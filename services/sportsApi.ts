@@ -1,183 +1,570 @@
 /**
  * services/sportsApi.ts
- * Cliente para a API de esportes (sports.bzzoiro.com)
+ *
+ * Cliente para a Futebol Brasil API (local / self-hosted).
+ * URL base: VITE_SPORTS_API_URL (default: http://localhost:3333)
+ *
+ * Cobre futebol BR, Europa, Copa 2026, NBA e Lutas/UFC.
  */
 
-import { env } from '../config/env';
+// ─── Config ───────────────────────────────────────────────────────────────────
 
-const API_BASE = 'https://sports.bzzoiro.com/api';
-const API_TOKEN = env.sportsApiToken;
+const API_BASE: string =
+  (typeof import.meta !== 'undefined' && (import.meta as Record<string, unknown>).env
+    ? ((import.meta as Record<string, Record<string, string>>).env.VITE_SPORTS_API_URL ?? 'http://localhost:3333')
+    : 'http://localhost:3333') + '/api'
 
-const headers = {
-  Authorization: `Token ${API_TOKEN}`,
-  'Content-Type': 'application/json',
-};
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-// --- Types ---
-
-export interface League {
-  id: number;
-  name: string;
-  country?: string;
-  logo?: string | null;
-  season?: string;
+export interface SportsCard {
+  id: string
+  type: 'match' | 'team' | 'competition' | 'fighter' | 'event'
+  title: string
+  subtitle?: string
+  image?: string | null
+  logoLeft?: string | null
+  logoRight?: string | null
+  badge?: string | null
+  status?: 'scheduled' | 'live' | 'finished' | 'postponed' | 'cancelled'
+  date?: string
+  time?: string
+  score?: { home: number | null; away: number | null }
+  competition?: string
+  href?: string
+  sport?: string
 }
 
-export interface Team {
-  id: number;
-  name: string;
-  logo?: string | null;
-  country?: string;
+export interface SportsSection {
+  id: string
+  title: string
+  type: string
+  items: SportsCard[]
 }
 
-export interface SportEvent {
-  id: number;
-  home_team: string;
-  away_team: string;
-  home_team_logo?: string | null;
-  away_team_logo?: string | null;
-  home_score?: number | null;
-  away_score?: number | null;
-  league?: string;
-  league_logo?: string | null;
-  date: string;
-  time?: string;
-  status?: string;
-  venue?: string;
-  round?: string;
+export interface SportsHome {
+  updatedAt: string
+  sections: SportsSection[]
 }
 
-export interface LiveMatch {
-  id: number;
-  home_team: string;
-  away_team: string;
-  home_team_logo?: string | null;
-  away_team_logo?: string | null;
-  home_score?: number | null;
-  away_score?: number | null;
-  league?: string;
-  league_logo?: string | null;
-  status?: string;
-  elapsed?: number | string | null;
-  venue?: string;
+export interface FootballMatch {
+  id: string
+  sport: string
+  competition: string
+  homeTeam: { id: string; name: string; logo?: string | null }
+  awayTeam: { id: string; name: string; logo?: string | null }
+  date: string
+  time?: string
+  status: string
+  score?: { home: number | null; away: number | null } | null
+  venue?: string | null
+  city?: string | null
+  broadcast?: string[]
+  updatedAt: string
 }
 
-export interface Prediction {
-  id: number;
-  home_team: string;
-  away_team: string;
-  home_team_logo?: string | null;
-  away_team_logo?: string | null;
-  league?: string;
-  date: string;
-  prediction?: string;
-  confidence?: number | null;
+export interface NBAGame {
+  id: string
+  sport: string
+  competition: string
+  homeTeam: { id: string; name: string; logo?: string | null }
+  awayTeam: { id: string; name: string; logo?: string | null }
+  date: string
+  time?: string
+  status: string
+  score?: { home: number | null; away: number | null } | null
+  period?: number | null
+  clock?: string | null
+  venue?: string | null
+  broadcast?: string[]
+  updatedAt: string
 }
 
-// --- Fetch helpers ---
+export interface NBAStandings {
+  east: NBATeamRecord[]
+  west: NBATeamRecord[]
+}
+
+export interface NBATeamRecord {
+  position: number
+  team: string
+  logo?: string | null
+  wins: number
+  losses: number
+  winPct: number
+}
+
+export interface NBATeam {
+  id: string
+  name: string
+  shortName?: string
+  logo?: string | null
+  color?: string | null
+  conference?: string | null
+  squad?: NBAPlayer[]
+}
+
+export interface NBAPlayer {
+  id: string
+  name: string
+  photo?: string | null
+  position?: string | null
+  jersey?: string | null
+  age?: number | null
+  nationality?: string | null
+}
+
+export interface FightEvent {
+  id: string
+  sport: string
+  name: string
+  nickname?: string | null
+  date: string
+  time?: string
+  venue?: string | null
+  city?: string | null
+  country?: string | null
+  status: string
+  mainEvent?: {
+    fighter1: FightFighter
+    fighter2: FightFighter
+    weightClass: string
+    rounds: number
+    winner?: string | null
+    method?: string | null
+  } | null
+  card?: FightCard[]
+  broadcast?: string[]
+}
+
+export interface FightFighter {
+  id: string
+  name: string
+  nickname?: string | null
+  country?: string | null
+  flag?: string | null
+  record?: string | null
+  photo?: string | null
+}
+
+export interface FightCard {
+  id: string
+  weightClass: string
+  rounds: number
+  fighter1: Omit<FightFighter, 'id'>
+  fighter2: Omit<FightFighter, 'id'>
+  winner?: string | null
+  method?: string | null
+  status: string
+}
+
+export interface FootballTeam {
+  id: string
+  name: string
+  logo?: string | null
+  country?: string
+  state?: string
+  city?: string
+  stadium?: { name?: string; capacity?: number | null }
+  founded?: string
+  colors?: string[]
+  coach?: string | null
+  // História e títulos
+  history?: string | null
+  historiaCompleta?: string | null
+  honors?: string[]
+  conquistasInternacionais?: number
+  conquistasNacionais?: number
+  // Identidade do clube
+  apelidos?: string[]
+  mascote?: string | null
+  hino?: string | null
+  presidente?: string | null
+  socioTorcedor?: string | null
+  museu?: string | null
+  redesSociais?: {
+    instagram?: string | null
+    twitter?: string | null
+    youtube?: string | null
+    tiktok?: string | null
+    facebook?: string | null
+  }
+  rivais?: string[]
+  // Elenco com fotos ESPN
+  squad?: FootballPlayer[]
+  updatedAt?: string
+}
+
+export interface FootballPlayer {
+  nome: string
+  posicao?: string | null
+  numero?: number | null
+  nacionalidade?: string | null
+  idade?: number | null
+  foto?: string | null
+}
+
+export interface Competition {
+  id: string
+  name: string
+  country: string
+  type: string
+  logo?: string | null
+}
+
+export interface StandingsRow {
+  posicao: number
+  time: string
+  escudo?: string | null
+  jogos: number
+  pontos: number
+  vitorias: number
+  empates: number
+  derrotas: number
+  golsPro: number
+  golsContra: number
+  saldoGols: number
+  aproveitamento: number
+}
+
+export interface WorldCup2026Info {
+  nome: string
+  edicao: number
+  ano: number
+  paises: string[]
+  inicio: string
+  fim: string
+  selecoesParticipantes: number
+  totalJogos: number
+  mascote: string
+}
+
+// ─── Fetch helper ─────────────────────────────────────────────────────────────
 
 async function apiFetch<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
-  const url = new URL(`${API_BASE}${endpoint}`);
+  const url = new URL(`${API_BASE}${endpoint}`)
   if (params) {
-    Object.entries(params).forEach(([k, v]) => {
-      if (v) url.searchParams.set(k, v);
-    });
+    Object.entries(params).forEach(([k, v]) => { if (v !== undefined) url.searchParams.set(k, v) })
   }
-  const res = await fetch(url.toString(), { headers });
-  if (!res.ok) throw new Error(`Sports API error: ${res.status}`);
-  return res.json();
+  const res = await fetch(url.toString())
+  if (!res.ok) throw new Error(`SportsAPI ${res.status}: ${endpoint}`)
+  const json = await res.json()
+  return (json.data ?? json) as T
 }
 
-// --- API methods ---
+// ─── API functions ────────────────────────────────────────────────────────────
 
-export async function getLeagues(): Promise<League[]> {
+/** Home agregada — seções prontas para o app de TV */
+export async function getSportsHome(): Promise<SportsHome> {
   try {
-    const data = await apiFetch<any>('/leagues/');
-    return Array.isArray(data) ? data : (data?.results ?? []);
+    return await apiFetch<SportsHome>('/sports/home')
   } catch (e) {
-    console.error('[SportsAPI] getLeagues error:', e);
-    return [];
+    console.error('[SportsAPI] getSportsHome error:', e)
+    return { updatedAt: new Date().toISOString(), sections: [] }
   }
 }
 
-export async function getTeams(country?: string): Promise<Team[]> {
+/** Partidas de futebol de hoje (BR + internacional) */
+export async function getTodayFootballMatches(): Promise<FootballMatch[]> {
   try {
-    const params: Record<string, string> = {};
-    if (country) params.country = country;
-    const data = await apiFetch<any>('/teams/', params);
-    return Array.isArray(data) ? data : (data?.results ?? []);
+    return await apiFetch<FootballMatch[]>('/football/matches/today')
   } catch (e) {
-    console.error('[SportsAPI] getTeams error:', e);
-    return [];
+    console.error('[SportsAPI] getTodayFootballMatches error:', e)
+    return []
   }
 }
 
-export async function getEvents(filters?: {
-  date_from?: string;
-  date_to?: string;
-  league?: string;
-  status?: string;
-}): Promise<SportEvent[]> {
+/** Próximas partidas de futebol */
+export async function getUpcomingMatches(days = 7): Promise<FootballMatch[]> {
   try {
-    const params: Record<string, string> = {};
-    if (filters?.date_from) params.date_from = filters.date_from;
-    if (filters?.date_to) params.date_to = filters.date_to;
-    if (filters?.league) params.league = filters.league;
-    if (filters?.status) params.status = filters.status;
-    const data = await apiFetch<any>('/events/', params);
-    return Array.isArray(data) ? data : (data?.results ?? []);
+    return await apiFetch<FootballMatch[]>('/football/matches/upcoming', { days: String(days) })
   } catch (e) {
-    console.error('[SportsAPI] getEvents error:', e);
-    return [];
+    console.error('[SportsAPI] getUpcomingMatches error:', e)
+    return []
   }
 }
 
-export async function getLiveMatches(): Promise<LiveMatch[]> {
+/** Partidas ao vivo */
+export async function getLiveMatches(): Promise<FootballMatch[]> {
   try {
-    const data = await apiFetch<any>('/live/');
-    return Array.isArray(data) ? data : (data?.results ?? []);
+    return await apiFetch<FootballMatch[]>('/football/matches/live')
   } catch (e) {
-    console.error('[SportsAPI] getLiveMatches error:', e);
-    return [];
+    console.error('[SportsAPI] getLiveMatches error:', e)
+    return []
   }
 }
 
-export async function getPredictions(upcoming?: boolean): Promise<Prediction[]> {
+/** Partidas recentes encerradas */
+export async function getRecentMatches(): Promise<FootballMatch[]> {
   try {
-    const params: Record<string, string> = {};
-    if (upcoming) params.upcoming = 'true';
-    const data = await apiFetch<any>('/predictions/', params);
-    return Array.isArray(data) ? data : (data?.results ?? []);
+    return await apiFetch<FootballMatch[]>('/football/matches/recent')
   } catch (e) {
-    console.error('[SportsAPI] getPredictions error:', e);
-    return [];
+    console.error('[SportsAPI] getRecentMatches error:', e)
+    return []
   }
 }
 
-// --- Utility ---
+/** Lista de competições disponíveis */
+export async function getCompetitions(): Promise<Competition[]> {
+  try {
+    return await apiFetch<Competition[]>('/football/competitions')
+  } catch (e) {
+    console.error('[SportsAPI] getCompetitions error:', e)
+    return []
+  }
+}
+
+/** Tabela de classificação de uma competição */
+export async function getCompetitionStandings(competitionId: string): Promise<StandingsRow[]> {
+  try {
+    return await apiFetch<StandingsRow[]>(`/football/competitions/${competitionId}/standings`)
+  } catch (e) {
+    console.error('[SportsAPI] getCompetitionStandings error:', e)
+    return []
+  }
+}
+
+/** Partidas de uma competição em uma data */
+export async function getCompetitionMatches(competitionId: string, date?: string): Promise<FootballMatch[]> {
+  try {
+    const params: Record<string, string> = {}
+    if (date) params.date = date
+    return await apiFetch<FootballMatch[]>(`/football/competitions/${competitionId}/matches`, params)
+  } catch (e) {
+    console.error('[SportsAPI] getCompetitionMatches error:', e)
+    return []
+  }
+}
+
+/** Lista de times brasileiros */
+export async function getTeams(): Promise<FootballTeam[]> {
+  try {
+    return await apiFetch<FootballTeam[]>('/football/teams')
+  } catch (e) {
+    console.error('[SportsAPI] getTeams error:', e)
+    return []
+  }
+}
+
+/** Detalhes de um time (com elenco) */
+export async function getTeamDetails(teamId: string): Promise<FootballTeam | null> {
+  try {
+    return await apiFetch<FootballTeam>(`/football/teams/${teamId}`)
+  } catch (e) {
+    console.error('[SportsAPI] getTeamDetails error:', e)
+    return null
+  }
+}
+
+/** Elenco de um time */
+export async function getTeamSquad(teamId: string): Promise<FootballPlayer[]> {
+  try {
+    return await apiFetch<FootballPlayer[]>(`/football/teams/${teamId}/squad`)
+  } catch (e) {
+    console.error('[SportsAPI] getTeamSquad error:', e)
+    return []
+  }
+}
+
+// ─── Copa do Mundo 2026 ────────────────────────────────────────────────────────
+
+export async function getWorldCup2026(): Promise<WorldCup2026Info | null> {
+  try {
+    return await apiFetch<WorldCup2026Info>('/world-cup/2026')
+  } catch (e) {
+    console.error('[SportsAPI] getWorldCup2026 error:', e)
+    return null
+  }
+}
+
+export async function getWorldCupTeams(): Promise<unknown[]> {
+  try {
+    return await apiFetch<unknown[]>('/world-cup/2026/teams')
+  } catch (e) {
+    console.error('[SportsAPI] getWorldCupTeams error:', e)
+    return []
+  }
+}
+
+export async function getWorldCupGroups(): Promise<unknown[]> {
+  try {
+    return await apiFetch<unknown[]>('/world-cup/2026/groups')
+  } catch (e) {
+    console.error('[SportsAPI] getWorldCupGroups error:', e)
+    return []
+  }
+}
+
+export async function getWorldCupMatches(): Promise<FootballMatch[]> {
+  try {
+    return await apiFetch<FootballMatch[]>('/world-cup/2026/matches')
+  } catch (e) {
+    console.error('[SportsAPI] getWorldCupMatches error:', e)
+    return []
+  }
+}
+
+export async function getWorldCupStadiums(): Promise<unknown[]> {
+  try {
+    return await apiFetch<unknown[]>('/world-cup/2026/stadiums')
+  } catch (e) {
+    console.error('[SportsAPI] getWorldCupStadiums error:', e)
+    return []
+  }
+}
+
+// ─── NBA ──────────────────────────────────────────────────────────────────────
+
+/** Jogos NBA de hoje */
+export async function getNbaGamesToday(): Promise<NBAGame[]> {
+  try {
+    return await apiFetch<NBAGame[]>('/nba/games/today')
+  } catch (e) {
+    console.error('[SportsAPI] getNbaGamesToday error:', e)
+    return []
+  }
+}
+
+/** Próximos jogos NBA */
+export async function getNbaGamesUpcoming(days = 7): Promise<NBAGame[]> {
+  try {
+    return await apiFetch<NBAGame[]>('/nba/games/upcoming', { days: String(days) })
+  } catch (e) {
+    console.error('[SportsAPI] getNbaGamesUpcoming error:', e)
+    return []
+  }
+}
+
+/** Alias retrocompatível */
+export async function getNbaGames(): Promise<NBAGame[]> {
+  return getNbaGamesToday()
+}
+
+/** Tabela NBA (leste + oeste) */
+export async function getNbaStandings(): Promise<NBAStandings> {
+  try {
+    return await apiFetch<NBAStandings>('/nba/standings')
+  } catch (e) {
+    console.error('[SportsAPI] getNbaStandings error:', e)
+    return { east: [], west: [] }
+  }
+}
+
+/** Times NBA */
+export async function getNbaTeams(): Promise<NBATeam[]> {
+  try {
+    return await apiFetch<NBATeam[]>('/nba/teams')
+  } catch (e) {
+    console.error('[SportsAPI] getNbaTeams error:', e)
+    return []
+  }
+}
+
+/** Detalhe de um time NBA (com roster) */
+export async function getNbaTeamDetails(teamId: string): Promise<NBATeam | null> {
+  try {
+    return await apiFetch<NBATeam>(`/nba/teams/${teamId}`)
+  } catch (e) {
+    console.error('[SportsAPI] getNbaTeamDetails error:', e)
+    return null
+  }
+}
+
+/** Perfil de jogador NBA */
+export async function getNbaPlayer(playerId: string): Promise<NBAPlayer | null> {
+  try {
+    return await apiFetch<NBAPlayer>(`/nba/players/${playerId}`)
+  } catch (e) {
+    console.error('[SportsAPI] getNbaPlayer error:', e)
+    return null
+  }
+}
+
+// ─── Fights / UFC ─────────────────────────────────────────────────────────────
+
+/** Próximo evento UFC ao vivo ou iminente */
+export async function getFightEvents(): Promise<FightEvent[]> {
+  try {
+    return await apiFetch<FightEvent[]>('/fights/events')
+  } catch (e) {
+    console.error('[SportsAPI] getFightEvents error:', e)
+    return []
+  }
+}
+
+/** Calendário completo de eventos de lutas */
+export async function getFightEventsUpcoming(): Promise<FightEvent[]> {
+  try {
+    return await apiFetch<FightEvent[]>('/fights/events/upcoming')
+  } catch (e) {
+    console.error('[SportsAPI] getFightEventsUpcoming error:', e)
+    return []
+  }
+}
+
+/** Detalhe de um evento de lutas */
+export async function getFightEventDetails(eventId: string): Promise<FightEvent | null> {
+  try {
+    return await apiFetch<FightEvent>(`/fights/events/${eventId}`)
+  } catch (e) {
+    console.error('[SportsAPI] getFightEventDetails error:', e)
+    return null
+  }
+}
+
+/** Perfil de lutador */
+export async function getFighter(fighterId: string): Promise<FightFighter | null> {
+  try {
+    return await apiFetch<FightFighter>(`/fights/fighters/${fighterId}`)
+  } catch (e) {
+    console.error('[SportsAPI] getFighter error:', e)
+    return null
+  }
+}
+
+// ─── Busca global ─────────────────────────────────────────────────────────────
+
+export async function searchSports(query: string): Promise<SportsCard[]> {
+  if (!query || query.length < 2) return []
+  try {
+    return await apiFetch<SportsCard[]>('/search', { q: query })
+  } catch (e) {
+    console.error('[SportsAPI] searchSports error:', e)
+    return []
+  }
+}
+
+// ─── Utilitários ─────────────────────────────────────────────────────────────
 
 export function formatMatchDate(dateStr: string): string {
   try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
+    const d = new Date(dateStr)
+    if (isNaN(d.getTime())) return dateStr
     return d
       .toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' })
-      .toUpperCase();
+      .toUpperCase()
   } catch {
-    return dateStr;
+    return dateStr
   }
 }
 
 export function formatMatchTime(dateStr: string, timeStr?: string): string {
   if (timeStr) {
-    const m = timeStr.match(/^(\d{2}:\d{2})/);
-    if (m) return m[1];
+    const m = timeStr.match(/^(\d{2}:\d{2})/)
+    if (m) return m[1]
   }
   try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return '--:--';
-    return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const d = new Date(dateStr)
+    if (isNaN(d.getTime())) return '--:--'
+    return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
   } catch {
-    return '--:--';
+    return '--:--'
   }
+}
+
+export function isLive(status: string): boolean {
+  return status === 'live' || status === 'ao_vivo'
+}
+
+export function isFinished(status: string): boolean {
+  return status === 'finished' || status === 'encerrado'
 }

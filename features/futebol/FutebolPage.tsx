@@ -11,6 +11,7 @@ import { BRASILEIRAO_TEAMS } from '@/data/brasileiraoTimes';
 import { playSelectSound } from '@/utils/soundEffects';
 import { FutebolHero, FutebolJogos, FutebolTabela } from '@/features/futebol/components';
 import { FutebolArtilharia } from '@/features/futebol/components/FutebolArtilharia';
+import SelecaoSection from '@/features/futebol/components/SelecaoSection';
 import { FutebolMatchCard } from '@/features/futebol/components/FutebolMatchCard';
 import '@/features/futebol/futebolVisionOS.css';
 import { channelsService } from '@/services/channelsService';
@@ -476,7 +477,20 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
             />
           </section>
 
+          {/* ── Seleção Brasileira / Copa 2026 ── */}
           <section className="px-6 md:px-12" data-nav-row="5" style={{ marginTop: '1cm' }}>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-2xl md:text-3xl font-black tracking-tight uppercase italic">
+                🇧🇷 Seleção
+              </h2>
+              <span className="text-[11px] uppercase tracking-[0.18em] text-white/50 font-bold">
+                Copa do Mundo 2026
+              </span>
+            </div>
+            <SelecaoSection />
+          </section>
+
+          <section className="px-6 md:px-12" data-nav-row="6" style={{ marginTop: '1cm' }}>
             <div className="flex items-center gap-3 mb-5">
               <h2 className="text-2xl md:text-3xl font-black tracking-tight uppercase italic">
                 Artilharia
@@ -489,7 +503,7 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
           </section>
 
           {resultadosRecentes.length > 0 && (
-            <section className="px-6 md:px-12" data-nav-row="6" style={{ marginTop: '1cm' }}>
+            <section className="px-6 md:px-12" data-nav-row="7" style={{ marginTop: '1cm' }}>
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-2xl md:text-3xl font-black tracking-tight uppercase italic">
                   Últimos Resultados
@@ -543,7 +557,7 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
                       onSelectAway={() =>
                         onSelectCardTeam(jogo.strAwayTeam, (jogo as any).idAwayTeam)
                       }
-                      navRow="6"
+                      navRow="7"
                       navColBase={idx * 2}
                     />
                   );

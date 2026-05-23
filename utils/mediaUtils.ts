@@ -360,9 +360,9 @@ export function hasValidVideoUrl(media: Media | Record<string, unknown>): boolea
 }
 
 /**
- * REGRA: Item só pode ser exibido se tiver poster E URL de vídeo válida.
- * Filmes: exige poster + stream/video_url no row.
- * Séries: exige poster + (stream/video_url no row OU seasons > 0 com episódios no DB).
+ * REGRA: Item só pode ser exibido se tiver poster E URL real de vídeo no Supabase.
+ * Não usar season_count como permissão visual: se não existe URL real no catálogo,
+ * o conteúdo não deve aparecer no app.
  */
 export function hasPosterAndVideo(media: Media): boolean {
   if (!hasValidPoster(media)) return false;
@@ -373,11 +373,7 @@ export function hasPosterAndVideo(media: Media): boolean {
 
   if (media.type === 'series' || (media.type as string) === 'tv') {
     if (!hasRequiredTmdbCatalogPoster(media)) return false;
-    const seasons = Number((media as any).seasons ?? (media as any).seasons_count);
-    // Séries aceitam: stream_url direta OU seasons>0 (episódios buscados na tela de detalhes).
-    // Se a série tiver seasons>0 mas os episódios não tiverem URL, o erro
-    // é capturado em handlePlayMedia (LegacyApp.tsx) com toast de aviso.
-    return hasValidVideoUrl(media) || (Number.isFinite(seasons) && seasons > 0);
+    return hasValidVideoUrl(media);
   }
 
   return false;

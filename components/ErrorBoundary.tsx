@@ -45,6 +45,8 @@ export class ErrorBoundary extends Component<Props, State> {
       /* noop */
     }
 
+    console.error('[CRITICAL_ERROR_DUMP]', error.message, '\\nSTACK:', error.stack);
+
     // Import dinâmico evita que Sentry (import estático) cause recursão quando offline
     void import('@sentry/react')
       .then(({ captureException }) => {

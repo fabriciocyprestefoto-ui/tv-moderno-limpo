@@ -1319,9 +1319,7 @@ function normalizeCatalogSeriesRow(row: any): Series {
 }
 
 function hasCatalogSeriesPlayback(row: any): boolean {
-  if (hasCatalogVideoUrl(row)) return true;
-  const seasons = Number((row as any)?.seasons ?? (row as any)?.seasons_count);
-  return Number.isFinite(seasons) && seasons > 0;
+  return hasCatalogVideoUrl(row);
 }
 
 export async function getMoviesPaginated(

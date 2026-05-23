@@ -1,0 +1,54 @@
+﻿--------- beginning of system
+05-22 02:17:47.278   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:18:47.279   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:19:47.280   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:20:47.280   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:21:06.600   530  1178 E AmazonHdmiService: No handle to TV client
+05-22 02:21:06.865   530  2454 E AmazonHdmiService: No handle to TV client
+05-22 02:21:06.887   530  2454 E AmazonHdmiService: No handle to TV client
+05-22 02:21:06.888   530  1178 E AmazonHdmiService: No handle to TV client
+05-22 02:21:06.892   530  1178 E AmazonHdmiService: No handle to TV client
+05-22 02:21:07.220   530  2294 E AmazonHdmiService: No handle to TV client
+05-22 02:21:07.227   530  2294 E AmazonHdmiService: No handle to TV client
+05-22 02:21:07.520   530  2454 E AmazonHdmiService: No handle to TV client
+05-22 02:21:07.820   530  2294 E AmazonHdmiService: No handle to TV client
+05-22 02:21:08.052   530  1600 E AmazonHdmiService: No handle to TV client
+05-22 02:21:08.120   530  2454 E AmazonHdmiService: No handle to TV client
+05-22 02:21:08.418   530   651 E AmazonHdmiService: No handle to TV client
+05-22 02:21:09.716   530  2294 E AmazonHdmiService: No handle to TV client
+05-22 02:21:09.719   530  2294 E AmazonHdmiService: No handle to TV client
+05-22 02:21:12.448   530  1178 E WindowManager: App trying to use insecure INPUT_FEATURE_NO_INPUT_CHANNEL flag. Ignoring
+05-22 02:21:15.222   530   783 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+05-22 02:21:16.377   530   651 E WindowManager: App trying to use insecure INPUT_FEATURE_NO_INPUT_CHANNEL flag. Ignoring
+05-22 02:21:20.385   530   783 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+05-22 02:21:21.832   530  2454 E AmazonHdmiService: Settings client binder died.
+05-22 02:21:47.286   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:22:47.287   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:23:31.787   530  1602 E WindowManager: App trying to use insecure INPUT_FEATURE_NO_INPUT_CHANNEL flag. Ignoring
+05-22 02:23:47.288   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:24:47.294   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:25:47.299   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:26:47.302   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:27:47.302   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:28:47.303   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:29:47.305   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+--------- beginning of main
+05-22 02:30:18.711   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:30:21.712   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:30:27.728   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:30:33.732   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:30:36.754   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:30:39.762   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:30:42.768   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:30:45.774   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:30:47.198  1318  1318 E wlan_stats: rtnetlink recv failure
+05-22 02:30:47.198  1318  1318 E wlan_stats: ERROR: Error fetching Kernel stats from driver
+05-22 02:30:47.305   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:30:54.789   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:31:15.845   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:31:21.858   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:31:42.898   530  1177 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:31:47.306   395   487 E storaged: getDiskStats failed with result NOT_SUPPORTED and size 0
+05-22 02:31:49.849  1624  2224 E whad    : Http1Client:sendRemoteCommand:curl_easy_perform failed, err=7
+05-22 02:32:03.955   530  1603 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0
+05-22 02:32:06.956   530  1603 E SELinux : avc:  denied  { see_home_task } for  scontext=u:r:platform_app:s0:c512,c768 tcontext=u:r:system_server:s0 tclass=amazon_policies permissive=0

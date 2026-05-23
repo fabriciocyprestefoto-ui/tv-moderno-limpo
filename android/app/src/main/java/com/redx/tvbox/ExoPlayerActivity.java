@@ -946,8 +946,8 @@ public class ExoPlayerActivity extends Activity {
                         ? headers.get("User-Agent")
                         : "Mozilla/5.0 (Linux; Android TV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36 RedflixTV/1.0")
                 .setAllowCrossProtocolRedirects(true)
-                .setConnectTimeoutMs(20_000)
-                .setReadTimeoutMs(25_000)
+                .setConnectTimeoutMs(15000)
+                .setReadTimeoutMs(15000)
                 .setDefaultRequestProperties(headers);
 
         // Buffer otimizado pra TV Box moderna e rede instável (32-64s).
@@ -967,10 +967,10 @@ public class ExoPlayerActivity extends Activity {
         androidx.media3.datasource.DataSource.Factory sourceFactory = dsFactory;
 
         // Decoder fallback: tenta próximo decoder se primário falha (HEVC em Firestick antigo, etc.)
-        // EXTENSION_RENDERER_MODE_PREFER prioriza extensões de software caso a renderização em hardware (TCL) falhe ou esteja bugada.
+        // FORÇAR DECODIFICADOR DE HARDWARE REALTEK (Mudar de PREFER_EXTENSIONS para EXTENSION_RENDERER_MODE_OFF)
         androidx.media3.exoplayer.DefaultRenderersFactory renderersFactory =
                 new androidx.media3.exoplayer.DefaultRenderersFactory(this)
-                        .setExtensionRendererMode(androidx.media3.exoplayer.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
+                        .setExtensionRendererMode(androidx.media3.exoplayer.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF)
                         .setEnableDecoderFallback(true)
                         .setMediaCodecSelector(
                                 androidx.media3.exoplayer.mediacodec.MediaCodecSelector.DEFAULT);
@@ -1410,29 +1410,14 @@ public class ExoPlayerActivity extends Activity {
 
     private void handleMainBufferStall() {
         if (player == null) return;
-        if (!fallbackUsed && fallbackUrl != null && !fallbackUrl.isEmpty()
-                && !fallbackUrl.equalsIgnoreCase(sourceUrl)) {
-            Log.w(TAG, "Buffer timeout; trocando para fallback: " + fallbackUrl);
-            fallbackUsed = true;
-            sourceUrl = fallbackUrl;
-            retryCount = 0;
-            retriedAsHls = false;
-            introUrl = null;
-            if (errorOverlay != null) errorOverlay.setVisibility(View.GONE);
-            if (bufferingView != null) bufferingView.setVisibility(View.VISIBLE);
-            preparePlayback(false);
-            return;
-        }
+        
+        android.util.Log.e(TAG, "TIMEOUT: Buffer travado por mais de 30s. Encerrando.");
+        fecharActivityComErro("Erro de timeout na rede. Tente novamente.");
+    }
 
-        int maxRetries = getMaxRetriesForCurrentStream();
-        if (retryCount < maxRetries) {
-            retryCount++;
-            Log.w(TAG, "Buffer timeout; retry " + retryCount + "/" + maxRetries);
-            preparePlayback(retriedAsHls);
-            return;
-        }
-
-        showError("Tempo esgotado ao carregar o stream. Tente novamente.");
+    private void fecharActivityComErro(String mensagem) {
+        // Encerra a activity nativa devolvendo o foco para a WebView do React
+        returnResultAndFinish();
     }
 
     private String normalizeAndroidAssetUri(@Nullable String uri) {

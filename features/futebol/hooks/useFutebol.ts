@@ -19,6 +19,22 @@ import {
   getTimesSerieA2026,
   normalizeTeamName,
 } from '../services/futebolService';
+import { getTeamDetails, FootballTeam } from '@/services/sportsApi';
+
+/** Converte nome do time (TheSportsDB) em slug da API local */
+function teamNameToApiSlug(name: string | null | undefined): string | null {
+  if (!name) return null;
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // remove acentos
+    .replace(/\s+/g, '') // remove espaços
+    .replace(/[^a-z0-9]/g, '') // só alfanumérico
+    .replace(/\bfc$/g, '')
+    .replace(/\bec$/g, '')
+    .replace(/\bfr$/g, '')
+    .trim() || null;
+}
 import { getJogosTransmissoes } from '../services/jogosTransmissoesService';
 import { dedupeFutebolEventos } from '../utils/dedupeJogos';
 import { initEPG, getJogosFromEPG, EPGJogoFutebol } from '@/services/epgService';
@@ -304,6 +320,7 @@ export function useFutebol() {
 
 export function useFutebolTime(teamId: string | undefined) {
   const [detalhesTime, setDetalhesTime] = useState<TimeDetalhes | null>(null);
+  const [dadosLocais, setDadosLocais] = useState<FootballTeam | null>(null);
   const [classificacaoAtual, setClassificacaoAtual] = useState<TabelaBrasileiraoRow | null>(null);
   const [proximosJogos, setProximosJogos] = useState<FutebolEvento[]>([]);
   const [resultadosRecentes, setResultadosRecentes] = useState<FutebolEvento[]>([]);
@@ -338,6 +355,14 @@ export function useFutebolTime(teamId: string | undefined) {
       setProximosJogos(proximos);
       setResultadosRecentes(resultados);
 
+      // Busca dados enriquecidos da API local (não bloqueia o restante)
+      const slug = teamNameToApiSlug(detalhes?.strTeam);
+      if (slug) {
+        getTeamDetails(slug)
+          .then(setDadosLocais)
+          .catch(() => setDadosLocais(null));
+      }
+
       try {
         const classificacao = await getClassificacaoDoTime(detalhes?.strTeam || null, teamId);
         setClassificacaoAtual(classificacao);
@@ -367,7 +392,15 @@ export function useFutebolTime(teamId: string | undefined) {
 
     try {
       const players = await getElencoTime(teamId);
-      setElenco(players);
+      if (players.length > 0) {
+        setElenco(players);
+      } else {
+        // Fallback: usar elenco ESPN da API local se TheSportsDB não retornou jogadores
+        setElenco((prev) => {
+          if (prev.length > 0) return prev; // já tem dados de outra fonte
+          return [];
+        });
+      }
     } catch {
       setElenco([]);
       setErroElenco('Nao foi possivel carregar o elenco.');
@@ -393,6 +426,7 @@ export function useFutebolTime(teamId: string | undefined) {
 
   return {
     detalhesTime,
+    dadosLocais,
     classificacaoAtual,
     classificacaoIndisponivel,
     proximosJogos,

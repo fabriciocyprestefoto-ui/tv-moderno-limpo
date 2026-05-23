@@ -291,25 +291,30 @@ function toJogoView(row: JogoTransmissao): JogoTransmissaoView {
 
 export async function getJogosTransmissoes(): Promise<JogoTransmissaoView[]> {
   const now = new Date().toISOString();
-  const { data, error } = await supabase
-    .from('jogos_transmissoes')
-    .select('*')
-    .gte('start_time', now)
-    .order('start_time', { ascending: true });
+  try {
+    const { data, error } = await supabase
+      .from('jogos_transmissoes')
+      .select('*')
+      .gte('start_time', now)
+      .order('start_time', { ascending: true });
 
-  if (error) {
-    console.warn('[jogosTransmissoes] Erro ao buscar:', error.message);
+    if (error) {
+      console.warn('[jogosTransmissoes] Erro ao buscar:', error.message);
+      return [];
+    }
+
+    // ── Filtra apenas jogos do Brasileirão Série A 2026 ─────────────────────
+    // Só exibe o jogo se AMBOS os times forem da Série A.
+    const serieARows = (data || []).filter((row) => {
+      const { home, away } = extractTeamsFromRow(row);
+      return isSerieATeam(home) && isSerieATeam(away);
+    });
+
+    const unique = deduplicateJogos(serieARows);
+    const views = unique.map(toJogoView);
+    return enrichBadges(views);
+  } catch (err) {
+    console.warn('[jogosTransmissoes] Erro no try/catch:', err);
     return [];
   }
-
-  // ── Filtra apenas jogos do Brasileirão Série A 2026 ─────────────────────
-  // Só exibe o jogo se AMBOS os times forem da Série A.
-  const serieARows = (data || []).filter((row) => {
-    const { home, away } = extractTeamsFromRow(row);
-    return isSerieATeam(home) && isSerieATeam(away);
-  });
-
-  const unique = deduplicateJogos(serieARows);
-  const views = unique.map(toJogoView);
-  return enrichBadges(views);
 }

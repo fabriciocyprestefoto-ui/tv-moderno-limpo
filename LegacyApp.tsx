@@ -879,6 +879,7 @@ const LegacyAppInner: React.FC = () => {
           setIsNavigating(false);
           setTransitionMedia(null);
           setSignal('playerActive', true);
+          savePosition('native-player-return');
 
           void (async () => {
             try {
@@ -926,6 +927,12 @@ const LegacyAppInner: React.FC = () => {
               showToast('Erro ao abrir o player nativo.', 'error');
             } finally {
               setSignal('playerActive', false);
+              setTimeout(() => {
+                restorePosition('native-player-return');
+                if (!document.activeElement || document.activeElement === document.body) {
+                  focusToFirstRow();
+                }
+              }, 150);
             }
           })();
           return;
@@ -1087,7 +1094,7 @@ const LegacyAppInner: React.FC = () => {
       showToast('"' + media.title + '" nao possui uma URL de stream valida no momento.', 'error');
       setIsNavigating(false);
     },
-    [currentPage, showToast, savePosition, location.pathname, location.search, routeNavigate, openHtml5PlayerRoute]
+    [currentPage, showToast, savePosition, restorePosition, focusToFirstRow, location.pathname, location.search, routeNavigate, openHtml5PlayerRoute]
   );
 
   useWatchDeepLink({

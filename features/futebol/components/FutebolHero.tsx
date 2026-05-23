@@ -4,10 +4,11 @@ import { playSelectSound } from '@/utils/soundEffects';
 import { isTVBox } from '@/utils/tvBoxDetector';
 
 const BANNER_URLS = [
-  'https://m.media-amazon.com/images/S/le-target-images-prod/amzn1.dv.gti.2ee71db1-c1cf-4056-ac00-1e9282374c66/1/HERO-16X9/pt-BR/1920x1080._UR1920,1080_SX1920_FMwebp_.png',
-  'https://m.media-amazon.com/images/S/sonata-images-prod/LATCANZ_Brasileirao2026_evergreen/edb5d6d1-4a91-452b-a7c5-24a1b692a977._UR1936,1089_SX3840_FMwebp_.jpeg',
-  'https://m.media-amazon.com/images/S/sonata-images-prod/LATCANZ_Premiereevergreen_Brasileirao2026/7f32b5b4-c388-41a2-bdf4-f275baf92146._SX3840_FMwebp_.jpeg',
-].map((url) => `https://wsrv.nl/?url=${encodeURIComponent(url)}&q=80&w=1920&output=webp`);
+  '/futebol.webp',
+  'https://wsrv.nl/?url=' + encodeURIComponent('https://m.media-amazon.com/images/S/le-target-images-prod/amzn1.dv.gti.2ee71db1-c1cf-4056-ac00-1e9282374c66/1/HERO-16X9/pt-BR/1920x1080._UR1920,1080_SX1920_FMwebp_.png') + '&q=80&w=1920&output=webp',
+  'https://wsrv.nl/?url=' + encodeURIComponent('https://m.media-amazon.com/images/S/sonata-images-prod/LATCANZ_Brasileirao2026_evergreen/edb5d6d1-4a91-452b-a7c5-24a1b692a977._UR1936,1089_SX3840_FMwebp_.jpeg') + '&q=80&w=1920&output=webp',
+  'https://wsrv.nl/?url=' + encodeURIComponent('https://m.media-amazon.com/images/S/sonata-images-prod/LATCANZ_Premiereevergreen_Brasileirao2026/7f32b5b4-c388-41a2-bdf4-f275baf92146._SX3840_FMwebp_.jpeg') + '&q=80&w=1920&output=webp'
+];
 
 const PLACEHOLDER_BADGE = '/logored.webp';
 

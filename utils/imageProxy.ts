@@ -24,6 +24,17 @@ const MAX_WIDTHS: Record<string, number> = {
   backdrop: 1280, // 1080p TV Box: w1280 para qualidade nítida em telas Full HD
 };
 
+function isNativeCapacitorApp(): boolean {
+  if (typeof window === 'undefined') return false;
+  const cap = (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor;
+  if (!cap) return false;
+  try {
+    return typeof cap.isNativePlatform === 'function' ? cap.isNativePlatform() : true;
+  } catch {
+    return true;
+  }
+}
+
 /**
  * Constrói URL de proxy para poster a partir de poster_path TMDB.
  * Valida entrada e retorna null se inválida.
@@ -58,6 +69,10 @@ export function toWebP(
   const isTmdb = url.includes('tmdb.org') || url.includes('themoviedb.org');
 
   if (isTmdb) {
+    // No APK (TCL/Fire Stick), usar TMDB direto. O proxy wsrv.nl funciona bem no
+    // desktop, mas em WebView/TV pode falhar e deixar só logos na Home.
+    if (isNativeCapacitorApp()) return url;
+
     const cleanUrl = url.replace(/^https?:\/\//, '');
     const width = MAX_WIDTHS[imageType] || 500;
     // Força a saída como WebP para economia de banda e performance na TV Box

@@ -15,31 +15,27 @@ import android.widget.ImageView;
 
 import java.io.InputStream;
 
+/**
+ * Splash nativo — cobre apenas o cold-start do WebView com um frame ESTÁTICO.
+ *
+ * A vinheta animada roda uma única vez no React (AppBootScreen.tsx). Aqui não
+ * animamos nada: animar a sequência aqui fazia a vinheta tocar 2x (nativo + WebView).
+ */
 public class NativeBootActivity extends Activity {
     private static final String TAG = "RedXNativeBoot";
-    private static final int FRAME_COUNT = 72;
-    private static final int START_FRAME = 6;
-    private static final int FRAME_STEP = 2;
-    private static final long FRAME_DURATION_MS = 65L;
-    private static final long MAX_BOOT_MS = 8000L;
+    /** Frame único exibido enquanto o WebView aquece. Continuidade com o 1º frame do AppBootScreen. */
+    private static final String STATIC_FRAME = "public/boot-vinheta/frame_001.webp";
+    /** Tempo segurando o frame estático antes de entregar à MainActivity (warm-up do WebView). */
+    private static final long HOLD_MS = 1600L;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private boolean launchedMain = false;
-    private int frameIndex = START_FRAME;
     private ImageView frameView;
-    private Bitmap currentFrame;
+    private Bitmap staticFrame;
 
-    private final Runnable fallbackLaunch = new Runnable() {
+    private final Runnable launchRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.w(TAG, "fallback timeout; launching MainActivity");
             launchMain();
-        }
-    };
-
-    private final Runnable frameTick = new Runnable() {
-        @Override
-        public void run() {
-            renderNextFrame();
         }
     };
 
@@ -70,46 +66,22 @@ public class NativeBootActivity extends Activity {
         ));
         root.addView(frameView);
 
-        handler.postDelayed(fallbackLaunch, MAX_BOOT_MS);
-        renderNextFrame();
-    }
-
-    private void renderNextFrame() {
-        if (launchedMain) return;
-        if (frameIndex >= FRAME_COUNT) {
-            launchMain();
-            return;
-        }
-
-        try {
-            String assetPath = String.format("public/boot-vinheta/frame_%03d.webp", frameIndex);
-            try (InputStream stream = getAssets().open(assetPath)) {
-                Bitmap nextFrame = BitmapFactory.decodeStream(stream);
-                if (nextFrame == null) {
-                    throw new IllegalStateException("decoded frame is null: " + assetPath);
-                }
-                Bitmap previousFrame = currentFrame;
-                currentFrame = nextFrame;
-                frameView.setImageBitmap(currentFrame);
-                if (previousFrame != null && !previousFrame.isRecycled()) {
-                    previousFrame.recycle();
-                }
+        try (InputStream stream = getAssets().open(STATIC_FRAME)) {
+            staticFrame = BitmapFactory.decodeStream(stream);
+            if (staticFrame != null) {
+                frameView.setImageBitmap(staticFrame);
             }
-
-            frameIndex += FRAME_STEP;
-            handler.postDelayed(frameTick, FRAME_DURATION_MS);
         } catch (Exception e) {
-            Log.e(TAG, "failed to render boot vinheta frame " + frameIndex, e);
-            launchMain();
+            Log.e(TAG, "failed to load static boot frame", e);
         }
+
+        handler.postDelayed(launchRunnable, HOLD_MS);
     }
 
     private void launchMain() {
         if (launchedMain) return;
         launchedMain = true;
-        handler.removeCallbacks(fallbackLaunch);
-        handler.removeCallbacks(frameTick);
-        releaseFrames();
+        handler.removeCallbacks(launchRunnable);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -118,23 +90,22 @@ public class NativeBootActivity extends Activity {
         overridePendingTransition(0, 0);
     }
 
-    private void releaseFrames() {
+    private void releaseFrame() {
         try {
             if (frameView != null) {
                 frameView.setImageDrawable(null);
             }
-            if (currentFrame != null && !currentFrame.isRecycled()) {
-                currentFrame.recycle();
+            if (staticFrame != null && !staticFrame.isRecycled()) {
+                staticFrame.recycle();
             }
-            currentFrame = null;
+            staticFrame = null;
         } catch (Exception ignored) {}
     }
 
     @Override
     protected void onDestroy() {
-        handler.removeCallbacks(fallbackLaunch);
-        handler.removeCallbacks(frameTick);
-        releaseFrames();
+        handler.removeCallbacks(launchRunnable);
+        releaseFrame();
         super.onDestroy();
     }
 }

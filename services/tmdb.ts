@@ -280,6 +280,66 @@ export async function fetchSeriesByGenre(genreId: number): Promise<Media[]> {
   }
 }
 
+// ─── Exports: TMDB Lists (Top 100) ──────────────────────────────────────────
+
+const CACHE_TTL_12H = 12 * 60 * 60 * 1000;
+
+async function fetchMultiPageTmdbList(cacheKey: string, endpoint: string, pages: number = 5): Promise<number[]> {
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Date.now() < parsed.expiresAt) return parsed.ids;
+    }
+  } catch (e) {}
+
+  const ids = new Set<number>();
+  const promises = [];
+  for (let p = 1; p <= pages; p++) {
+    const separator = endpoint.includes('?') ? '&' : '?';
+    promises.push(
+      fetchTmdbForHome(`${BASE_URL}${endpoint}${separator}page=${p}`)
+        .then(async (res) => {
+          if (!res.ok) return;
+          const data = await res.json();
+          data.results?.forEach((item: any) => {
+            if (item.id) ids.add(item.id);
+          });
+        })
+        .catch(() => {})
+    );
+  }
+  await Promise.allSettled(promises);
+  
+  const idArray = Array.from(ids);
+  if (idArray.length > 0) {
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify({ ids: idArray, expiresAt: Date.now() + CACHE_TTL_12H }));
+    } catch (e) {}
+  }
+  return idArray;
+}
+
+export async function fetchTop100PopularIds(): Promise<number[]> {
+  return fetchMultiPageTmdbList('tmdb_popular_ids', '/trending/all/week?language=pt-BR', 5);
+}
+
+export async function fetchTop100TopRatedIds(): Promise<number[]> {
+  const [movies, series] = await Promise.all([
+    fetchMultiPageTmdbList('tmdb_top_rated_movies', '/movie/top_rated?language=pt-BR', 3),
+    fetchMultiPageTmdbList('tmdb_top_rated_series', '/tv/top_rated?language=pt-BR', 3)
+  ]);
+  return [...new Set([...movies, ...series])];
+}
+
+export async function fetchTop100NewestIds(): Promise<number[]> {
+  const [movies, series] = await Promise.all([
+    fetchMultiPageTmdbList('tmdb_newest_movies', '/discover/movie?sort_by=primary_release_date.desc&vote_count.gte=50&language=pt-BR', 3),
+    fetchMultiPageTmdbList('tmdb_newest_series', '/discover/tv?sort_by=first_air_date.desc&vote_count.gte=50&language=pt-BR', 3)
+  ]);
+  return [...new Set([...movies, ...series])];
+}
+
 export async function searchMedia(query: string): Promise<Media[]> {
   try {
     const response = await fetchTmdb(

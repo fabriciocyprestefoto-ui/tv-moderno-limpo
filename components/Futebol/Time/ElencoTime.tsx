@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Goal, Shield, UserRound } from 'lucide-react';
 import type { JogadorTime } from '@/features/futebol/types';
+import type { FootballPlayer } from '@/services/sportsApi';
 
 interface ElencoPorPosicao {
   goleiros: JogadorTime[];
@@ -14,15 +15,29 @@ interface ElencoTimeProps {
   artilheiro: JogadorTime | null;
   loading: boolean;
   error: string | null;
+  /** Elenco ESPN da API local — usado como fallback de foto quando TheSportsDB não tem */
+  espnSquad?: FootballPlayer[];
 }
 
 interface PlayerCardProps {
   jogador: JogadorTime;
   index: number;
+  espnPhotoMap?: Record<string, string>;
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = memo(({ jogador, index }) => {
-  const image = jogador.strCutout || jogador.strThumb;
+/** Normaliza nome de jogador para uso como chave no mapa ESPN */
+function normalizePlayerName(name: string | null | undefined): string {
+  return (name || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+const PlayerCard: React.FC<PlayerCardProps> = memo(({ jogador, index, espnPhotoMap }) => {
+  const sportsDbImg = jogador.strCutout || jogador.strThumb;
+  const espnImg = espnPhotoMap?.[normalizePlayerName(jogador.strPlayer)] || null;
+  const image = sportsDbImg || espnImg;
 
   return (
     <article
@@ -62,7 +77,8 @@ const PositionBlock: React.FC<{
   players: JogadorTime[];
   emptyMessage: string;
   rowIndex: number;
-}> = memo(({ title, players, emptyMessage, rowIndex }) => {
+  espnPhotoMap?: Record<string, string>;
+}> = memo(({ title, players, emptyMessage, rowIndex, espnPhotoMap }) => {
   return (
     <section data-nav-row={rowIndex}>
       <h3 className="text-lg font-black uppercase tracking-tight mb-3">{title}</h3>
@@ -77,6 +93,7 @@ const PositionBlock: React.FC<{
               key={jogador.idPlayer || `${jogador.strPlayer}-${index}`}
               jogador={jogador}
               index={index}
+              espnPhotoMap={espnPhotoMap}
             />
           ))}
         </div>
@@ -88,7 +105,19 @@ const PositionBlock: React.FC<{
 PositionBlock.displayName = 'PositionBlock';
 
 const ElencoTime: React.FC<ElencoTimeProps> = memo(
-  ({ elencoPorPosicao, artilheiro, loading, error }) => {
+  ({ elencoPorPosicao, artilheiro, loading, error, espnSquad }) => {
+    // Monta mapa de fotos ESPN indexado por nome normalizado
+    const espnPhotoMap = React.useMemo<Record<string, string>>(() => {
+      if (!espnSquad?.length) return {};
+      const map: Record<string, string> = {};
+      for (const p of espnSquad) {
+        if (p.foto && p.nome) {
+          map[normalizePlayerName(p.nome)] = p.foto;
+        }
+      }
+      return map;
+    }, [espnSquad]);
+
     return (
       <section className="max-w-6xl mx-auto px-6 md:px-12 mt-10 pb-16">
         <div className="flex items-center gap-2 mb-5">
@@ -129,24 +158,28 @@ const ElencoTime: React.FC<ElencoTimeProps> = memo(
               players={elencoPorPosicao.goleiros}
               emptyMessage="Sem goleiros cadastrados."
               rowIndex={5}
+              espnPhotoMap={espnPhotoMap}
             />
             <PositionBlock
               title="Defensores"
               players={elencoPorPosicao.defensores}
               emptyMessage="Sem defensores cadastrados."
               rowIndex={6}
+              espnPhotoMap={espnPhotoMap}
             />
             <PositionBlock
               title="Meio-campo"
               players={elencoPorPosicao.meioCampo}
               emptyMessage="Sem jogadores de meio-campo cadastrados."
               rowIndex={7}
+              espnPhotoMap={espnPhotoMap}
             />
             <PositionBlock
               title="Atacantes"
               players={elencoPorPosicao.atacantes}
               emptyMessage="Sem atacantes cadastrados."
               rowIndex={8}
+              espnPhotoMap={espnPhotoMap}
             />
           </div>
         )}

@@ -23,8 +23,15 @@ export function useReducedMotion(): boolean {
       setReduced(mq.matches || document.documentElement.classList.contains('low-power'));
     };
 
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
+    if (mq.addEventListener) {
+      mq.addEventListener('change', update);
+      return () => mq.removeEventListener('change', update);
+    } else if (mq.addListener) {
+      // Fallback para WebViews antigas (Firestick / TCL antigo)
+      mq.addListener(update);
+      return () => mq.removeListener(update);
+    }
+    return () => {};
   }, []);
 
   return reduced;
