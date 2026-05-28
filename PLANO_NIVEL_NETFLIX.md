@@ -24,11 +24,13 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - [ ] **BLOQUEADO (edge fn fora do repo):** rate-limit + expiração nas chaves de acesso (login 16 chars) na edge function de auth (resolver junto da Fase 1, quando as functions entrarem no repo).
 **Pronto (parcial):** debug roda; release (quando assinado) valida assinatura; sem debug remoto em produção. Resta: assinar release + rate-limit das chaves.
 
-## Fase 1 — Reprodutibilidade · destrava venda/DD · STATUS: PENDENTE
-- [ ] Versionar schema em `supabase/migrations` (channels, adult_streams, adult_menu_sections/items, adult_profile_verifications, catalog settings).
-- [ ] Commitar edge functions (`tmdb-proxy`, `verify-admin-password`) no repo.
-- [ ] README de setup (env, deploy supabase, seed) + `.env.example` completo.
-**Pronto:** clone limpo sobe app+backend do zero.
+## Fase 1 — Reprodutibilidade · destrava venda/DD · STATUS: PARCIAL (docs prontas; artefatos fiéis bloqueados por credenciais)
+- [x] **README.md** criado (setup, env, build targets, deploy supabase, release assinado, TVs, arquitetura).
+- [x] **.env.example** completado: adicionadas chaves faltantes (`VITE_APP_TARGET`, `VITE_BUILD_CHANNEL`, `VITE_TV/WEB/LEGACY_BUILD`, `VITE_NATIVE_ANDROID_PLAYER`, `VITE_SKIP_AUTH`, `VITE_BRASILEIRAO_API_URL`, `VITE_API_BR_URL`, `VITE_BINSTREAM_*`, `VITE_TMDB_READ_TOKEN_HOME`).
+- [x] **supabase/README.md** criado: schema observado (channels, adult_streams, adult_menu_*, adult_profile_verifications) + comandos `db pull`/`functions download` + nota de RLS.
+- [ ] **BLOQUEADO (precisa `supabase login` + senha do DB):** `supabase db pull` → `supabase/migrations/*.sql` fiel (tipos/constraints/índices/**RLS**). Introspecção via REST não traz RLS/DDL completo.
+- [ ] **BLOQUEADO (source no servidor):** `supabase functions download tmdb-proxy` e `verify-admin-password` → versionar source real. (Resolve junto o rate-limit das chaves da Fase 0.)
+**Pronto (parcial):** docs/scaffold prontos; falta o dono rodar `db pull` + `functions download` (credenciais Supabase) para fechar a reprodutibilidade fiel.
 
 ## Fase 2 — Robustez de stream/erros · Erros 6→8 · STATUS: PENDENTE
 - [ ] Auto-skip para próximo canal vivo quando stream falha (LiveTV + Adulto).
@@ -73,4 +75,5 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 
 - _início_ — arquivo criado. Linha de base registrada. Iniciando Fase 0.
 - **Fase 0 (código)** — `MainActivity.java`: `AppValidator.validate(this)` reativado só em release (`!BuildConfig.DEBUG`). `capacitor.config.json`: `webContentsDebuggingEnabled` → false. Build debug instalado na TCL → app abre (pid vivo) e CDP ativo (Chrome 148): **debug não brickou**. Falta: keystore release + EXPECTED_SIGNATURE + rate-limit das chaves (bloqueados por infra/edge fn).
-- **Próximo:** Fase 1 (reprodutibilidade): migrations + edge functions no repo + README. Resolve junto o rate-limit das chaves da Fase 0.
+- **Fase 1 (docs)** — Criados `README.md` (setup completo), `supabase/README.md` (schema observado + comandos `db pull`/`functions download` + RLS). `.env.example` completado com chaves de build/target/streams faltantes. **Bloqueado:** `supabase db pull` (precisa login+senha DB) e `functions download` (source no servidor) — só o dono do projeto consegue. Esses fecham migrations fiéis + source das edge functions + rate-limit das chaves.
+- **Próximo:** Fase 2 (robustez de stream): auto-skip de canal morto + remover overlay debug de produção + telas de erro padronizadas. (Não depende de credenciais — executável.)
