@@ -25,6 +25,7 @@ import { normalizeRemoteKey } from '@/hooks/useRemoteControl';
 import { runtimeFlags } from '@/config/runtimeFlags';
 import { isNativePlatform, playNative } from '@/services/nativePlayerService';
 import { isFireTV } from '@/utils/tvBoxDetector';
+import { platformBannerFallbackUrls } from '@/utils/publicAssetUrl';
 
 // PIN adulto gerenciado via AdultPinModal/Edge Function; PIN nunca deve ir no bundle.
 
@@ -39,6 +40,11 @@ const LIVETV_LOADING_SURFACE = {
   backgroundSize: 'cover' as const,
 };
 const LOCAL_CHANNEL_PLACEHOLDER = '/logored.webp';
+/** Vinheta de fundo no splash de entrada dos Canais (mesma fonte da intro). */
+const LIVETV_INTRO_VINHETA_URLS = platformBannerFallbackUrls(
+  'vinheta-tv.mp4',
+  import.meta.env.VITE_APP_VERSION ?? '1'
+);
 const LIVE_STREAM_UNAVAILABLE_MESSAGE = 'Canal indisponível ou servidor não respondeu.';
 // Timeouts HLS.js (web/Fire Stick). O painel fontez.cc faz 302 rápido para uma CDN
 // edge; uma edge lenta-mas-viva pode levar >8s para o manifest. 28s dá folga para
@@ -381,6 +387,14 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     }
 
     const firstCat = categories[0];
+    // Canal padrão ao abrir Canais = SBT (pedido do usuário). Sem SBT, cai no 1º da 1ª categoria.
+    const sbt = allChannels.find((c) => /\bsbt\b/i.test(c.name));
+    if (sbt) {
+      const cat = categories.find((c) => c.id === sbt.category) || firstCat;
+      setActiveCategory(cat.id);
+      setSelectedChannel(sbt);
+      return;
+    }
     setActiveCategory(firstCat.id);
     const firstChannel =
       allChannels.find((c) => c.category === firstCat.id) || allChannels[0] || null;
@@ -1288,7 +1302,40 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
         className="fixed inset-0 flex flex-col items-center justify-center gap-6 p-8 overflow-hidden"
         style={LIVETV_LOADING_SURFACE}
       >
-        <div className="livetv-vision-boot relative z-10 w-full max-w-sm px-10 py-12 flex flex-col items-center gap-6">
+        {/* Vinheta como background em segundo plano */}
+        <video
+          src={LIVETV_INTRO_VINHETA_URLS[0]}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          onError={(e) => {
+            (e.currentTarget as HTMLVideoElement).style.display = 'none';
+          }}
+        />
+        {/* Escurecido + tom roxo para contraste do card sobre a vinheta */}
+        <div
+          className="absolute inset-0"
+          style={{
+            zIndex: 1,
+            background:
+              'radial-gradient(ellipse at center, rgba(30,10,60,0.45) 0%, rgba(0,0,0,0.72) 100%)',
+          }}
+          aria-hidden
+        />
+        {/* Card translúcido roxo com a logo REDX (sem blur — perf TV) */}
+        <div
+          className="relative z-10 px-12 py-12 flex flex-col items-center gap-6 rounded-[28px]"
+          style={{
+            background: 'var(--exit-glass-bg)',
+            border: '1px solid var(--exit-glass-border)',
+            boxShadow: 'var(--exit-glass-shadow)',
+          }}
+        >
           <img
             src="/logored.webp"
             alt="Redflix"
@@ -1302,7 +1349,7 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
             }}
             aria-hidden
           />
-          <p className="text-white/50 text-xs font-semibold uppercase tracking-[0.2em]">
+          <p className="text-white/60 text-xs font-semibold uppercase tracking-[0.2em]">
             Carregando canais…
           </p>
         </div>
