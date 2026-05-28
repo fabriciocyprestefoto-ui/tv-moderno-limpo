@@ -15,7 +15,7 @@ import { logger } from '@/utils/logger';
 import { setSignal } from '@/utils/appSignals';
 import { runtimeFlags } from '@/config/runtimeFlags';
 import { isNativePlatform, playNative } from '@/services/nativePlayerService';
-import { isFireTV, isLegacyHtml5OnlyTV } from '@/utils/tvBoxDetector';
+import { isFireTV } from '@/utils/tvBoxDetector';
 
 const ADULT_LIMIT = 400;
 const LOCAL_CHANNEL_PLACEHOLDER = '/logored.webp';
@@ -72,11 +72,13 @@ export default function AdultoPage() {
   const hlsRef = useRef<any | null>(null);
   const nativeAdultLaunchRef = useRef(0);
   const [liveStreamError, setLiveStreamError] = useState<string | null>(null);
+  // Gate idêntico à página Canais (LiveTV): SEM isLegacyHtml5OnlyTV(). O player nativo é
+  // Activity Android (Media3/ExoPlayer) e independe do WebView. Bloquear por essa heurística
+  // fazia o Adulto cair no <video> HTML5 (que não toca http fontez na TCL) — não funcionava.
   const useNativeAdultPlayer =
     runtimeFlags.isTvBuild &&
     runtimeFlags.nativeAndroidPlayerEnabled &&
     !isFireTV() &&
-    !isLegacyHtml5OnlyTV() &&
     isNativePlatform();
 
   // Marcar página como adulta para CSS + sinalizar player ativo para spatial/remote nav
