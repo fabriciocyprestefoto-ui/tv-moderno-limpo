@@ -387,12 +387,12 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     }
 
     const firstCat = categories[0];
-    // Canal padrão ao abrir Canais = SBT (pedido do usuário). Sem SBT, cai no 1º da 1ª categoria.
-    const sbt = allChannels.find((c) => /\bsbt\b/i.test(c.name));
-    if (sbt) {
-      const cat = categories.find((c) => c.id === sbt.category) || firstCat;
+    // Canal padrão ao abrir Canais = History (pedido do usuário). Sem ele, cai no 1º da 1ª categoria.
+    const defaultChannel = allChannels.find((c) => /\bhistory\b/i.test(c.name));
+    if (defaultChannel) {
+      const cat = categories.find((c) => c.id === defaultChannel.category) || firstCat;
       setActiveCategory(cat.id);
-      setSelectedChannel(sbt);
+      setSelectedChannel(defaultChannel);
       return;
     }
     setActiveCategory(firstCat.id);
@@ -1302,21 +1302,36 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
         className="fixed inset-0 flex flex-col items-center justify-center gap-6 p-8 overflow-hidden"
         style={LIVETV_LOADING_SURFACE}
       >
-        {/* Vinheta como background em segundo plano */}
-        <video
-          src={LIVETV_INTRO_VINHETA_URLS[0]}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ zIndex: 0 }}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-          onError={(e) => {
-            (e.currentTarget as HTMLVideoElement).style.display = 'none';
-          }}
-        />
+        {/* Vinheta como background em segundo plano.
+            WebView nativo (TV box) não reproduz o <video> (aparecia símbolo quebrado),
+            então usa um frame estático da vinheta. No web/desktop toca o vídeo. */}
+        {isNativePlatform() ? (
+          <img
+            src="/vinheta-poster.webp"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ zIndex: 0 }}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        ) : (
+          <video
+            src={LIVETV_INTRO_VINHETA_URLS[0]}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ zIndex: 0 }}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+            onError={(e) => {
+              (e.currentTarget as HTMLVideoElement).style.display = 'none';
+            }}
+          />
+        )}
         {/* Escurecido + tom roxo para contraste do card sobre a vinheta */}
         <div
           className="absolute inset-0"
