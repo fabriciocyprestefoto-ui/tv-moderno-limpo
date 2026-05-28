@@ -550,45 +550,94 @@ public class ExoPlayerActivity extends Activity {
         loadingLabel.setLayoutParams(lblParams);
         root.addView(loadingLabel);
 
-        // Overlay de erro fatal
+        // Overlay de erro — backdrop escuro + card interno estilo desktop livetv-vision-boot
+        // ("CANAL INDISPONÍVEL" + mensagem + botão red-600 "TENTAR NOVAMENTE").
         errorOverlay = new LinearLayout(this);
         errorOverlay.setOrientation(LinearLayout.VERTICAL);
         errorOverlay.setGravity(android.view.Gravity.CENTER);
-        errorOverlay.setBackgroundColor(0xCC000000);
+        errorOverlay.setBackgroundColor(0x8C000000);
         errorOverlay.setLayoutParams(new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
         ));
         errorOverlay.setVisibility(View.GONE);
 
-        errorText = new TextView(this);
-        errorText.setTextColor(Color.WHITE);
-        errorText.setTextSize(20);
-        errorText.setPadding(48, 48, 48, 16);
-        errorText.setGravity(android.view.Gravity.CENTER);
-        errorOverlay.addView(errorText);
+        // Card vision-boot (variante .tv-box: sólido escuro com borda branca sutil)
+        LinearLayout errorCard = new LinearLayout(this);
+        errorCard.setOrientation(LinearLayout.VERTICAL);
+        errorCard.setGravity(android.view.Gravity.CENTER);
+        GradientDrawable errorCardBg = new GradientDrawable();
+        errorCardBg.setColor(0xF4161618);
+        errorCardBg.setCornerRadius(dp(32));
+        errorCardBg.setStroke(dp(1), 0x2EFFFFFF);
+        errorCard.setBackground(errorCardBg);
+        errorCard.setPadding(dp(40), dp(28), dp(40), dp(28));
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                dp(440), LinearLayout.LayoutParams.WRAP_CONTENT);
+        errorCard.setLayoutParams(cardParams);
+        errorOverlay.addView(errorCard);
 
-        TextView hint = new TextView(this);
-        hint.setText("Pressione VOLTAR para sair");
-        hint.setTextColor(0xAAFFFFFF);
-        hint.setTextSize(14);
-        errorOverlay.addView(hint);
+        TextView errorBadge = new TextView(this);
+        errorBadge.setText("CANAL INDISPONÍVEL");
+        errorBadge.setTextColor(0x73FFFFFF);
+        errorBadge.setTextSize(11);
+        errorBadge.setTypeface(Typeface.DEFAULT_BOLD);
+        errorBadge.setLetterSpacing(0.25f);
+        errorBadge.setGravity(android.view.Gravity.CENTER);
+        LinearLayout.LayoutParams badgeP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        badgeP.bottomMargin = dp(12);
+        errorBadge.setLayoutParams(badgeP);
+        errorCard.addView(errorBadge);
+
+        errorText = new TextView(this);
+        errorText.setTextColor(0xD9FFFFFF);
+        errorText.setTextSize(18);
+        errorText.setTypeface(Typeface.DEFAULT_BOLD);
+        errorText.setGravity(android.view.Gravity.CENTER);
+        LinearLayout.LayoutParams textP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        textP.bottomMargin = dp(20);
+        errorText.setLayoutParams(textP);
+        errorCard.addView(errorText);
 
         retryButton = new android.widget.Button(this);
-        retryButton.setText("Tentar novamente");
+        retryButton.setText("TENTAR NOVAMENTE");
         retryButton.setTextColor(Color.WHITE);
-        retryButton.setBackgroundColor(0xFF1565C0);
-        retryButton.setPadding(48, 24, 48, 24);
+        retryButton.setTextSize(12);
+        retryButton.setTypeface(Typeface.DEFAULT_BOLD);
+        retryButton.setAllCaps(true);
+        retryButton.setLetterSpacing(0.18f);
+        GradientDrawable retryBg = new GradientDrawable();
+        retryBg.setColor(0xFFDC2626);
+        retryBg.setCornerRadius(dp(12));
+        retryButton.setBackground(retryBg);
+        retryButton.setPadding(dp(24), dp(12), dp(24), dp(12));
         retryButton.setFocusable(true);
         retryButton.setFocusableInTouchMode(true);
         LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        btnParams.topMargin = 32;
         retryButton.setLayoutParams(btnParams);
         retryButton.setOnClickListener(v -> retryPlayback());
-        errorOverlay.addView(retryButton);
+        errorCard.addView(retryButton);
+
+        TextView hint = new TextView(this);
+        hint.setText("PRESSIONE VOLTAR PARA SAIR");
+        hint.setTextColor(0x5CFFFFFF);
+        hint.setTextSize(9);
+        hint.setTypeface(Typeface.DEFAULT_BOLD);
+        hint.setLetterSpacing(0.25f);
+        hint.setGravity(android.view.Gravity.CENTER);
+        LinearLayout.LayoutParams hintP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        hintP.topMargin = dp(16);
+        hint.setLayoutParams(hintP);
+        errorCard.addView(hint);
 
         buildPlayerHud();
         root.addView(errorOverlay);
@@ -659,11 +708,28 @@ public class ExoPlayerActivity extends Activity {
         titleWrap.addView(hudTitle, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
         hudYear = new TextView(this);
-        hudYear.setText(isLive ? "AO VIVO" : yearStr);
-        hudYear.setTextColor(0xB8FFFFFF);
-        hudYear.setTextSize(13);
+        hudYear.setTextColor(isLive ? 0xFFFFFFFF : 0xB8FFFFFF);
         hudYear.setTypeface(Typeface.DEFAULT_BOLD);
-        hudYear.setPadding(dp(14), 0, 0, 0);
+        if (isLive) {
+            // Chip cyan estilo desktop PitoChannelInfoOverlay (rgba(6,182,212,0.72)).
+            hudYear.setText("LIVE");
+            hudYear.setTextSize(10);
+            hudYear.setLetterSpacing(0.18f);
+            GradientDrawable liveChip = new GradientDrawable();
+            liveChip.setColor(0xCC06B6D4);
+            liveChip.setCornerRadius(dp(10));
+            hudYear.setBackground(liveChip);
+            hudYear.setPadding(dp(10), dp(4), dp(10), dp(4));
+            LinearLayout.LayoutParams liveLp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            liveLp.leftMargin = dp(14);
+            hudYear.setLayoutParams(liveLp);
+        } else {
+            hudYear.setText(yearStr);
+            hudYear.setTextSize(13);
+            hudYear.setPadding(dp(14), 0, 0, 0);
+        }
         titleWrap.addView(hudYear);
 
         TextView watchedChip = new TextView(this);
@@ -797,12 +863,12 @@ public class ExoPlayerActivity extends Activity {
     }
 
     private GradientDrawable makeHudBackground() {
-        GradientDrawable bg = new GradientDrawable(
-                GradientDrawable.Orientation.TL_BR,
-                new int[] { 0xD94E1B78, 0xCC7C3AA5, 0xD9241238 }
-        );
-        bg.setCornerRadius(dp(42));
-        bg.setStroke(dp(1), 0x44FFFFFF);
+        // Vision-glass igual ao desktop livetv-vision-floating-header (variante .tv-box):
+        // fundo escuro semi-opaco, borda branca sutil, cantos arredondados.
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(0xE0141418);
+        bg.setCornerRadius(dp(24));
+        bg.setStroke(dp(1), 0x29FFFFFF);
         return bg;
     }
 
