@@ -11,6 +11,7 @@ import { BRASILEIRAO_TEAMS } from '@/data/brasileiraoTimes';
 import { playSelectSound } from '@/utils/soundEffects';
 import { FutebolHero, FutebolJogos, FutebolTabela } from '@/features/futebol/components';
 import { FutebolArtilharia } from '@/features/futebol/components/FutebolArtilharia';
+import { FutebolOutrosEsportes } from '@/features/futebol/components/FutebolOutrosEsportes';
 import SelecaoSection from '@/features/futebol/components/SelecaoSection';
 import { FutebolMatchCard } from '@/features/futebol/components/FutebolMatchCard';
 import '@/features/futebol/futebolVisionOS.css';
@@ -557,6 +558,11 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
               </span>
             </div>
             <FutebolArtilharia />
+          </section>
+
+          {/* ── NBA + UFC/Lutas (API real) ── */}
+          <section className="px-6 md:px-12" data-nav-row="8" style={{ marginTop: '1cm' }}>
+            <FutebolOutrosEsportes />
           </section>
 
           {resultadosRecentes.length > 0 && (

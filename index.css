@@ -136,6 +136,39 @@
   display: none;
 }
 
+/* ─── TV Box / Android TV: esconder TODAS as scrollbars visuais ───
+   Navegação é por D-pad/foco. Scroll continua funcional (programático e por
+   foco) — apenas a barra visual some. Escopo restrito ao modo TV: desktop
+   mantém suas scrollbars. As classes ficam no <html> (tvBoxDetector). */
+.tv-box,
+.tv-box *,
+.tv-box-mode,
+.tv-box-mode *,
+.lite-mode,
+.lite-mode * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.tv-box::-webkit-scrollbar,
+.tv-box *::-webkit-scrollbar,
+.tv-box-mode::-webkit-scrollbar,
+.tv-box-mode *::-webkit-scrollbar,
+.lite-mode::-webkit-scrollbar,
+.lite-mode *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+/* Sem barra horizontal no viewport raiz em TV */
+.tv-box,
+.tv-box-mode,
+.lite-mode,
+.tv-box body,
+.tv-box-mode body,
+.lite-mode body {
+  overflow-x: hidden !important;
+}
+
 /* ═══ SIDEBAR RAIL — fino, roxo, expande todo ao focar (estilo YouTube) ═══ */
 
 :root {
@@ -3315,11 +3348,12 @@ select:focus:not(:focus-visible) {
   background-color: #080810 !important;
 }
 
-/* 16 — Sidebar rail: sem blur */
+/* 16 — Sidebar rail: translucido (sem blur, para poupar GPU em TV box) */
 .lite-mode .sidebar-rail {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
-  background: rgba(10, 10, 20, 0.98) !important;
+  background: var(--exit-glass-bg) !important;
+  border-right: 1px solid var(--exit-glass-border) !important;
   transition: none !important;
 }
 

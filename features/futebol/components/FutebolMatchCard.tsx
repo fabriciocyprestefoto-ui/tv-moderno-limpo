@@ -433,8 +433,32 @@ const FutebolMatchCardComponent: React.FC<FutebolMatchCardProps> = ({
             )}
           </div>
 
-          {channelLogo &&
-            (onSelectChannel ? (
+          {(() => {
+            if (!channelLogo && !channelName) return null;
+            const initials = (channelName ?? '')
+              .replace(/[^a-zA-Z0-9 ]/g, '')
+              .split(/\s+/)
+              .filter(Boolean)
+              .slice(0, 2)
+              .map((w) => w[0])
+              .join('')
+              .toUpperCase();
+            const inner = channelLogo ? (
+              <img
+                src={channelLogo}
+                alt={channelName ?? 'Canal'}
+                className="h-8 w-12 object-contain"
+                loading="lazy"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            ) : (
+              <span className="flex h-8 min-w-[48px] items-center justify-center px-2 text-[11px] font-black tracking-wide text-purple-100">
+                {initials || 'TV'}
+              </span>
+            );
+            return onSelectChannel ? (
               <button
                 type="button"
                 onClick={onSelectChannel}
@@ -450,15 +474,7 @@ const FutebolMatchCardComponent: React.FC<FutebolMatchCardProps> = ({
                 data-nav-col={navColBase + 2}
                 aria-label={channelName ?? 'Assistir'}
               >
-                <img
-                  src={channelLogo}
-                  alt={channelName ?? 'Canal'}
-                  className="h-8 w-12 object-contain"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
+                {inner}
               </button>
             ) : (
               <div
@@ -468,17 +484,10 @@ const FutebolMatchCardComponent: React.FC<FutebolMatchCardProps> = ({
                   border: '1px solid rgba(167,139,250,0.25)',
                 }}
               >
-                <img
-                  src={channelLogo}
-                  alt={channelName ?? 'Canal'}
-                  className="h-8 w-12 object-contain"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
+                {inner}
               </div>
-            ))}
+            );
+          })()}
         </div>
       </div>
     </article>

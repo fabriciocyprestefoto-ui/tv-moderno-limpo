@@ -825,9 +825,9 @@ const Home: React.FC<HomeProps> = ({
                   onSelectMedia={onSelectMedia}
                   dbMedia={allContent}
                   hideCard={filterOpen}
-                  priorityTmdbIds={[71446]}
-                  priorityTitles={['La casa de papel']}
-                  priorityTmdbMediaType="series"
+                  priorityTmdbIds={[541671]}
+                  priorityTitles={['Bailarina']}
+                  priorityTmdbMediaType="movie"
                   maxBannerSlides={10}
                 />
                 {!isSidebarOpen && (

@@ -138,6 +138,14 @@ public class MainActivity extends BridgeActivity {
                 parent.setBackgroundColor(Color.TRANSPARENT);
             }
 
+            // TV: navegação é por D-pad/foco — esconder scrollbars NATIVAS do WebView
+            // (a barra do viewport raiz não é estilável por CSS ::-webkit-scrollbar).
+            // Scroll continua funcional; remove também o glow de overscroll.
+            webView.setVerticalScrollBarEnabled(false);
+            webView.setHorizontalScrollBarEnabled(false);
+            webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+            webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+
             // CRUCIAL: Permitir autoplay sem gesto do usuário
             settings.setMediaPlaybackRequiresUserGesture(false);
             // Validação em TV (adb): adb logcat -s RED-X:D

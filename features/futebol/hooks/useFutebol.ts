@@ -16,6 +16,7 @@ import {
   getCompetitions,
   getRedxFootballFull,
   getTeamDetails,
+  getUpcomingMatches,
 } from '@/services/sportsApi';
 import { dedupeFutebolEventos } from '../utils/dedupeJogos';
 
@@ -254,27 +255,32 @@ export function useFutebol() {
     setClassificacaoIndisponivel(false);
 
     try {
-      const [full, competitionsData] = await Promise.all([
+      // brasil/full = Brasileirão (tabela/times/artilharia); upcoming = todas as ligas
+      const [full, competitionsData, upcoming] = await Promise.all([
         getRedxFootballFull(14),
         getCompetitions(),
+        getUpcomingMatches(30),
       ]);
-      if (!full) throw new Error('REDX API indisponivel');
 
-      const times = full.times.map((time) =>
+      const times = (full?.times ?? []).map((time) =>
         teamToSerieA({ id: time.id, name: time.name, logo: time.logo || time.escudo || null })
       );
       const lookup = buildTeamMapFromTimes(times);
       const jogos = dedupeFutebolEventos([
-        ...full.jogosDoDia.map(matchToEvento),
-        ...full.proximosJogos.map(matchToEvento),
+        ...(full?.jogosDoDia ?? []).map(matchToEvento),
+        ...(full?.proximosJogos ?? []).map(matchToEvento),
+        ...upcoming.map(matchToEvento),
       ]);
+
+      // só falha se nada veio da API
+      if (!full && jogos.length === 0) throw new Error('REDX API indisponivel');
 
       setTeamIdLookup(lookup);
       setTimesSerieA(times);
       setCompetitions(competitionsData);
       setProximosJogos(sortUpcomingFutebolEventos(jogos));
-      setResultadosRecentes(dedupeFutebolEventos((full.ultimosResultados || []).map(matchToEvento)));
-      setTabela(full.tabela.map(standingsToTabela));
+      setResultadosRecentes(dedupeFutebolEventos((full?.ultimosResultados ?? []).map(matchToEvento)));
+      setTabela((full?.tabela ?? []).map(standingsToTabela));
     } catch {
       setProximosJogos([]);
       setResultadosRecentes([]);

@@ -301,15 +301,32 @@ export interface WorldCup2026Info {
 
 // ─── Fetch helper ─────────────────────────────────────────────────────────────
 
+const API_TIMEOUT_MS = 8000
+
+const DEV: boolean =
+  typeof import.meta !== 'undefined' &&
+  Boolean((import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV)
+
+/** Log apenas em desenvolvimento — silencioso em produção/TV Box. */
+function logError(...args: unknown[]): void {
+  if (DEV) console.error(...args)
+}
+
 async function apiFetch<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
   const url = new URL(`${API_BASE}${endpoint}`)
   if (params) {
     Object.entries(params).forEach(([k, v]) => { if (v !== undefined) url.searchParams.set(k, v) })
   }
-  const res = await fetch(url.toString())
-  if (!res.ok) throw new Error(`SportsAPI ${res.status}: ${endpoint}`)
-  const json = await res.json()
-  return (json.data ?? json) as T
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), API_TIMEOUT_MS)
+  try {
+    const res = await fetch(url.toString(), { signal: controller.signal })
+    if (!res.ok) throw new Error(`SportsAPI ${res.status}: ${endpoint}`)
+    const json = await res.json()
+    return (json.data ?? json) as T
+  } finally {
+    clearTimeout(timer)
+  }
 }
 
 // ─── API functions ────────────────────────────────────────────────────────────
@@ -319,7 +336,7 @@ export async function getSportsHome(): Promise<SportsHome> {
   try {
     return await apiFetch<SportsHome>('/sports/home')
   } catch (e) {
-    console.error('[SportsAPI] getSportsHome error:', e)
+    logError('[SportsAPI] getSportsHome error:', e)
     return { updatedAt: new Date().toISOString(), sections: [] }
   }
 }
@@ -329,7 +346,7 @@ export async function getTodayFootballMatches(): Promise<FootballMatch[]> {
   try {
     return await apiFetch<FootballMatch[]>('/football/matches/today')
   } catch (e) {
-    console.error('[SportsAPI] getTodayFootballMatches error:', e)
+    logError('[SportsAPI] getTodayFootballMatches error:', e)
     return []
   }
 }
@@ -339,7 +356,7 @@ export async function getUpcomingMatches(days = 7): Promise<FootballMatch[]> {
   try {
     return await apiFetch<FootballMatch[]>('/football/matches/upcoming', { days: String(days) })
   } catch (e) {
-    console.error('[SportsAPI] getUpcomingMatches error:', e)
+    logError('[SportsAPI] getUpcomingMatches error:', e)
     return []
   }
 }
@@ -349,7 +366,7 @@ export async function getLiveMatches(): Promise<FootballMatch[]> {
   try {
     return await apiFetch<FootballMatch[]>('/football/matches/live')
   } catch (e) {
-    console.error('[SportsAPI] getLiveMatches error:', e)
+    logError('[SportsAPI] getLiveMatches error:', e)
     return []
   }
 }
@@ -359,7 +376,7 @@ export async function getRecentMatches(): Promise<FootballMatch[]> {
   try {
     return await apiFetch<FootballMatch[]>('/football/matches/recent')
   } catch (e) {
-    console.error('[SportsAPI] getRecentMatches error:', e)
+    logError('[SportsAPI] getRecentMatches error:', e)
     return []
   }
 }
@@ -369,7 +386,7 @@ export async function getRedxFootballFull(days = 14): Promise<RedxFootballFull |
   try {
     return await apiFetch<RedxFootballFull>('/football/brasil/full', { days: String(days) })
   } catch (e) {
-    console.error('[SportsAPI] getRedxFootballFull error:', e)
+    logError('[SportsAPI] getRedxFootballFull error:', e)
     return null
   }
 }
@@ -379,7 +396,7 @@ export async function getCompetitions(): Promise<Competition[]> {
   try {
     return await apiFetch<Competition[]>('/football/competitions')
   } catch (e) {
-    console.error('[SportsAPI] getCompetitions error:', e)
+    logError('[SportsAPI] getCompetitions error:', e)
     return []
   }
 }
@@ -389,7 +406,7 @@ export async function getCompetitionStandings(competitionId: string): Promise<St
   try {
     return await apiFetch<StandingsRow[]>(`/football/competitions/${competitionId}/standings`)
   } catch (e) {
-    console.error('[SportsAPI] getCompetitionStandings error:', e)
+    logError('[SportsAPI] getCompetitionStandings error:', e)
     return []
   }
 }
@@ -399,7 +416,7 @@ export async function getCompetitionTopScorers(competitionId: string): Promise<F
   try {
     return await apiFetch<FootballTopScorer[]>(`/football/competitions/${competitionId}/top-scorers`)
   } catch (e) {
-    console.error('[SportsAPI] getCompetitionTopScorers error:', e)
+    logError('[SportsAPI] getCompetitionTopScorers error:', e)
     return []
   }
 }
@@ -411,7 +428,7 @@ export async function getCompetitionMatches(competitionId: string, date?: string
     if (date) params.date = date
     return await apiFetch<FootballMatch[]>(`/football/competitions/${competitionId}/matches`, params)
   } catch (e) {
-    console.error('[SportsAPI] getCompetitionMatches error:', e)
+    logError('[SportsAPI] getCompetitionMatches error:', e)
     return []
   }
 }
@@ -421,7 +438,7 @@ export async function getTeams(): Promise<FootballTeam[]> {
   try {
     return await apiFetch<FootballTeam[]>('/football/teams')
   } catch (e) {
-    console.error('[SportsAPI] getTeams error:', e)
+    logError('[SportsAPI] getTeams error:', e)
     return []
   }
 }
@@ -431,7 +448,7 @@ export async function getTeamDetails(teamId: string): Promise<FootballTeam | nul
   try {
     return await apiFetch<FootballTeam>(`/football/teams/${teamId}`)
   } catch (e) {
-    console.error('[SportsAPI] getTeamDetails error:', e)
+    logError('[SportsAPI] getTeamDetails error:', e)
     return null
   }
 }
@@ -441,7 +458,7 @@ export async function getTeamSquad(teamId: string): Promise<FootballPlayer[]> {
   try {
     return await apiFetch<FootballPlayer[]>(`/football/teams/${teamId}/squad`)
   } catch (e) {
-    console.error('[SportsAPI] getTeamSquad error:', e)
+    logError('[SportsAPI] getTeamSquad error:', e)
     return []
   }
 }
@@ -452,7 +469,7 @@ export async function getWorldCup2026(): Promise<WorldCup2026Info | null> {
   try {
     return await apiFetch<WorldCup2026Info>('/world-cup/2026')
   } catch (e) {
-    console.error('[SportsAPI] getWorldCup2026 error:', e)
+    logError('[SportsAPI] getWorldCup2026 error:', e)
     return null
   }
 }
@@ -461,7 +478,7 @@ export async function getWorldCupTeams(): Promise<unknown[]> {
   try {
     return await apiFetch<unknown[]>('/world-cup/2026/teams')
   } catch (e) {
-    console.error('[SportsAPI] getWorldCupTeams error:', e)
+    logError('[SportsAPI] getWorldCupTeams error:', e)
     return []
   }
 }
@@ -470,7 +487,7 @@ export async function getWorldCupGroups(): Promise<unknown[]> {
   try {
     return await apiFetch<unknown[]>('/world-cup/2026/groups')
   } catch (e) {
-    console.error('[SportsAPI] getWorldCupGroups error:', e)
+    logError('[SportsAPI] getWorldCupGroups error:', e)
     return []
   }
 }
@@ -479,7 +496,7 @@ export async function getWorldCupMatches(): Promise<FootballMatch[]> {
   try {
     return await apiFetch<FootballMatch[]>('/world-cup/2026/matches')
   } catch (e) {
-    console.error('[SportsAPI] getWorldCupMatches error:', e)
+    logError('[SportsAPI] getWorldCupMatches error:', e)
     return []
   }
 }
@@ -488,7 +505,7 @@ export async function getWorldCupStadiums(): Promise<unknown[]> {
   try {
     return await apiFetch<unknown[]>('/world-cup/2026/stadiums')
   } catch (e) {
-    console.error('[SportsAPI] getWorldCupStadiums error:', e)
+    logError('[SportsAPI] getWorldCupStadiums error:', e)
     return []
   }
 }
@@ -500,7 +517,7 @@ export async function getNbaGamesToday(): Promise<NBAGame[]> {
   try {
     return await apiFetch<NBAGame[]>('/nba/games/today')
   } catch (e) {
-    console.error('[SportsAPI] getNbaGamesToday error:', e)
+    logError('[SportsAPI] getNbaGamesToday error:', e)
     return []
   }
 }
@@ -510,7 +527,7 @@ export async function getNbaGamesUpcoming(days = 7): Promise<NBAGame[]> {
   try {
     return await apiFetch<NBAGame[]>('/nba/games/upcoming', { days: String(days) })
   } catch (e) {
-    console.error('[SportsAPI] getNbaGamesUpcoming error:', e)
+    logError('[SportsAPI] getNbaGamesUpcoming error:', e)
     return []
   }
 }
@@ -525,7 +542,7 @@ export async function getNbaStandings(): Promise<NBAStandings> {
   try {
     return await apiFetch<NBAStandings>('/nba/standings')
   } catch (e) {
-    console.error('[SportsAPI] getNbaStandings error:', e)
+    logError('[SportsAPI] getNbaStandings error:', e)
     return { east: [], west: [] }
   }
 }
@@ -535,7 +552,7 @@ export async function getNbaTeams(): Promise<NBATeam[]> {
   try {
     return await apiFetch<NBATeam[]>('/nba/teams')
   } catch (e) {
-    console.error('[SportsAPI] getNbaTeams error:', e)
+    logError('[SportsAPI] getNbaTeams error:', e)
     return []
   }
 }
@@ -545,7 +562,7 @@ export async function getNbaTeamDetails(teamId: string): Promise<NBATeam | null>
   try {
     return await apiFetch<NBATeam>(`/nba/teams/${teamId}`)
   } catch (e) {
-    console.error('[SportsAPI] getNbaTeamDetails error:', e)
+    logError('[SportsAPI] getNbaTeamDetails error:', e)
     return null
   }
 }
@@ -555,7 +572,7 @@ export async function getNbaPlayer(playerId: string): Promise<NBAPlayer | null> 
   try {
     return await apiFetch<NBAPlayer>(`/nba/players/${playerId}`)
   } catch (e) {
-    console.error('[SportsAPI] getNbaPlayer error:', e)
+    logError('[SportsAPI] getNbaPlayer error:', e)
     return null
   }
 }
@@ -567,7 +584,7 @@ export async function getFightEvents(): Promise<FightEvent[]> {
   try {
     return await apiFetch<FightEvent[]>('/fights/events')
   } catch (e) {
-    console.error('[SportsAPI] getFightEvents error:', e)
+    logError('[SportsAPI] getFightEvents error:', e)
     return []
   }
 }
@@ -577,7 +594,7 @@ export async function getFightEventsUpcoming(): Promise<FightEvent[]> {
   try {
     return await apiFetch<FightEvent[]>('/fights/events/upcoming')
   } catch (e) {
-    console.error('[SportsAPI] getFightEventsUpcoming error:', e)
+    logError('[SportsAPI] getFightEventsUpcoming error:', e)
     return []
   }
 }
@@ -587,7 +604,7 @@ export async function getFightEventDetails(eventId: string): Promise<FightEvent 
   try {
     return await apiFetch<FightEvent>(`/fights/events/${eventId}`)
   } catch (e) {
-    console.error('[SportsAPI] getFightEventDetails error:', e)
+    logError('[SportsAPI] getFightEventDetails error:', e)
     return null
   }
 }
@@ -597,7 +614,7 @@ export async function getFighter(fighterId: string): Promise<FightFighter | null
   try {
     return await apiFetch<FightFighter>(`/fights/fighters/${fighterId}`)
   } catch (e) {
-    console.error('[SportsAPI] getFighter error:', e)
+    logError('[SportsAPI] getFighter error:', e)
     return null
   }
 }
@@ -609,7 +626,7 @@ export async function searchSports(query: string): Promise<SportsCard[]> {
   try {
     return await apiFetch<SportsCard[]>('/search', { q: query })
   } catch (e) {
-    console.error('[SportsAPI] searchSports error:', e)
+    logError('[SportsAPI] searchSports error:', e)
     return []
   }
 }
