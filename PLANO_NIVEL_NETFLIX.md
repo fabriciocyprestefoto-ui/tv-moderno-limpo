@@ -39,11 +39,11 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - [ ] **MANUAL/infra:** agendar prune de streams mortos (`scripts/prune-dead-adult-streams.cjs`) via cron/Supabase scheduled — fora do código do app.
 **Pronto (parcial):** sem overlay debug; erro de stream tem retry + próximo canal. Falta auto-skip automático (diferido por segurança) + agendamento do prune.
 
-## Fase 3 — Performance · Perf 7→9 · STATUS: PENDENTE
-- [ ] Fila única de fetch TMDB (cap concorrência, só no foco): `components/MediaCard.tsx:304`, `components/MovieRow.tsx:121`.
-- [ ] Unificar 3 componentes de imagem (LazyImage/NetflixImage/PosterImage) em 1.
-- [ ] Garantir `vendor-charts` (278KB) lazy só no admin.
-**Pronto:** scroll de fileira sem engasgo na TV.
+## Fase 3 — Performance · Perf 7→9 · STATUS: PARCIAL
+- [x] **Matada a tempestade de fetch TMDB por card**: removida a IntersectionObserver de preload (200px) do `MediaCard` que disparava `getMediaDetailsByID` para todo card próximo da viewport. Preload agora SÓ no foco/hover (`handleFocus`/`handleMouseEnter`). Poster base aparece sem preload; logo/backdrop só no estado expandido (exige foco). `components/MediaCard.tsx:~297`.
+- [x] **`vendor-charts` (278KB) já é lazy**: `recharts` só é importado por `pages/admin/Dashboard.tsx` (admin é rota lazy → chunk `pages-admin`). Não carrega no caminho TV/Home. Confirmado. Sem mudança.
+- [ ] **DIFERIDO (refactor amplo):** unificar 3 componentes de imagem (LazyImage/NetflixImage/PosterImage) em 1 com cache compartilhado. Risco de regressão visual em várias páginas; fazer com testes visuais por tela. `MovieRow` não é storm (busca logo só do 1º + focado).
+**Pronto (parcial):** scroll de grade sem rajada de requests TMDB. Falta unificar componentes de imagem (diferido).
 
 ## Fase 4 — Qualidade de código · Código 6→8 · STATUS: PENDENTE
 - [ ] Consolidar 2 sistemas de navegação em 1 (geométrico OU spatial).
@@ -77,4 +77,6 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - **Fase 0 (código)** — `MainActivity.java`: `AppValidator.validate(this)` reativado só em release (`!BuildConfig.DEBUG`). `capacitor.config.json`: `webContentsDebuggingEnabled` → false. Build debug instalado na TCL → app abre (pid vivo) e CDP ativo (Chrome 148): **debug não brickou**. Falta: keystore release + EXPECTED_SIGNATURE + rate-limit das chaves (bloqueados por infra/edge fn).
 - **Fase 1 (docs)** — Criados `README.md` (setup completo), `supabase/README.md` (schema observado + comandos `db pull`/`functions download` + RLS). `.env.example` completado com chaves de build/target/streams faltantes. **Bloqueado:** `supabase db pull` (precisa login+senha DB) e `functions download` (source no servidor) — só o dono do projeto consegue. Esses fecham migrations fiéis + source das edge functions + rate-limit das chaves.
 - **Fase 2 (parcial)** — Removido overlay debug cru do LiveTV. Adicionado botão "Próximo canal" no overlay de erro de stream (skip manual seguro). Auto-skip AUTOMÁTICO **diferido** (risco de loop no player nativo sem teste on-device). tsc+eslint limpos.
-- **Próximo:** validar Fase 2 no device (happy path canais intacto) e seguir Fase 3 (performance: fila única de fetch TMDB + unificar componentes de imagem). Auto-skip automático quando houver janela de teste na TV.
+- **Fase 2** validada no device (Canais abre History, sem overlay debug). Commit 7acce02.
+- **Fase 3 (parcial)** — Removida IO de preload do MediaCard (fim da tempestade de `getMediaDetailsByID` por card ao rolar). `vendor-charts` confirmado lazy (só admin). Unificação de imagem diferida (refactor amplo). tsc+eslint limpos.
+- **Próximo:** Fase 4 (qualidade: consolidar 2 navs em 1 + zerar TS legado em channelsService + reduzir `as any`). Depois Fase 5 (testes), 6 (a11y), 7 (Android/loja).

@@ -294,30 +294,11 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
       }
     }, [media.tmdb_id, media.type, media.title, hasLoaded]);
 
-    // Ref para garantir acesso à versão mais recente de preloadContent sem re-criar o observer
-    const preloadRef = useRef(preloadContent);
-    useEffect(() => {
-      preloadRef.current = preloadContent;
-    }, [preloadContent]);
-
-    // Busca poster e logo via TMDB ao montar — logo precisa de fetch mesmo quando poster_path já existe
-    useEffect(() => {
-      if (!isInteractiveCard) return;
-      if (!media.tmdb_id) return;
-      const el = cardRef.current;
-      if (!el) return;
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            observer.disconnect();
-            preloadRef.current();
-          }
-        },
-        { rootMargin: '200px' }
-      );
-      observer.observe(el);
-      return () => observer.disconnect();
-    }, [isInteractiveCard, media.id, media.tmdb_id]);
+    // PERF: preload (detalhes/logo/poster TMDB) acontece SOB DEMANDA no foco/hover
+    // (handleFocus / handleMouseEnter), não mais via IntersectionObserver por proximidade.
+    // Antes, cada card a ≤200px da viewport disparava getMediaDetailsByID → tempestade de
+    // requisições ao rolar grades grandes (engasgo em TV Box). O poster base já aparece sem
+    // preload; logo/backdrop só são necessários no estado expandido (que exige foco/hover).
 
     const handleMouseEnter = useCallback(() => {
       if (disableHover) return;
