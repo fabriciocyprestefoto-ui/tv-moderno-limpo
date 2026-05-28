@@ -14,6 +14,21 @@
 ## Linha de base (auditoria)
 Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 6 · Código 6 · Testes 5 · **Segurança 4**.
 
+## ESTADO ATUAL (snapshot — atualizar a cada fase)
+| Fase | Status | Commit | Feito | Falta |
+|---|---|---|---|---|
+| 0 Segurança | PARCIAL | 88bce07 | anti-repack só em release + `webContentsDebuggingEnabled=false` (debug não brickou) | assinar release (`redx-release.jks` ausente) + `EXPECTED_SIGNATURE` + rate-limit das chaves (edge fn) |
+| 1 Reprodutibilidade | PARCIAL | 5b21cc2 | README + supabase/README + .env.example completo | `supabase db pull` (migrations+RLS) + `functions download` (source) — precisa login Supabase do dono |
+| 2 Robustez stream | PARCIAL | 7acce02 | removido overlay debug; botão "Próximo canal" (skip manual) | auto-skip AUTOMÁTICO (diferido: risco loop player nativo sem teste device) + agendar prune |
+| 3 Performance | PARCIAL | 842fcce | matada tempestade fetch TMDB por card; `vendor-charts` já lazy (só admin) | unificar 3 componentes de imagem (refactor amplo, diferido) |
+| 4 Qualidade | PARCIAL | 3be0693 | **`tsc` limpo no projeto inteiro** (fix generics sourceSanitizer, sem `as any`) | consolidar 2 navs em 1 + reduzir `as any` (142) — diferidos por risco |
+| 5 Testes | PARCIAL | 7f0541a | suíte medida (269/269); E2E mínimo reprodução/canais/erro/D-pad verde | D-pad real em device + elevar cobertura por área |
+| 6 UX/A11y | **COMPLETA** | — | ARIA cards/rows/player + loading status + contraste/foco + **layout shift auditado (CLS máx 0.0018)** | — |
+| 7 Android/loja | PARCIAL | — | store-safe por flag + E2E verde + **chunk AdultoPage removido por DCE** + LiveTV bloqueia canal adulto em store-safe | só formalizar buildTypes Gradle (baixo impacto); flavor nativo dispensável |
+
+**Bloqueios que dependem de VOCÊ (não-código):** (a) keystore release + `supabase login`/senha DB → fecha Fase 0 (assinatura+rate-limit) e Fase 1 (migrations+functions).
+**Próximas executáveis sem credenciais:** Fase 6 (layout shift), Fase 7 (flavor/variant nativo se necessário), D-pad em device real.
+
 ---
 
 ## Fase 0 — Segurança crítica · Sec 4→7 · STATUS: PARCIAL (código pronto; 2 itens bloqueados por infra)
@@ -52,23 +67,34 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 **Pronto (parcial):** projeto typecheck-clean. Falta consolidar nav (diferido por risco) + reduzir as-any.
 
 ## Fase 5 — Testes · Testes 5→8 · STATUS: PARCIAL
-- [x] **Suíte medida** (antes: cobertura desconhecida): **269 testes**. Estava 12 falhas/3 arquivos → corrigido para **3 falhas**.
+- [x] **Suíte medida e verde** (antes: cobertura desconhecida): **269/269 testes passando**. Estava 12 falhas/3 arquivos → 0 falhas.
 - [x] **HeroBanner** (9 falhas) corrigido: mock de `@/utils/imageProxy` estava desatualizado (faltava `getResponsiveImageSrcSet` que o componente usa). `components/__tests__/HeroBanner.test.tsx`.
 - [x] Regressão do fix Fase 4 (sourceSanitizer) já coberta por `utils/__tests__/sourceSanitizer.test.ts` (passa) + `tsc` limpo.
-- [ ] **Pré-existentes (arquivos não tocados):** `adultPinUtils.test.ts` (1, isolamento — estado de unlock em memória persiste entre testes) e `playbackHealth.test.ts` (2, normalização de URL retorna undefined). Investigar/corrigir sem mascarar comportamento.
-- [ ] **PENDENTE:** E2E "abrir título → reproduzir → voltar" (VOD+live) com fake-login fixture (`VITE_FAKE_LOGIN`); regressão de D-pad; cobertura medida no CI. Cypress hoje cobre smoke/nav (`minimum-tv-flow`, `shell-navigation`, `smoke-basic`, `error-boundary`).
-**Pronto (parcial):** suíte medida e estabilizada (266/269). Faltam 3 falhas pré-existentes + E2E de reprodução + gate de cobertura no CI.
+- [x] **Pré-existentes corrigidos:** `adultPinUtils.test.ts` agora limpa também cache em memória via `clearAdultUnlocked()`; `playbackHealth.test.ts` alinhado ao contrato v2 (query preservada, hash removido, storage key v2).
+- [x] **E2E mínimo estabilizado:** `minimum-tv-flow.cy.ts` cobre "abrir título → reproduzir → voltar", "Canais → voltar" e ErrorBoundary global com fixture local de catálogo.
+- [x] **Runner E2E padrão ampliado e verde:** `scripts/run-e2e-ci.mjs` agora roda `smoke-basic`, `shell-navigation` e `minimum-tv-flow` por padrão; suíte E2E padrão passou com 6/6 testes.
+- [x] **Gate de cobertura local validado:** `npm run test:coverage` passou com 269/269 testes. Cobertura global reportada baixa (36.6% statements), mas thresholds atuais por projeto passaram.
+- [x] **Regressão D-pad em browser/E2E:** `dpad-navigation.cy.ts` valida navegação vertical do menu lateral via setas do controle remoto.
+- [ ] **PENDENTE:** D-pad em device real e, se desejar, elevar thresholds/cobertura por áreas críticas.
+**Pronto (parcial):** suíte unitária/integração estabilizada (269/269), coverage gate local verde e E2E mínimo de reprodução/canais/D-pad verde. Falta D-pad em device real e amadurecer meta de cobertura por área.
 
-## Fase 6 — UX/A11y polish · UX 8→9 · STATUS: PENDENTE
-- [ ] ARIA consistente em cards/rows/player.
-- [ ] Contraste/foco revisados; transições suaves.
-- [ ] Loading states sem layout shift.
-**Pronto:** auditoria a11y básica passa.
+## Fase 6 — UX/A11y polish · UX 8→9 · STATUS: PARCIAL
+- [x] ARIA inicial em cards/rows: `MediaCard`, cards de futebol e menus/listas de canais com labels mais descritivos; skeleton da Home marcado como `role="status"`/`aria-busy`.
+- [x] ARIA do player e overlays principais: HUD, progresso, erro/retry, retomar, qualidade, elenco e episódios.
+- [x] Loading/empty states principais anunciados sem layout shift novo (`HomeSkeleton`, `VirtualGrid`, loading-more).
+- [x] Contraste/foco visual dos caminhos principais revisado: plataformas, cards, canais e controles do player têm foco visível também em `:focus` de WebView/TV.
+- [x] **Auditoria final de layout shift CONCLUÍDA** via PerformanceObserver `layout-shift` (buffered) no dev server (login dev `000000`). CLS por rota/interação, todas << 0.1 (limiar "bom"): Home load **0.0018**, Séries **0.0016**, Canais/Filmes/Futebol/Kids/Pesquisar/Configurações/Minha-lista **0**, foco/expand de card **0** (usa `transform`/`scale`, não layout), sidebar expand **0** (overlay, não empurra conteúdo), Home @1920×1080 (TV) **0**. Sem shifts ruins; nenhuma correção necessária.
+**Pronto:** auditoria a11y básica passa + layout shift auditado e verde (CLS máx 0.0018). STATUS: **COMPLETA**.
 
-## Fase 7 — Android/distribuição · Android 7→8,5 · STATUS: PENDENTE
-- [ ] Separar build adulto (flag/variant) para versão Play Store.
-- [ ] Formalizar buildTypes por target (tv/web/legacy já existem).
-**Pronto:** caminho de loja viável (versão sem adulto).
+## Fase 7 — Android/distribuição · Android 7→8,5 · STATUS: PARCIAL
+- [x] Primeira camada de build store-safe: `VITE_STORE_SAFE_BUILD=true` desativa menu/rota Adulto via `runtimeFlags.adultContentEnabled`; `.env.example` documentado.
+- [x] Scripts formais: `build:android:store`, `build:apk:store`, `build:android:full`, `build:apk:debug:full`; Vite bloqueia `STORE_SAFE=true` com adulto ligado.
+- [x] E2E store-safe dedicado: com `VITE_STORE_SAFE_BUILD=true` e `VITE_ENABLE_ADULT_CONTENT=false`, o menu lateral não mostra Adulto e `/adulto` não monta `AdultoPage`.
+- [x] **Chunk `AdultoPage-*.js` removido FISICAMENTE do bundle de loja** via dead-code-elimination de build. Guard build-time foldable em `App.tsx`/`LegacyApp.tsx`: `const ADULT_CONTENT_BUNDLED = import.meta.env.VITE_ENABLE_ADULT_CONTENT !== 'false' && import.meta.env.VITE_STORE_SAFE_BUILD !== 'true'` em `&&` antes do `import('./pages/AdultoPage')`. Vite substitui os literais → Rollup elimina o branch morto → chunk não emitido. Verificado: build store = 0 chunks `AdultoPage` (grep no `dist/assets` zero referências); build full = `AdultoPage-*.js` presente. Não precisou flavor Gradle nativo.
+- [x] **LiveTV store-safe:** canal de categoria adulta (`adultos`/`adulto`/`hot`) com `runtimeFlags.adultContentEnabled=false` é bloqueado sem expor o modal de PIN; `adultUnlocked` inicial força `false` em build de loja. Guardado por flag → builds normais inalterados.
+- [ ] Separar variant Android nativa/flavor: **dispensável** para o chunk adulto (já removido por DCE). Só necessário se a loja exigir separação por buildType Gradle de outros artefatos.
+- [ ] Formalizar buildTypes por target (tv/web/legacy já existem) — pendente, baixo impacto.
+**Pronto (parcial→quase):** caminho de loja viável por flag, validado em E2E (2/2), suíte 269/269, tsc+eslint limpos. Chunk `AdultoPage` **fisicamente ausente** no bundle store; `AdultPinModal` (gate de canais ao vivo) permanece estático no LiveTV mas inalcançável em store-safe (canal adulto bloqueado antes do PIN). Resta só formalizar buildTypes Gradle se a loja pedir.
 
 ---
 
@@ -84,4 +110,18 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - **Fase 4 (parcial)** — `tsc` agora LIMPO no projeto todo (erros legados de channelsService zerados via fix de generics em sourceSanitizer; sem `as any`). Consolidação de nav e redução de as-any diferidas (risco). Validar canais no device (sanitizer está no caminho).
 - **Fase 4** validada no device (canais carregam pós-fix sanitizer). Commit 3be0693.
 - **Fase 5 (parcial)** — Suíte medida: 269 testes. Corrigido mock desatualizado do HeroBanner (12→3 falhas). Restam 3 pré-existentes (adultPinUtils isolamento, playbackHealth normalização) em arquivos não tocados — documentadas para fix sem mascarar comportamento. E2E de reprodução + cobertura no CI pendentes.
-- **Próximo:** Fase 6 (a11y: ARIA em cards/rows/player, contraste/foco) e Fase 7 (Android/loja: build adulto separado). Depois: fechar pré-existentes de teste + E2E.
+- **Fase 6 (parcial)** — Aplicada primeira fatia de A11y/UX: `MediaCard` agora anuncia tipo/título/estado expandido e ações internas com `aria-label`/`aria-pressed`; `FutebolMatchCard` anuncia confronto/campeonato/status; listas de canais anunciam número, nome e programa atual; `HomeSkeleton` anuncia carregamento do catálogo. Typecheck filtrado dos arquivos tocados sem erros.
+- **Fase 6 (parcial)** — Aplicada segunda fatia de A11y/UX: HUD/overlays do player receberam roles/labels/estado; `VirtualGrid` passou a anunciar loading/empty/loading-more; `VideoCard` ganhou labels de ações e progressbar; shimmer/skeleton recebeu contenção de paint e fallback mais forte para `prefers-reduced-motion`. Typecheck filtrado dos arquivos tocados sem erros.
+- **Fase 6 (parcial)** — Aplicada terceira fatia de UX/A11y: plataformas agora anunciam filtro e preservam logos decorativas; `ContinueWatchingRow` e `Top10Row` receberam labels/progressbar; controles do player ganharam `data-player-control`/estado atual e foco robusto para WebView/TV. Falta auditoria visual final de layout shift em device/browser.
+- **Fase 6 (parcial)** — Checagem prática via Playwright em `http://127.0.0.1:5173/`: login dev `000000` abriu Home uma vez e confirmou plataformas com labels/sem pageerror; revelou destaque antigo de `MovieRow` sem label, corrigido. Nova queda no login revelou input de chave sem `aria-label`, corrigido. Logs de catálogo Supabase abortado/timeout permaneceram externos à Fase 6.
+- **Fase 7 (parcial)** — Adicionada flag store-safe (`VITE_STORE_SAFE_BUILD`) e override adulto (`VITE_ENABLE_ADULT_CONTENT`): runtime agora expõe `adultContentEnabled`; Sidebar remove Adulto quando desativado; rota `/adulto` cai para shell seguro; LegacyApp bloqueia navegação/render adulto em build de loja. Falta formalizar scripts/variants Android e validar build de loja.
+- **Fase 7 (parcial)** — Formalizados scripts npm para store/full sem rodar build: `build:android:store`, `build:apk:store`, `build:android:full`, `build:apk:debug:full`; adicionada trava no Vite contra flags contraditórias (`STORE_SAFE=true` + adulto ligado). Falta validar build store e decidir se precisa flavor Gradle nativo.
+- **Fase 5** — Corrigidas as 3 falhas pré-existentes documentadas: cache adulto em memória agora tem `clearAdultUnlocked()` para isolamento de teste; testes de `playbackHealth` foram atualizados para o contrato atual v2, que preserva query string para evitar falsos positivos com tokens novos. Teste alvo: 23/23. Suíte completa: 269/269.
+- **Fase 5** — E2E mínimo de reprodução estabilizado: cache local `redx-catalog-cache-v9` no spec evita dependência do Supabase para Home/Assistir; rota de canais aceita BrowserRouter/HashRouter; ErrorBoundary pode ser disparado por query E2E e o fallback customizado ganhou `role="alert"`. Rodado via `E2E_CYPRESS_SPEC=cypress/e2e/minimum-tv-flow.cy.ts E2E_CYPRESS_BROWSER=electron npm run e2e:ci`: 3/3 testes passaram.
+- **Fase 5** — `scripts/run-e2e-ci.mjs` agora inclui `minimum-tv-flow.cy.ts` na suíte padrão, além de `smoke-basic` e `shell-navigation`. Rodado com `E2E_CYPRESS_BROWSER=electron npm run e2e:ci`: 6/6 testes passaram.
+- **Fase 5** — Coverage gate local validado: `npm run test:coverage` passou com 28 arquivos e 269/269 testes. Relatório global atual: 36.6% statements, 30.27% branches, 35.75% functions, 38.49% lines; thresholds configurados por projeto passaram.
+- **Fase 5** — Adicionada regressão D-pad em `cypress/e2e/dpad-navigation.cy.ts`: seta para baixo/baixo/cima no menu lateral valida foco em Início → Gêneros → Séries → Gêneros usando evento no elemento focado (mais fiel ao bubbling do React). `scripts/run-e2e-ci.mjs` agora inclui esse spec. Rodado com `E2E_CYPRESS_BROWSER=electron npm run e2e:ci`: 7/7 testes passaram.
+- **Fase 7** — Adicionado E2E store-safe em `cypress/e2e/store-safe.cy.ts`: valida que `VITE_STORE_SAFE_BUILD=true` + `VITE_ENABLE_ADULT_CONTENT=false` remove Adulto do menu e bloqueia acesso direto a `/adulto` sem montar `AdultoPage`. Rodado com `E2E_CYPRESS_SPEC=cypress/e2e/store-safe.cy.ts E2E_CYPRESS_BROWSER=electron VITE_STORE_SAFE_BUILD=true VITE_ENABLE_ADULT_CONTENT=false VITE_APP_TARGET=tv npm run e2e:ci`: 2/2 testes passaram. Nota: build ainda lista chunk adulto; se precisar separação física para loja, criar flavor/entrypoint dedicado.
+- **Fase 6 (COMPLETA)** — Auditoria final de layout shift feita no dev server (Vite + login dev `000000`) com `PerformanceObserver({type:'layout-shift',buffered:true})` filtrando `hadRecentInput`. Medido CLS por rota e por interação: Home load 0.0018, Séries 0.0016, demais rotas (Canais/Filmes/Futebol/Kids/Pesquisar/Configurações/Minha-lista) 0, foco/expand de card 0 (anima via `transform`, não layout), sidebar expand 0 (overlay absoluto, não empurra `main`), Home @1920×1080 (TV) 0. Tudo bem abaixo do limiar "bom" (CLS<0.1). Nenhum shift problemático → sem correção de código necessária. Fase 6 fechada.
+- **Fase 7 (avanço)** — Fechado o gap do chunk adulto físico: guard build-time foldable (`ADULT_CONTENT_BUNDLED`) em `App.tsx`/`LegacyApp.tsx` faz o Rollup eliminar o `import('./pages/AdultoPage')` no bundle de loja (DCE). Verificado: store build sem `AdultoPage-*.js`, full build com. LiveTV passou a bloquear canal de categoria adulta em store-safe (sem expor PIN) e `adultUnlocked` inicia `false` quando `adultContentEnabled=false`; tudo guardado por flag → builds normais idênticos. Validado: tsc 0, eslint 0, unit 269/269, E2E store-safe 2/2, builds store/full conferem chunks. Não precisou flavor Gradle nativo.
+- **Próximo:** D-pad em device real (precisa TV via adb); formalizar buildTypes Gradle por target se a loja exigir; itens bloqueados por infra (keystore release + `supabase login` → Fases 0/1).

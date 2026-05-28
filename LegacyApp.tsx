@@ -54,7 +54,14 @@ const Settings = React.lazy(() => import('./pages/Settings'));
 const Search = React.lazy(() => import('./pages/Search'));
 const AdminDashboard = React.lazy(() => import('./pages/admin/Dashboard'));
 const DebugPage = React.lazy(() => import('./pages/DebugPage'));
-const AdultoPage = React.lazy(() => import('./pages/AdultoPage'));
+// Build-time gate (DCE): remove fisicamente o chunk AdultoPage no bundle de loja.
+const ADULT_CONTENT_BUNDLED =
+  import.meta.env.VITE_ENABLE_ADULT_CONTENT !== 'false' &&
+  import.meta.env.VITE_STORE_SAFE_BUILD !== 'true';
+const AdultoPage =
+  ADULT_CONTENT_BUNDLED && runtimeFlags.adultContentEnabled
+    ? React.lazy(() => import('./pages/AdultoPage'))
+    : null;
 
 import { GlobalLoader } from './components/GlobalLoader';
 import TitleTransitionOverlay from './components/TitleTransitionOverlay';
@@ -421,7 +428,7 @@ const PAGES_WITH_ROWS = [
   Page.KIDS,
   Page.MY_LIST,
   Page.LIVE,
-  Page.ADULTO,
+  ...(runtimeFlags.adultContentEnabled ? [Page.ADULTO] : []),
   Page.SEARCH,
   Page.DETAILS,
 ];
@@ -722,6 +729,13 @@ const LegacyAppInner: React.FC = () => {
       // switch interno (case Page.ADULTO). Evita double-mount causado
       // por setCurrentPage(Page.ADULTO) + v7_startTransition.
       if (page === Page.ADULTO) {
+        if (!runtimeFlags.adultContentEnabled) {
+          setIsNavigating(false);
+          setTransitionMedia(null);
+          routeNavigate('/');
+          setCurrentPage(Page.HOME);
+          return;
+        }
         setIsNavigating(false);
         setTransitionMedia(null);
         routeNavigate('/adulto');
@@ -1544,6 +1558,22 @@ const LegacyAppInner: React.FC = () => {
         );
 
       case Page.ADULTO:
+        if (!runtimeFlags.adultContentEnabled) {
+          return (
+            <Home
+              movies={movies ?? []}
+              series={series ?? []}
+              trendingMovies={trendingMovies ?? []}
+              trendingSeries={trendingSeries ?? []}
+              seriesByGenre={(seriesByGenre ?? new Map()) as Map<HomeGenreLabel, Media[]>}
+              catalogErrorMessage={catalogErrorMessage}
+              usingCachedCatalog={usingCachedCatalog}
+              onSelectMedia={(m) => navigate(Page.DETAILS, m)}
+              onPlayMedia={handlePlayMedia}
+              initialPlatform={urlPlatform}
+            />
+          );
+        }
         return (
           <ErrorBoundary
             onError={(err) => {
@@ -1563,7 +1593,7 @@ const LegacyAppInner: React.FC = () => {
             )}
           >
             <React.Suspense fallback={<LazyFallback />}>
-              <AdultoPage />
+              {AdultoPage ? <AdultoPage /> : null}
             </React.Suspense>
           </ErrorBoundary>
         );

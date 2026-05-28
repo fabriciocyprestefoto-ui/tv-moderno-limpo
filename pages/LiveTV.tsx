@@ -250,7 +250,10 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
   const [isInfoOverlayVisible, setIsInfoOverlayVisible] = useState(false);
 
   // Controle parental — lazy init lê TTL do sessionStorage (evita re-pedir PIN após nav)
-  const [adultUnlocked, setAdultUnlocked] = useState(() => isAdultUnlocked());
+  // Em build de loja (adultContentEnabled=false) o canal adulto nunca destrava.
+  const [adultUnlocked, setAdultUnlocked] = useState(
+    () => runtimeFlags.adultContentEnabled && isAdultUnlocked(),
+  );
   const [showAdultPin, setShowAdultPin] = useState(false);
 
   // Navegação por teclado
@@ -682,12 +685,16 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     setIsMenuVisible(false);
 
     // Controle parental — adulto (normalizado para 'adultos')
-    if (
-      (channel.category === 'adultos' ||
-        channel.category === 'adulto' ||
-        channel.category === 'hot') &&
-      !adultUnlocked
-    ) {
+    const isAdultCategory =
+      channel.category === 'adultos' ||
+      channel.category === 'adulto' ||
+      channel.category === 'hot';
+    if (isAdultCategory && !runtimeFlags.adultContentEnabled) {
+      // Build de loja: adulto desativado — bloqueia sem expor PIN.
+      selectingChannelRef.current = false;
+      return;
+    }
+    if (isAdultCategory && !adultUnlocked) {
       selectingChannelRef.current = false;
       pendingAdultChannelRef.current = channel;
       setShowAdultPin(true);

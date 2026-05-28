@@ -28,6 +28,7 @@ import { PageTransition } from './components/PageTransition';
 import { ExitConfirmModal } from './components/ExitConfirmModal';
 import AppBootScreen from './components/AppBootScreen';
 import LiveTVPreloader from './components/LiveTVPreloader';
+import { runtimeFlags } from './config/runtimeFlags';
 const AdminRoute = lazyWithChunkRetry(() => import('./components/AdminRoute'), 'AdminRoute');
 const NotFoundPage = lazyWithChunkRetry(() => import('./pages/NotFoundPage'), 'NotFoundPage');
 
@@ -41,7 +42,17 @@ const enableHlsTestRoute = import.meta.env.VITE_TV_BUILD !== '1';
 const HLSTestPlayer = enableHlsTestRoute
   ? lazyWithChunkRetry(() => import('./pages/HLSTestPlayer'), 'HLSTestPlayer')
   : null;
-const AdultoPage = lazyWithChunkRetry(() => import('./pages/AdultoPage'), 'AdultoPage');
+// Build-time gate: literais de import.meta.env são substituídos pelo Vite e
+// permitem que o Rollup elimine o branch morto (DCE), removendo fisicamente o
+// chunk AdultoPage do bundle de loja. O guard runtime (runtimeFlags) segue
+// valendo para builds que incluem o chunk.
+const ADULT_CONTENT_BUNDLED =
+  import.meta.env.VITE_ENABLE_ADULT_CONTENT !== 'false' &&
+  import.meta.env.VITE_STORE_SAFE_BUILD !== 'true';
+const AdultoPage =
+  ADULT_CONTENT_BUNDLED && runtimeFlags.adultContentEnabled
+    ? lazyWithChunkRetry(() => import('./pages/AdultoPage'), 'AdultoPage')
+    : null;
 
 const isElectronDesktop =
   typeof navigator !== 'undefined' && /Electron/i.test(navigator.userAgent || '');
@@ -49,11 +60,18 @@ const RouterComponent = isElectronDesktop ? HashRouter : BrowserRouter;
 
 /** Cypress: `sessionStorage.setItem('redx-e2e-throw-root','1')` antes do load testa o ErrorBoundary global. */
 const E2EInjectedRootError: React.FC = () => {
+  const urlParams =
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   if (
-    typeof sessionStorage !== 'undefined' &&
-    sessionStorage.getItem('redx-e2e-throw-root') === '1'
+    urlParams?.get('redx_e2e_throw') === '1' ||
+    (typeof sessionStorage !== 'undefined' &&
+      sessionStorage.getItem('redx-e2e-throw-root') === '1')
   ) {
-    sessionStorage.removeItem('redx-e2e-throw-root');
+    try {
+      sessionStorage.removeItem('redx-e2e-throw-root');
+    } catch {
+      /* noop */
+    }
     throw new Error('E2E: forced root render error');
   }
   return null;
@@ -196,7 +214,11 @@ const App: React.FC = () => {
         }
       }}
       fallback={(error) => (
-        <div className="fixed inset-0 flex flex-col items-center justify-center bg-black text-white gap-4 px-6">
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="fixed inset-0 flex flex-col items-center justify-center bg-black text-white gap-4 px-6"
+        >
           <p className="text-lg font-bold">Erro inesperado</p>
           {String(import.meta.env.VITE_BUILD_CHANNEL || '').trim() !== 'production' &&
             error?.message && (
@@ -376,7 +398,7 @@ const App: React.FC = () => {
                     path="/adulto"
                     element={
                       <React.Suspense fallback={<LazyFallback />}>
-                        <AdultoPage />
+                        {AdultoPage ? <AdultoPage /> : <LegacyApp />}
                       </React.Suspense>
                     }
                   />
