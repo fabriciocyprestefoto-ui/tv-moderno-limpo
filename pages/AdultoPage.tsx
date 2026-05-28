@@ -15,7 +15,6 @@ import { logger } from '@/utils/logger';
 import { setSignal } from '@/utils/appSignals';
 import { runtimeFlags } from '@/config/runtimeFlags';
 import { isNativePlatform, playNative } from '@/services/nativePlayerService';
-import { isFireTV } from '@/utils/tvBoxDetector';
 
 const ADULT_LIMIT = 400;
 const LOCAL_CHANNEL_PLACEHOLDER = '/logored.webp';
@@ -72,13 +71,12 @@ export default function AdultoPage() {
   const hlsRef = useRef<any | null>(null);
   const nativeAdultLaunchRef = useRef(0);
   const [liveStreamError, setLiveStreamError] = useState<string | null>(null);
-  // Gate idêntico à página Canais (LiveTV): SEM isLegacyHtml5OnlyTV(). O player nativo é
-  // Activity Android (Media3/ExoPlayer) e independe do WebView. Bloquear por essa heurística
-  // fazia o Adulto cair no <video> HTML5 (que não toca http fontez na TCL) — não funcionava.
+  // Player nativo (Media3/ExoPlayer) também no Firestick: o <video> web HLS é bloqueado
+  // por Mixed Content (manifest http fontez sobre page https) e dependeria de edge 302 vivo.
+  // O ExoPlayer toca http direto, fora do WebView — único caminho que funciona p/ esses streams.
   const useNativeAdultPlayer =
     runtimeFlags.isTvBuild &&
     runtimeFlags.nativeAndroidPlayerEnabled &&
-    !isFireTV() &&
     isNativePlatform();
 
   // Marcar página como adulta para CSS + sinalizar player ativo para spatial/remote nav
@@ -315,7 +313,25 @@ export default function AdultoPage() {
 
     try {
       if (Hls && Hls.isSupported()) {
-        const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+        // Mesma config robusta da pagina Canais (LiveTV): lowLatencyMode=false e
+        // timeouts longos. lowLatencyMode=true travava o manifest de streams fontez
+        // (nao low-latency) no Firestick/WebView — readyState ficava em 0.
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: false,
+          manifestLoadingTimeOut: 28000,
+          manifestLoadingMaxRetry: 1,
+          manifestLoadingRetryDelay: 1000,
+          manifestLoadingMaxRetryTimeout: 8000,
+          levelLoadingTimeOut: 28000,
+          levelLoadingMaxRetry: 1,
+          levelLoadingRetryDelay: 1000,
+          levelLoadingMaxRetryTimeout: 8000,
+          fragLoadingTimeOut: 28000,
+          fragLoadingMaxRetry: 1,
+          fragLoadingRetryDelay: 1000,
+          fragLoadingMaxRetryTimeout: 8000,
+        });
         hlsRef.current = hls;
         hls.loadSource(url);
         hls.attachMedia(video);
