@@ -51,11 +51,13 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - [ ] **DIFERIDO:** reduzir `as any` (142) nos hot paths — fazer pontualmente, com verificação por arquivo (risco de mascarar shape real).
 **Pronto (parcial):** projeto typecheck-clean. Falta consolidar nav (diferido por risco) + reduzir as-any.
 
-## Fase 5 — Testes · Testes 5→8 · STATUS: PENDENTE
-- [ ] E2E: abrir título → reproduzir → voltar (VOD + live).
-- [ ] Regressão de D-pad (foco/scroll/back).
-- [ ] Cobertura no CI (meta ≥60% services/hooks core).
-**Pronto:** CI verde com E2E dos fluxos críticos.
+## Fase 5 — Testes · Testes 5→8 · STATUS: PARCIAL
+- [x] **Suíte medida** (antes: cobertura desconhecida): **269 testes**. Estava 12 falhas/3 arquivos → corrigido para **3 falhas**.
+- [x] **HeroBanner** (9 falhas) corrigido: mock de `@/utils/imageProxy` estava desatualizado (faltava `getResponsiveImageSrcSet` que o componente usa). `components/__tests__/HeroBanner.test.tsx`.
+- [x] Regressão do fix Fase 4 (sourceSanitizer) já coberta por `utils/__tests__/sourceSanitizer.test.ts` (passa) + `tsc` limpo.
+- [ ] **Pré-existentes (arquivos não tocados):** `adultPinUtils.test.ts` (1, isolamento — estado de unlock em memória persiste entre testes) e `playbackHealth.test.ts` (2, normalização de URL retorna undefined). Investigar/corrigir sem mascarar comportamento.
+- [ ] **PENDENTE:** E2E "abrir título → reproduzir → voltar" (VOD+live) com fake-login fixture (`VITE_FAKE_LOGIN`); regressão de D-pad; cobertura medida no CI. Cypress hoje cobre smoke/nav (`minimum-tv-flow`, `shell-navigation`, `smoke-basic`, `error-boundary`).
+**Pronto (parcial):** suíte medida e estabilizada (266/269). Faltam 3 falhas pré-existentes + E2E de reprodução + gate de cobertura no CI.
 
 ## Fase 6 — UX/A11y polish · UX 8→9 · STATUS: PENDENTE
 - [ ] ARIA consistente em cards/rows/player.
@@ -80,4 +82,6 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - **Fase 2** validada no device (Canais abre History, sem overlay debug). Commit 7acce02.
 - **Fase 3 (parcial)** — Removida IO de preload do MediaCard (fim da tempestade de `getMediaDetailsByID` por card ao rolar). `vendor-charts` confirmado lazy (só admin). Unificação de imagem diferida (refactor amplo). tsc+eslint limpos.
 - **Fase 4 (parcial)** — `tsc` agora LIMPO no projeto todo (erros legados de channelsService zerados via fix de generics em sourceSanitizer; sem `as any`). Consolidação de nav e redução de as-any diferidas (risco). Validar canais no device (sanitizer está no caminho).
-- **Próximo:** validar canais (carga/play) no device pós-fix do sanitizer; depois Fase 5 (testes E2E), 6 (a11y), 7 (Android/loja).
+- **Fase 4** validada no device (canais carregam pós-fix sanitizer). Commit 3be0693.
+- **Fase 5 (parcial)** — Suíte medida: 269 testes. Corrigido mock desatualizado do HeroBanner (12→3 falhas). Restam 3 pré-existentes (adultPinUtils isolamento, playbackHealth normalização) em arquivos não tocados — documentadas para fix sem mascarar comportamento. E2E de reprodução + cobertura no CI pendentes.
+- **Próximo:** Fase 6 (a11y: ARIA em cards/rows/player, contraste/foco) e Fase 7 (Android/loja: build adulto separado). Depois: fechar pré-existentes de teste + E2E.

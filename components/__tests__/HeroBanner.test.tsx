@@ -21,6 +21,7 @@ vi.mock('@/services/tmdb', () => ({
 vi.mock('@/utils/imageProxy', () => ({
   toWebP: (url: string) => url,
   extractOriginalUrl: (url: string) => url,
+  getResponsiveImageSrcSet: () => undefined,
 }));
 
 vi.mock('@/utils/soundEffects', () => ({
