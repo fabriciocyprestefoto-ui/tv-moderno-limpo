@@ -828,7 +828,8 @@ const Home: React.FC<HomeProps> = ({
                   priorityTmdbIds={[541671]}
                   priorityTitles={['Bailarina']}
                   priorityTmdbMediaType="movie"
-                  maxBannerSlides={10}
+                  exclusivePriority
+                  maxBannerSlides={1}
                 />
                 {!isSidebarOpen && (
                   <div
