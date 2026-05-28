@@ -45,11 +45,11 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - [ ] **DIFERIDO (refactor amplo):** unificar 3 componentes de imagem (LazyImage/NetflixImage/PosterImage) em 1 com cache compartilhado. Risco de regressão visual em várias páginas; fazer com testes visuais por tela. `MovieRow` não é storm (busca logo só do 1º + focado).
 **Pronto (parcial):** scroll de grade sem rajada de requests TMDB. Falta unificar componentes de imagem (diferido).
 
-## Fase 4 — Qualidade de código · Código 6→8 · STATUS: PENDENTE
-- [ ] Consolidar 2 sistemas de navegação em 1 (geométrico OU spatial).
-- [ ] Zerar erros TS legados em `services/channelsService.ts`.
-- [ ] Reduzir `as any` (142) nos hot paths.
-**Pronto:** `tsc` limpo; um motor de nav único documentado.
+## Fase 4 — Qualidade de código · Código 6→8 · STATUS: PARCIAL
+- [x] **`tsc` LIMPO no projeto inteiro** (exit 0). Causa raiz dos erros legados: `sanitizeFontezChannels`/`removeOldDeadSources` exigiam `T extends SourceLike` (Record<string,unknown> & ...), e `Channel`/`AdultStream` não têm index signature. Fix: constraint `T extends object` + indexação interna via cast controlado `as Record<string,unknown>` (sem `as any`). `utils/sourceSanitizer.ts`.
+- [ ] **DIFERIDO (alto risco):** consolidar 2 sistemas de navegação (geométrico `useRemoteNavigation` + `useSpatialNavigation`) em 1. Mexe na área que funciona bem; precisa E2E de D-pad em todos os fluxos antes. Documentar hierarquia de guards primeiro.
+- [ ] **DIFERIDO:** reduzir `as any` (142) nos hot paths — fazer pontualmente, com verificação por arquivo (risco de mascarar shape real).
+**Pronto (parcial):** projeto typecheck-clean. Falta consolidar nav (diferido por risco) + reduzir as-any.
 
 ## Fase 5 — Testes · Testes 5→8 · STATUS: PENDENTE
 - [ ] E2E: abrir título → reproduzir → voltar (VOD + live).
@@ -79,4 +79,5 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - **Fase 2 (parcial)** — Removido overlay debug cru do LiveTV. Adicionado botão "Próximo canal" no overlay de erro de stream (skip manual seguro). Auto-skip AUTOMÁTICO **diferido** (risco de loop no player nativo sem teste on-device). tsc+eslint limpos.
 - **Fase 2** validada no device (Canais abre History, sem overlay debug). Commit 7acce02.
 - **Fase 3 (parcial)** — Removida IO de preload do MediaCard (fim da tempestade de `getMediaDetailsByID` por card ao rolar). `vendor-charts` confirmado lazy (só admin). Unificação de imagem diferida (refactor amplo). tsc+eslint limpos.
-- **Próximo:** Fase 4 (qualidade: consolidar 2 navs em 1 + zerar TS legado em channelsService + reduzir `as any`). Depois Fase 5 (testes), 6 (a11y), 7 (Android/loja).
+- **Fase 4 (parcial)** — `tsc` agora LIMPO no projeto todo (erros legados de channelsService zerados via fix de generics em sourceSanitizer; sem `as any`). Consolidação de nav e redução de as-any diferidas (risco). Validar canais no device (sanitizer está no caminho).
+- **Próximo:** validar canais (carga/play) no device pós-fix do sanitizer; depois Fase 5 (testes E2E), 6 (a11y), 7 (Android/loja).

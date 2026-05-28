@@ -2,18 +2,9 @@ import { isActiveSourceUrl, isInactiveSourceUrl } from './sourceUrlPolicy';
 
 const SOURCE_PURGE_MARKER = 'redx-dead-source-purge-v1';
 
-type SourceLike = Record<string, unknown> & {
-  logo?: string;
-  logo_url?: string | null;
-  logoUrl?: string | null;
-  tvg_logo?: string | null;
-  thumbnail?: string | null;
-  image?: string | null;
-  icon?: string | null;
-  stream_url?: string;
-  streamUrl?: string;
-  url?: string;
-};
+// Aceita qualquer objeto (Channel, AdultStream, linhas cruas do Supabase) sem exigir
+// index signature no tipo do chamador. O acesso por chave é feito via cast controlado
+// para Record<string, unknown> dentro das funções (campos podem ou não existir).
 
 const LOGO_FIELDS = ['logo', 'logo_url', 'logoUrl', 'tvg_logo', 'tvg-logo', 'thumbnail'] as const;
 const STREAM_FIELDS = ['stream_url', 'streamUrl', 'url'] as const;
@@ -35,18 +26,19 @@ export function isFontezContentUrl(value: unknown): boolean {
   return isActiveSourceUrl(value);
 }
 
-export function removeOldDeadSources<T extends SourceLike>(channel: T): T | null {
+export function removeOldDeadSources<T extends object>(channel: T): T | null {
   const next = { ...channel } as T;
+  const nextRec = next as Record<string, unknown>;
 
   for (const key of LOGO_FIELDS) {
-    const value = next[key];
+    const value = nextRec[key];
     if (typeof value === 'string' && isOldDeadSourceUrl(value)) {
-      (next as Record<string, unknown>)[key] = '';
+      nextRec[key] = '';
     }
   }
 
   const streamValue = STREAM_FIELDS
-    .map((key) => next[key])
+    .map((key) => nextRec[key])
     .find((value) => typeof value === 'string' && value.trim());
 
   if (!streamValue || isOldDeadSourceUrl(streamValue)) {
@@ -56,7 +48,7 @@ export function removeOldDeadSources<T extends SourceLike>(channel: T): T | null
   return next;
 }
 
-export function sanitizeFontezChannels<T extends SourceLike>(
+export function sanitizeFontezChannels<T extends object>(
   channels: T[],
   context = 'channels'
 ): T[] {
@@ -64,7 +56,8 @@ export function sanitizeFontezChannels<T extends SourceLike>(
   let removedInvalidStreams = 0;
 
   const sanitized = channels.flatMap((channel) => {
-    const hadOldLogo = LOGO_FIELDS.some((key) => isOldDeadSourceUrl(channel[key]));
+    const channelRec = channel as Record<string, unknown>;
+    const hadOldLogo = LOGO_FIELDS.some((key) => isOldDeadSourceUrl(channelRec[key]));
     const next = removeOldDeadSources(channel);
 
     if (!next) {
