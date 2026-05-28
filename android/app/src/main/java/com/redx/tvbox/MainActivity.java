@@ -44,10 +44,16 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(com.redx.tvbox.NativePlayerPlugin.class);
         super.onCreate(savedInstanceState);
 
-        // AppValidator.validate() temporariamente bypass: EXPECTED_SIGNATURE
-        // hardcoded pode não bater com keystore atual → System.exit(0) no launch.
-        // Reabilitar quando SHA-256 real do APK release for confirmado.
-        android.util.Log.w("RED-X", "AppValidator.validate() bypass temporário");
+        // Anti-repack: validação de assinatura SOMENTE em release. Em debug o APK é
+        // assinado com a chave de debug (hash != EXPECTED_SIGNATURE) — validar aqui
+        // mataria o build de desenvolvimento. Em release, exige o keystore oficial.
+        // IMPORTANTE: antes de publicar release, confirmar EXPECTED_SIGNATURE em
+        // AppValidator.java com o SHA-256 do certificado de redx-release.jks.
+        if (!BuildConfig.DEBUG) {
+            AppValidator.validate(this);
+        } else {
+            android.util.Log.w("RED-X", "AppValidator: bypass em debug (enforce só em release)");
+        }
 
         // Autoplay / HTML5 video: aplicar JÁ neste frame — se só rodar em Handler.post,
         // o WebView pode carregar index.html antes de setMediaPlaybackRequiresUserGesture(false)
