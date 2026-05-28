@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { PitoChannel } from './types';
+import { handleChannelLogoError } from '@/utils/channelLogo';
 
 interface ChannelGridProps {
   channels: PitoChannel[];
@@ -122,17 +123,20 @@ export const PitoChannelGrid: React.FC<ChannelGridProps> = ({
                       >
                         {channel.number}
                       </span>
-                      <div className="w-7 h-7 bg-white rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center p-1">
-                        <img
-                          src={channel.logo}
-                          alt={channel.name}
-                          loading="lazy"
-                          className="w-full h-full object-contain"
-                          referrerPolicy="no-referrer"
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
+                      <div className="relative w-7 h-7 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center p-1 bg-black/25 border border-white/10">
+                        <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-white/55">
+                          {channel.name.slice(0, 2).toUpperCase()}
+                        </span>
+                        {channel.logo ? (
+                          <img
+                            src={channel.logo}
+                            alt={channel.name}
+                            loading="lazy"
+                            className="relative z-[1] block w-full h-full object-contain opacity-100"
+                            referrerPolicy="no-referrer"
+                            onError={(e) => handleChannelLogoError(channel.name, e.currentTarget)}
+                          />
+                        ) : null}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div

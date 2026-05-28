@@ -2,6 +2,7 @@ import type { Channel } from '@/types';
 import { env } from '@/config/env';
 import { pickFirstRealStreamUrlFromRow } from '@/utils/streamUrlGuards';
 import { sanitizeFontezChannels } from '@/utils/sourceSanitizer';
+import { resolveChannelLogo } from '@/utils/channelLogo';
 
 // Supabase REST default cap = 1000. Carregar em 1-2 requests reduz spinner em ~1s
 // na TV (Wi-Fi lenta) vs 7 requests de 200 cada.
@@ -12,17 +13,7 @@ function rowToChannel(row: Record<string, unknown>): Channel | null {
   const name = String(row.name ?? row.nome ?? '').trim();
   if (!name || !stream_url) return null;
 
-  const logo = String(
-    row.logo ??
-      row.logo_url ??
-      row.logoUrl ??
-      row.tvg_logo ??
-      row['tvg-logo'] ??
-      row.thumbnail ??
-      row.image ??
-      row.icon ??
-      ''
-  ).trim();
+  const { logo } = resolveChannelLogo(row);
   const category =
     String(row.category ?? row.genero ?? row.grupo ?? 'Variedades').trim() || 'Variedades';
   const programRaw = row.current_program ?? row.program ?? row.epg_current ?? row.epg_line;

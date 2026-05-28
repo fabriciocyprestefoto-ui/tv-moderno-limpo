@@ -2,7 +2,7 @@
  * services/sportsApi.ts
  *
  * Cliente para a Futebol Brasil API (local / self-hosted).
- * URL base: VITE_SPORTS_API_URL (default: http://localhost:3333)
+ * URL base: VITE_SPORTS_API_URL (default: REDX API ESPORTE na Vercel)
  *
  * Cobre futebol BR, Europa, Copa 2026, NBA e Lutas/UFC.
  */
@@ -10,9 +10,9 @@
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const API_BASE: string =
-  (typeof import.meta !== 'undefined' && (import.meta as Record<string, unknown>).env
-    ? ((import.meta as Record<string, Record<string, string>>).env.VITE_SPORTS_API_URL ?? 'http://localhost:3333')
-    : 'http://localhost:3333') + '/api'
+  (typeof import.meta !== 'undefined' && (import.meta as unknown as { env?: Record<string, string> }).env
+    ? ((import.meta as unknown as { env: Record<string, string> }).env.VITE_SPORTS_API_URL ?? 'https://futebol-brasil-api-vercel-ok.vercel.app')
+    : 'https://futebol-brasil-api-vercel-ok.vercel.app').replace(/\/$/, '') + '/api'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -59,7 +59,16 @@ export interface FootballMatch {
   venue?: string | null
   city?: string | null
   broadcast?: string[]
+  broadcasts?: SportsBroadcast[]
+  transmissoes?: SportsBroadcast[]
   updatedAt: string
+}
+
+export interface SportsBroadcast {
+  canal: string
+  tipo: 'tv_aberta' | 'tv_fechada' | 'streaming' | 'youtube' | 'desconhecido'
+  url: string | null
+  logo: string | null
 }
 
 export interface NBAGame {
@@ -191,16 +200,33 @@ export interface FootballTeam {
   rivais?: string[]
   // Elenco com fotos ESPN
   squad?: FootballPlayer[]
+  elenco?: FootballPlayer[]
+  proximosJogos?: FootballMatch[]
+  ultimosResultados?: FootballMatch[]
   updatedAt?: string
 }
 
 export interface FootballPlayer {
+  id?: string | null
   nome: string
   posicao?: string | null
   numero?: number | null
   nacionalidade?: string | null
   idade?: number | null
   foto?: string | null
+  fotoReal?: boolean
+  perfilUrl?: string | null
+}
+
+export interface FootballTopScorer {
+  posicao: number
+  jogador: string
+  time: string
+  gols: number
+  assistencias: number | null
+  foto: string
+  fotoReal?: boolean
+  perfilUrl?: string | null
 }
 
 export interface Competition {
@@ -224,6 +250,41 @@ export interface StandingsRow {
   golsContra: number
   saldoGols: number
   aproveitamento: number
+}
+
+export interface RedxFootballFull {
+  competition: string
+  endpoints: Record<string, string>
+  jogosDoDia: FootballMatch[]
+  transmissoesHoje: Array<{
+    matchId: string
+    jogo: string
+    campeonato: string
+    data: string
+    horario?: string
+    homeTeam?: { name: string; logo?: string | null }
+    awayTeam?: { name: string; logo?: string | null }
+    transmissoes: SportsBroadcast[]
+  }>
+  times: Array<{
+    id: string
+    name: string
+    slug: string
+    logo?: string | null
+    escudo?: string | null
+    city?: string
+    state?: string
+    stadium?: string
+    colors?: string[]
+    teamUrl?: string
+    squadUrl?: string
+    matchesUrl?: string
+  }>
+  tabela: StandingsRow[]
+  artilharia: FootballTopScorer[]
+  ultimosResultados: FootballMatch[]
+  proximosJogos: FootballMatch[]
+  updatedAt: string
 }
 
 export interface WorldCup2026Info {
@@ -303,6 +364,16 @@ export async function getRecentMatches(): Promise<FootballMatch[]> {
   }
 }
 
+/** Pacote completo da REDX API para a página Futebol */
+export async function getRedxFootballFull(days = 14): Promise<RedxFootballFull | null> {
+  try {
+    return await apiFetch<RedxFootballFull>('/football/brasil/full', { days: String(days) })
+  } catch (e) {
+    console.error('[SportsAPI] getRedxFootballFull error:', e)
+    return null
+  }
+}
+
 /** Lista de competições disponíveis */
 export async function getCompetitions(): Promise<Competition[]> {
   try {
@@ -319,6 +390,16 @@ export async function getCompetitionStandings(competitionId: string): Promise<St
     return await apiFetch<StandingsRow[]>(`/football/competitions/${competitionId}/standings`)
   } catch (e) {
     console.error('[SportsAPI] getCompetitionStandings error:', e)
+    return []
+  }
+}
+
+/** Artilharia com foto sempre preenchida */
+export async function getCompetitionTopScorers(competitionId: string): Promise<FootballTopScorer[]> {
+  try {
+    return await apiFetch<FootballTopScorer[]>(`/football/competitions/${competitionId}/top-scorers`)
+  } catch (e) {
+    console.error('[SportsAPI] getCompetitionTopScorers error:', e)
     return []
   }
 }

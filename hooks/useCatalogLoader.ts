@@ -87,9 +87,13 @@ const GENRE_TRANSLATIONS_PT: Record<string, string> = {
   'guerra e politica': 'Guerra e Política',
 };
 
+// Piso de catálogo: filme/série de 2015 pra frente. Admin pode subir via min_year
+// (ex.: 2020), nunca descer abaixo de 2015. Itens sem ano definido passam (não barrados).
+const CATALOG_YEAR_FLOOR = 2015;
 const resolveCatalogMinYear = (settings?: { min_year?: number } | null): number => {
   const raw = Number(settings?.min_year);
-  return Number.isFinite(raw) && raw > 1900 ? raw : DEFAULT_CATALOG_MIN_YEAR;
+  const base = Number.isFinite(raw) && raw > 1900 ? raw : DEFAULT_CATALOG_MIN_YEAR;
+  return Math.max(base, CATALOG_YEAR_FLOOR);
 };
 
 const normalizeText = (value: string): string =>

@@ -52,7 +52,6 @@ const ChannelItem: React.FC<ChannelItemProps> = ({
             alt={channel.name}
             className="w-full h-full object-contain"
             loading="lazy"
-            crossOrigin="anonymous"
             referrerPolicy="no-referrer"
             onError={(e) => {
               const img = e.target as HTMLImageElement;
@@ -88,7 +87,6 @@ const ChannelItem: React.FC<ChannelItemProps> = ({
               alt={channel.name}
               className="w-full h-full object-contain"
               loading="lazy"
-              crossOrigin="anonymous"
               referrerPolicy="no-referrer"
             />
           ) : (

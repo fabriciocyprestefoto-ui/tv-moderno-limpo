@@ -117,7 +117,11 @@ const Top10Row: React.FC<Top10RowProps> = React.memo(
                       fallbackSrc={ERROR_SVG}
                       showSkeleton={true}
                       objectFit="cover"
-                      eager={idx < 3}
+                      eager={idx < 2}
+                      imageType="poster"
+                      width={CARD_WIDTH}
+                      height={CARD_HEIGHT}
+                      sizes={`${CARD_WIDTH}px`}
                     />
                   ) : (
                     <div className="absolute inset-0 bg-[#16161e] flex items-center justify-center">

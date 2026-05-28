@@ -23,7 +23,13 @@ import {
 } from '../config/homeCatalog';
 import { removeDuplicates, sortByRating } from '../utils/catalogUtils';
 import { matchesPlatform } from '../config/platformConfig';
-import { getProviderTmdbIds, fetchMoviesByTrending, fetchSeriesByTrending } from '../services/tmdb';
+import {
+  getProviderTmdbIds,
+  fetchMoviesByTrending,
+  fetchSeriesByTrending,
+  fetchTop100PopularIds,
+  fetchTop100TopRatedIds,
+} from '../services/tmdb';
 import { isKidsContent } from '../utils/genreUtils';
 import { useNavigate } from 'react-router-dom';
 import { useSpatialNav } from '../hooks/useSpatialNavigation';
@@ -114,6 +120,10 @@ const Home: React.FC<HomeProps> = ({
   // ── Conteúdo em Alta via TMDB ──────────────────────────────────
   const [tmdbPopularMovies, setTmdbPopularMovies] = useState<Media[]>([]);
   const [tmdbPopularSeries, setTmdbPopularSeries] = useState<Media[]>([]);
+  // IDs TMDB para "Aclamados": populares (trending/week) + bem avaliados (top_rated).
+  // Aclamados = itens do catálogo Supabase que o TMDB considera populares E/OU bem avaliados.
+  const [tmdbPopularIds, setTmdbPopularIds] = useState<Set<number>>(new Set());
+  const [tmdbTopRatedIds, setTmdbTopRatedIds] = useState<Set<number>>(new Set());
   const [newEpToast, setNewEpToast] = useState<{
     seriesName: string;
     seasonEpisode: string;
@@ -274,22 +284,43 @@ const Home: React.FC<HomeProps> = ({
   const platformLabel = selectedPlatform || '';
 
   // ─── Top Rated content (Filmes Aclamados e Séries Imperdíveis) ──────────
-  // Exclui itens já exibidos nas linhas "Em Alta" para evitar repetição de conteúdo
+  // "Aclamados" = itens do catálogo Supabase que o TMDB classifica como bem avaliados
+  // (top_rated) e/ou populares (trending). Score: top_rated=2, popular=1 (ambos=3).
+  // Ordena por score desc, desempate por rating (vote_average). Se os ranks TMDB ainda
+  // não carregaram ou o catálogo não casa por tmdb_id, cai para ordenação por rating.
+  const acclaimedScore = useCallback(
+    (m: Media): number => {
+      const id = Number((m as { tmdb_id?: number | string }).tmdb_id);
+      if (!Number.isFinite(id) || id <= 0) return 0;
+      return (tmdbTopRatedIds.has(id) ? 2 : 0) + (tmdbPopularIds.has(id) ? 1 : 0);
+    },
+    [tmdbPopularIds, tmdbTopRatedIds]
+  );
+
+  const rankAcclaimed = useCallback(
+    (pool: Media[]): Media[] => {
+      const hasTmdbRanks = tmdbPopularIds.size > 0 || tmdbTopRatedIds.size > 0;
+      if (!hasTmdbRanks) return [...pool].sort(sortByRating).slice(0, 100);
+      const ranked = pool.filter((m) => acclaimedScore(m) > 0);
+      ranked.sort((a, b) => {
+        const d = acclaimedScore(b) - acclaimedScore(a);
+        return d !== 0 ? d : sortByRating(a, b);
+      });
+      // Catálogo pode não casar por tmdb_id — fallback p/ não esvaziar a linha.
+      return (ranked.length >= 5 ? ranked : [...pool].sort(sortByRating)).slice(0, 100);
+    },
+    [acclaimedScore, tmdbPopularIds, tmdbTopRatedIds]
+  );
+
   const topRatedMovies = useMemo(() => {
     const trendingKeys = new Set(effectiveTrendingMovies.map((m) => mediaKey(m)));
-    return [...effectiveMovies]
-      .filter((m) => !trendingKeys.has(mediaKey(m)))
-      .sort(sortByRating)
-      .slice(0, 100);
-  }, [effectiveMovies, effectiveTrendingMovies]);
+    return rankAcclaimed(effectiveMovies.filter((m) => !trendingKeys.has(mediaKey(m))));
+  }, [effectiveMovies, effectiveTrendingMovies, rankAcclaimed]);
 
   const topRatedSeries = useMemo(() => {
     const trendingKeys = new Set(effectiveTrendingSeries.map((s) => mediaKey(s)));
-    return [...effectiveSeries]
-      .filter((s) => !trendingKeys.has(mediaKey(s)))
-      .sort(sortByRating)
-      .slice(0, 100);
-  }, [effectiveSeries, effectiveTrendingSeries]);
+    return rankAcclaimed(effectiveSeries.filter((s) => !trendingKeys.has(mediaKey(s))));
+  }, [effectiveSeries, effectiveTrendingSeries, rankAcclaimed]);
 
   // ─── Novidades: mais recentes por ano (décrescente) ───────────────────────
   const newestMovies = useMemo(() => {
@@ -353,6 +384,14 @@ const Home: React.FC<HomeProps> = ({
             setTmdbPopularMovies(movies.slice(0, 10));
             setTmdbPopularSeries(series.slice(0, 10));
           }
+        })
+        .catch(() => {});
+      // IDs TMDB para ranquear "Aclamados" (populares + bem avaliados). Cache 12h em localStorage.
+      Promise.all([fetchTop100PopularIds(), fetchTop100TopRatedIds()])
+        .then(([popular, topRated]) => {
+          if (cancelled) return;
+          if (popular?.length) setTmdbPopularIds(new Set(popular.map(Number)));
+          if (topRated?.length) setTmdbTopRatedIds(new Set(topRated.map(Number)));
         })
         .catch(() => {});
     };
@@ -789,8 +828,7 @@ const Home: React.FC<HomeProps> = ({
                   priorityTmdbIds={[71446]}
                   priorityTitles={['La casa de papel']}
                   priorityTmdbMediaType="series"
-                  exclusivePriority
-                  maxBannerSlides={1}
+                  maxBannerSlides={10}
                 />
                 {!isSidebarOpen && (
                   <div

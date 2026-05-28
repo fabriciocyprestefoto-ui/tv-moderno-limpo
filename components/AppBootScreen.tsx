@@ -11,8 +11,13 @@ interface AppBootScreenProps {
 const TOTAL_FRAMES_RENDERED = 36;
 const FPS = 12;
 const FRAME_DURATION_MS = 1000 / FPS;
-/** Sequência webp completa: 48 frames / 12fps ≈ 4s. O splash nunca sai antes disso. */
-const MIN_TOTAL_MS = TOTAL_FRAMES_RENDERED * FRAME_DURATION_MS;
+/**
+ * Piso mínimo do splash, DESACOPLADO da duração da animação. Antes o splash só saía
+ * após a sequência inteira (36 frames / 12fps = 3s) mesmo com o catálogo já pronto —
+ * 3s fixos de espera percebida. Agora sai assim que `homeReady` sinaliza, respeitando
+ * só este piso curto (evita flash). A animação continua tocando enquanto aguarda.
+ */
+const MIN_TOTAL_MS = 1200;
 /** Teto de segurança: se o catálogo (homeReady) nunca sinalizar, sai assim mesmo. */
 const MAX_TOTAL_MS = 12000;
 
@@ -119,10 +124,10 @@ const AppBootScreen: React.FC<AppBootScreenProps> = ({ onComplete }) => {
       }
 
       const elapsed = time - startTimeRef.current;
-      // Sai quando: sequência completa + catálogo pronto + tempo mínimo,
-      // OU teto de segurança atingido. Mesmo critério do boot do desktop.
+      // Sai quando: catálogo pronto + piso mínimo (não exige mais a sequência inteira),
+      // OU teto de segurança atingido. Corta os ~3s fixos quando o conteúdo já carregou.
       if (
-        (sequenceDone && getSignal('homeReady') && elapsed >= MIN_TOTAL_MS) ||
+        (getSignal('homeReady') && elapsed >= MIN_TOTAL_MS) ||
         elapsed >= MAX_TOTAL_MS
       ) {
         finish();

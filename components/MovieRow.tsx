@@ -83,7 +83,8 @@ const SLOT_EXPANDED_HEIGHT = CARD_HEIGHT;
 const SLOT_EXPANDED_WIDTH = Math.round((SLOT_EXPANDED_HEIGHT * 16) / 9);
 const SLOT_COLLAPSED_WIDTH = CARD_WIDTH;
 const IS_CAPACITOR = typeof window !== 'undefined' && !!window.Capacitor;
-const VISIBLE_ROW_EAGER_COUNT = IS_CAPACITOR ? 4 : 6;
+const VISIBLE_ROW_EAGER_COUNT = IS_CAPACITOR ? 2 : 6;
+const ROW_OVERSCAN = IS_CAPACITOR ? 3 : 6;
 
 const MovieRow: React.FC<MovieRowProps> = React.memo(
   ({
@@ -124,17 +125,13 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
         setLogoMap((prev) => (prev.has(key) ? prev : new Map(prev).set(key, _logoCache.get(key)!)));
         return;
       }
-      const initial = getMediaLogo(media) || null;
-      logoCacheSet(key, initial);
-      if (initial) {
-        setLogoMap((prev) => new Map(prev).set(key, initial));
-        return;
-      }
+      // Sempre busca a logo localizada (pt→en→null→ja). Não semear com a
+      // logo_url armazenada, que pode estar em idioma errado (flash ja).
       getLogo(media.tmdb_id, media.type as 'movie' | 'series')
         .then((logo) => {
           const normalizedLogo = logo ? getMediaLogo({ logo_url: logo }) : null;
           logoCacheSet(key, normalizedLogo);
-          if (normalizedLogo) setLogoMap((prev) => new Map(prev).set(key, normalizedLogo));
+          setLogoMap((prev) => new Map(prev).set(key, normalizedLogo));
         })
         .catch(() => {
           logoCacheSet(key, null);
@@ -143,10 +140,11 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
 
     const getLogoFor = useCallback(
       (media: Media): string | null => {
-        const fallbackLogo = getMediaLogo(media) || null;
-        if (!media?.tmdb_id) return fallbackLogo;
+        // Sem tmdb_id: única fonte é a logo armazenada. Com tmdb_id: só a
+        // localizada já buscada (null = skeleton, evita flash estrangeiro).
+        if (!media?.tmdb_id) return getMediaLogo(media) || null;
         const key = `${media.tmdb_id}_${media.type}`;
-        return logoMap.get(key) ?? fallbackLogo;
+        return logoMap.get(key) ?? null;
       },
       [logoMap]
     );
@@ -171,7 +169,7 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
       count: isVisible ? renderedItems.length : 0,
       getScrollElement: () => rowRef.current,
       estimateSize: () => VIRTUAL_CARD_STRIDE,
-      overscan: 6,
+      overscan: ROW_OVERSCAN,
     });
 
     const slotWidth = currentSlotMovie
@@ -220,6 +218,35 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
     useEffect(() => {
       if (currentSlotMovie) fetchLogoFor(currentSlotMovie);
     }, [currentSlotMovie, fetchLogoFor]);
+
+    // ── Prefetch on-focus (Fase 2): aquece o cache dos próximos posters ───────
+    // O virtualizer só monta cards visíveis+overscan. Ao focar/navegar na row,
+    // pré-carregamos em idle os N posters seguintes (mesma URL WebP do card) para
+    // que o scroll horizontal seja instantâneo. Dedup via Set; cancelável.
+    const prefetchedPostersRef = useRef<Set<string>>(new Set());
+    useEffect(() => {
+      if (!isVisible || validItems.length === 0) return;
+      const PREFETCH_AHEAD = 6;
+      const run = () => {
+        for (let i = 1; i <= PREFETCH_AHEAD; i++) {
+          const item = validItems[(activeIndex + i) % validItems.length];
+          if (!item) continue;
+          const url = getMediaPoster(item);
+          if (!url || prefetchedPostersRef.current.has(url)) continue;
+          prefetchedPostersRef.current.add(url);
+          const img = new Image();
+          img.decoding = 'async';
+          img.src = url;
+        }
+      };
+      const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+      const cic = (window as unknown as { cancelIdleCallback?: (h: number) => void }).cancelIdleCallback;
+      const handle = ric ? ric(run, { timeout: 1200 }) : (window.setTimeout(run, 200) as unknown as number);
+      return () => {
+        if (cic && ric) cic(handle);
+        else window.clearTimeout(handle);
+      };
+    }, [isVisible, activeIndex, validItems]);
 
     const featuredBackdrop =
       tmdbBackdrop || (currentSlotMovie ? getMediaBackdrop(currentSlotMovie) : '');
@@ -417,6 +444,10 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
                     showSkeleton={true}
                     objectFit="cover"
                     eager={true}
+                    imageType="backdrop"
+                    width={SLOT_EXPANDED_WIDTH}
+                    height={SLOT_EXPANDED_HEIGHT}
+                    sizes={`${SLOT_EXPANDED_WIDTH}px`}
                   />
                 ) : (
                   <div className="absolute inset-0 bg-[#16161e] flex items-center justify-center">
@@ -450,14 +481,16 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
                     showSkeleton={true}
                     objectFit="cover"
                     eager={true}
+                    imageType="poster"
+                    width={CARD_WIDTH}
+                    height={CARD_HEIGHT}
+                    sizes={`${CARD_WIDTH}px`}
                   />
                 ) : (
                   <div className="absolute inset-0 bg-[#16161e] flex items-center justify-center">
                     <div className="w-16 h-20 rounded-lg bg-white/5 animate-pulse" />
                   </div>
                 )}
-                <div className={styles.cardGradient} />
-                {featuredLogo && <img src={featuredLogo} alt="" className={styles.cardLogo} />}
               </article>
             ) : null}
           </button>
@@ -518,19 +551,17 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
                               showSkeleton={true}
                               objectFit="cover"
                               eager={isVisible && vi.index < VISIBLE_ROW_EAGER_COUNT}
+                              imageType="poster"
+                              width={CARD_WIDTH}
+                              height={CARD_HEIGHT}
+                              sizes={`${CARD_WIDTH}px`}
                             />
                           ) : (
                             <div className="absolute inset-0 bg-[#16161e] flex items-center justify-center">
                               <div className="w-12 h-16 rounded bg-white/5 animate-pulse" />
                             </div>
                           )}
-                          <div className={styles.cardGradient} />
-                          {(() => {
-                            const logo = getLogoFor(media);
-                            return logo ? (
-                              <img src={logo} alt="" className={styles.cardLogo} />
-                            ) : null;
-                          })()}
+                          {/* Cards verticais sem overlay de logo/titulo */}
                         </button>
                       </div>
                     );

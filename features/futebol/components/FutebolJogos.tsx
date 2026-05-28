@@ -116,7 +116,7 @@ const FutebolJogosComponent: React.FC<FutebolJogosProps> = ({
           (jogo as JogoTransmissaoView).canal ||
           'Transmissão não confirmada';
         const displayName = extractChannelNameFromEpg(rawBroadcast) || rawBroadcast;
-        const channelLogo = getChannelLogo?.(rawBroadcast) ?? jogo.strChannelLogo ?? null;
+        const channelLogo = jogo.strChannelLogo ?? getChannelLogo?.(rawBroadcast) ?? null;
         const channelTarget = getChannelTarget?.(rawBroadcast) ?? displayName;
         const hasCanal = Boolean(rawBroadcast && rawBroadcast !== 'Transmissão não confirmada');
         const competition = (jogo as FutebolEvento).strLeague ?? null;

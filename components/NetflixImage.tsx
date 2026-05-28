@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { getProxyUrl } from '@/utils/imageProxy';
+import { getProxyUrl, getResponsiveImageSrcSet } from '@/utils/imageProxy';
 
 /**
  * NetflixImage — Componente de imagem otimizado para TV Box.
@@ -13,6 +13,9 @@ interface NetflixImageProps {
   className?: string;
   aspectRatio?: string;
   objectFit?: 'cover' | 'contain';
+  width?: number;
+  height?: number;
+  sizes?: string;
 }
 
 const NetflixImage: React.FC<NetflixImageProps> = ({
@@ -22,12 +25,17 @@ const NetflixImage: React.FC<NetflixImageProps> = ({
   className = '',
   aspectRatio,
   objectFit = 'cover',
+  width,
+  height,
+  sizes,
 }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // URL Otimizada via Proxy conforme PRD
   const imageUrl = useMemo(() => getProxyUrl(src, { format: 'avif', imageType }), [src, imageType]);
+  const responsiveType = imageType === 'backdrop' || imageType === 'poster' ? imageType : undefined;
+  const srcSet = responsiveType ? getResponsiveImageSrcSet(imageUrl, responsiveType) : undefined;
 
   if (!src || hasError) {
     return (
@@ -47,7 +55,13 @@ const NetflixImage: React.FC<NetflixImageProps> = ({
     >
       <img
         src={imageUrl}
+        srcSet={srcSet}
+        sizes={
+          srcSet ? sizes ?? (responsiveType === 'backdrop' ? '50vw' : `${width ?? 185}px`) : undefined
+        }
         alt={alt}
+        width={width}
+        height={height}
         loading="lazy"
         decoding="async"
         className={`w-full h-full transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}

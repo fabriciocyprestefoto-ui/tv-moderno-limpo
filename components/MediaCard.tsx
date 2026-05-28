@@ -9,6 +9,7 @@ import { userService } from '@/services/userService';
 import { motion } from 'framer-motion';
 import { Play, Plus, Check, Clock, Info } from 'lucide-react';
 import { getMediaPoster, getMediaBackdrop, getMediaLogo } from '@/utils/mediaUtils';
+import { getLocalizedLogoSync, rememberLocalizedLogo } from '@/services/logoService';
 import { getWatchProgress } from '@/utils/continueWatchingProgress';
 import {
   cacheStatusGet,
@@ -20,6 +21,7 @@ import {
 import LazyImage, { ERROR_SVG } from '@/components/LazyImage';
 import { playNavigateSound, playSelectSound } from '@/utils/soundEffects';
 import { useToast } from '@/contexts/ToastContext';
+import { isTVBox } from '@/utils/tvBoxDetector';
 
 /** Limita prefetches concorrentes para não sobrecarregar TV Box fraco */
 let _activePrefetches = 0;
@@ -99,7 +101,7 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
     const isInteractiveCard = !disableHover;
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
-    const [logoUrl, setLogoUrl] = useState<string | null>(getMediaLogo(media) || null);
+    const [logoUrl, setLogoUrl] = useState<string | null>(getLocalizedLogoSync(media));
     const [dynamicPosterUrl, setDynamicPosterUrl] = useState<string | null>(null);
     // isMuted/trailer states removidos — trailers desativados conforme PRD
     const [backdropLoaded, setBackdropLoaded] = useState(false);
@@ -147,7 +149,7 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
     }, [isInteractiveCard, media.tmdb_id, media.id]);
 
     useEffect(() => {
-      setLogoUrl(getMediaLogo(media) || null);
+      setLogoUrl(getLocalizedLogoSync(media));
       setBackdropLoaded(false);
       setHasLoaded(false);
     }, [
@@ -234,7 +236,7 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
       media.poster ||
       '';
     const shouldPosterLoadEagerly =
-      eagerPoster ?? (isInteractiveCard && colIndex !== undefined && colIndex < 3);
+      eagerPoster ?? (isInteractiveCard && colIndex !== undefined && colIndex < (isTVBox() ? 2 : 3));
 
     // Dimensões responsivas: escala baseada na resolução lógica da tela
     // 4K/Full HD ≥ 1920: 195px | 1280–1919: 180px | < 1280 (TV Box 720p): 167px
@@ -280,7 +282,11 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
         setHasLoaded(true);
         if (!details) return;
 
-        if (details.logo) setLogoUrl(getMediaLogo({ logo_url: details.logo }) || details.logo);
+        if (details.logo) {
+          const norm = getMediaLogo({ logo_url: details.logo }) || details.logo;
+          setLogoUrl(norm);
+          rememberLocalizedLogo(media, norm);
+        }
         // Poster oficial TMDB sempre tem prioridade sobre qualquer URL do banco
         if (details.poster) setDynamicPosterUrl(details.poster);
       } catch {
@@ -565,6 +571,10 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
                   showSkeleton={true}
                   objectFit="cover"
                   eager={shouldPosterLoadEagerly}
+                  imageType="poster"
+                  width={cardWidth}
+                  height={cardHeight}
+                  sizes={`${cardWidth}px`}
                 />
               ) : (
                 <div className="absolute inset-0 skeleton-shimmer-netflix rounded-2xl" />
@@ -595,34 +605,7 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
                 )}
               </div>
 
-              {/* Gradiente mínimo na base — poster totalmente visível */}
-              <div className="absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
-
-              <div
-                className={`absolute inset-x-0 ${isFocused ? 'bottom-2.5 px-2.5' : 'bottom-3 px-4'} pointer-events-none z-10`}
-              >
-                {isFocused && (
-                  <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/55 to-transparent pointer-events-none -z-10" />
-                )}
-                {logoUrl ? (
-                  <img
-                    src={logoUrl}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                    className={`${isFocused ? 'max-h-8' : 'max-h-7'} w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]`}
-                  />
-                ) : (
-                  <span
-                    className={`block max-w-[92%] font-black uppercase leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] ${
-                      isFocused ? 'text-[9px]' : 'text-[8px]'
-                    }`}
-                  >
-                    {titleSafe}
-                  </span>
-                )}
-              </div>
+              {/* Poster vertical limpo: sem overlay de logo/titulo no estado retraido */}
             </div>
             {/* F5: Progress bar — conteúdo parcialmente assistido */}
             {(() => {
@@ -661,6 +644,8 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
                     className="absolute inset-0 w-full h-full object-cover"
                     loading="lazy"
                     decoding="async"
+                    width={expandedWidth}
+                    height={cardHeight}
                     onLoad={() => setBackdropLoaded(true)}
                     onError={() => setBackdropLoaded(true)}
                   />

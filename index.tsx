@@ -158,6 +158,8 @@ if (sentryDsn) {
 if (import.meta.env.PROD) {
   import('web-vitals').then(({ onCLS, onINP, onLCP, onFCP, onTTFB }) => {
     const report = (metric: { name: string; value: number; rating: string }) => {
+      // Sempre logar no console (ADB/logcat) — mesmo com Sentry, p/ medição local na TV.
+      console.info('[Vitals]', metric.name, Math.round(metric.value), metric.rating);
       if (sentryDsn) {
         void import('@sentry/react').then(({ captureEvent }) => {
           captureEvent({
@@ -166,9 +168,6 @@ if (import.meta.env.PROD) {
             extra: { value: Math.round(metric.value), rating: metric.rating },
           });
         });
-      } else {
-        // PROD sem Sentry: ainda registrar no console (ADB / WebView remoto).
-        console.info('[Vitals]', metric.name, Math.round(metric.value), metric.rating);
       }
     };
     onCLS(report);

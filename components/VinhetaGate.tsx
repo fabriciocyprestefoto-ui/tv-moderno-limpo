@@ -21,7 +21,25 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
   const mountedAtRef = useRef(0);
   const minTimerRef = useRef<number | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const loggedPlaySuccessRef = useRef(false);
   const [sourceIndex, setSourceIndex] = useState(0);
+  const [showSoundUnlock, setShowSoundUnlock] = useState(false);
+
+  const unlockSound = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.defaultMuted = false;
+    video.muted = false;
+    video.volume = 1;
+    console.log('[IntroLegacy] muted=false');
+    console.log('[IntroLegacy] volume=1');
+    void video.play().then(() => {
+      setShowSoundUnlock(false);
+    }).catch(() => {
+      // Mantém o aviso visível se o browser ainda bloquear o unmute.
+      setShowSoundUnlock(true);
+    });
+  }, []);
 
   const finish = useCallback(() => {
     if (completedRef.current) return;
@@ -44,8 +62,11 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
   useEffect(() => {
     if (!active) return;
     completedRef.current = false;
+    loggedPlaySuccessRef.current = false;
     mountedAtRef.current = Date.now();
     setSourceIndex(0);
+    setShowSoundUnlock(false);
+    console.log('[IntroLegacy] userGesture=true');
     // TV Moderno: NÃO toca vinheta web — pula direto pro onComplete.
     // Vinheta deveria rodar em ExoPlayer nativo (EXTRA_INTRO_URL) — não implementado
     // nessa build pra evitar timer preso. Skip completo é OK funcionalmente.
@@ -67,12 +88,18 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
     if (!active) return;
     const video = videoRef.current;
     if (!video) return;
-    // Vinheta sempre muted — política de autoplay compatível com WebView legado
-    // (Firestick) e moderno (Android TV). Som da vinheta nunca toca.
-    prepareVideoForAutoplay(video, true);
+    // Legacy/WebView: tenta tocar com som quando a vinheta vem de clique do usuário.
+    // Se autoplay com som falhar, cai para muted e exibe prompt para ativar som.
+    prepareVideoForAutoplay(video, false);
+    console.log('[IntroLegacy] muted=false');
+    console.log('[IntroLegacy] volume=1');
     const cleanupReadyPlay = playWhenVideoReady(video, {
-      mutedFirst: true,
+      mutedFirst: false,
       mutedFallback: true,
+      onMutedFallback: () => {
+        console.log('[IntroLegacy] autoplay with sound blocked, waiting user OK');
+        setShowSoundUnlock(true);
+      },
     });
     // Detecção de stall — Firestick / WebView antigo pode ficar networkState=2
     // ("carregando") mas readyState nunca progride (codec não suportado, rede lenta
@@ -106,6 +133,11 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
       event.stopPropagation();
 
       const key = event.key;
+      if (showSoundUnlock && (key === 'Enter' || key === ' ' || key === 'OK')) {
+        unlockSound();
+        return;
+      }
+
       if (key === 'Escape' || key === 'Backspace' || key === 'Back') {
         onCancel?.();
       }
@@ -113,7 +145,7 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
 
     window.addEventListener('keydown', onKeyDown, { capture: true });
     return () => window.removeEventListener('keydown', onKeyDown, { capture: true });
-  }, [active, onCancel]);
+  }, [active, onCancel, showSoundUnlock, unlockSound]);
 
   if (!active) return null;
   // TV Moderno: nenhum <video> montado — onComplete já foi agendado no effect acima.
@@ -131,16 +163,15 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
         ref={(el) => {
           videoRef.current = el;
           if (el) {
-            el.setAttribute('muted', '');
-            el.muted = true;
-            el.defaultMuted = true;
-            el.volume = 0;
+            el.removeAttribute('muted');
+            el.muted = false;
+            el.defaultMuted = false;
+            el.volume = 1;
           }
         }}
         src={VINHETA_URLS[sourceIndex] ?? VINHETA_URLS[0]}
         className="h-full w-full object-cover"
         autoPlay
-        muted
         playsInline
         controls={false}
         controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
@@ -148,6 +179,14 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
         disableRemotePlayback
         preload="auto"
         aria-hidden="true"
+        onPlaying={(e) => {
+          if (loggedPlaySuccessRef.current) return;
+          const v = e.currentTarget;
+          if (!v.muted && v.volume > 0) {
+            loggedPlaySuccessRef.current = true;
+            console.log('[IntroLegacy] play success');
+          }
+        }}
         onEnded={finish}
         onError={() => {
           if (sourceIndex + 1 < VINHETA_URLS.length) {
@@ -157,6 +196,17 @@ const VinhetaGate: React.FC<VinhetaGateProps> = ({ active, onComplete, onCancel 
           finish();
         }}
       />
+      {showSoundUnlock && (
+        <div className="absolute inset-x-0 bottom-10 flex justify-center pointer-events-none">
+          <button
+            type="button"
+            onClick={unlockSound}
+            className="pointer-events-auto rounded-xl bg-white/18 border border-white/35 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-white"
+          >
+            Ativar som (OK)
+          </button>
+        </div>
+      )}
     </div>
   );
 };

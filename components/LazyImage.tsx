@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { extractOriginalUrl } from '../utils/imageProxy';
+import { extractOriginalUrl, getResponsiveImageSrcSet } from '../utils/imageProxy';
 import { isTVBox } from '../utils/tvBoxDetector';
 
 /** Base64 seguro para SVG com caracteres Unicode (evita btoa quebrar com acentos) */
@@ -45,6 +45,10 @@ export interface LazyImageProps {
   objectFit?: 'cover' | 'contain' | 'fill';
   eager?: boolean;
   fetchPriority?: 'high' | 'low' | 'auto';
+  width?: number;
+  height?: number;
+  sizes?: string;
+  imageType?: 'poster' | 'backdrop';
   style?: React.CSSProperties;
   onLoad?: () => void;
 }
@@ -60,6 +64,10 @@ const LazyImage: React.FC<LazyImageProps> = React.memo(
     objectFit = 'cover',
     eager = false,
     fetchPriority,
+    width,
+    height,
+    sizes,
+    imageType = 'poster',
     style,
     onLoad: onLoadProp,
   }) => {
@@ -73,10 +81,11 @@ const LazyImage: React.FC<LazyImageProps> = React.memo(
     const triedTimeoutFallbackRef = useRef(false);
     const loadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const retryCountRef = useRef(0);
-    const MAX_RETRIES = 2;
+    // 1 retry: src já é WebP/wsrv; única queda útil é p/ TMDB JPEG original. Falha mais rápida.
+    const MAX_RETRIES = 1;
 
-    // Timeout adaptativo: TV Box em rede limitada recebe 5s, desktop 2s
-    const LOAD_TIMEOUT_MS = isTVBox() ? 5000 : 2000;
+    // Timeout adaptativo: TV Box 2.5s, desktop 1.5s. Antes 5s/2s prendia o skeleton longo demais.
+    const LOAD_TIMEOUT_MS = isTVBox() ? 2500 : 1500;
 
     // Reset states when src changes; URL inválida = erro imediato
     useEffect(() => {
@@ -192,6 +201,8 @@ const LazyImage: React.FC<LazyImageProps> = React.memo(
 
     // URL inválida: nunca renderizar img — só fallback (evita ícone quebrado)
     const finalSrc = hasError ? fallbackSrc || ERROR_SVG : src;
+    const srcSet = getResponsiveImageSrcSet(src, imageType);
+    const responsiveSizes = sizes ?? (imageType === 'backdrop' ? '50vw' : '185px');
 
     // Durante loading: PLACEHOLDER_SVG. Em erro: fallbackSrc ou ERROR_SVG.
     const fallbackUrl = hasError ? fallbackSrc || ERROR_SVG : PLACEHOLDER_SVG;
@@ -226,7 +237,11 @@ const LazyImage: React.FC<LazyImageProps> = React.memo(
           <img
             ref={imgRef}
             src={finalSrc}
+            srcSet={srcSet}
+            sizes={srcSet ? responsiveSizes : undefined}
             alt={alt}
+            width={width}
+            height={height}
             loading={eager ? 'eager' : 'lazy'}
             // React 18: atributo DOM é `fetchpriority` (minúsculo); evita warning no console.
             {...({
@@ -236,7 +251,7 @@ const LazyImage: React.FC<LazyImageProps> = React.memo(
             referrerPolicy="no-referrer"
             onLoad={handleLoad}
             onError={handleError}
-            className={`absolute inset-0 w-full h-full transition-opacity duration-500 ease-out z-[2] ${
+            className={`absolute inset-0 w-full h-full transition-opacity duration-200 ease-out z-[2] ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             style={{ objectFit }}

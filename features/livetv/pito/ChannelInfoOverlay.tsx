@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { PitoChannel } from './types';
 import { G, vGlass, VISION_HUD_STYLE } from '@/components/player/playerTokens';
+import { handleChannelLogoError } from '@/utils/channelLogo';
 
 interface ChannelInfoOverlayProps {
   channel: PitoChannel;
@@ -62,19 +63,25 @@ export const PitoChannelInfoOverlay: React.FC<ChannelInfoOverlayProps> = ({
         <div className="flex items-center gap-3">
           {/* Logo do canal */}
           <div
-            className="w-11 h-11 rounded-full p-2 flex items-center justify-center flex-shrink-0"
+            className="relative w-11 h-11 rounded-full p-2 flex items-center justify-center flex-shrink-0 overflow-hidden"
             style={vGlass({
-              background: 'rgba(255,255,255,0.92)',
-              border: '1px solid rgba(255,255,255,0.68)',
+              background: 'rgba(12,6,24,0.46)',
+              border: '1px solid rgba(255,255,255,0.18)',
               boxShadow: '0 10px 26px rgba(0,0,0,0.38)',
             })}
           >
-            <img
-              src={channel.logo}
-              alt={channel.name}
-              className="w-full h-full object-contain"
-              referrerPolicy="no-referrer"
-            />
+            <span className="absolute inset-0 flex items-center justify-center text-sm font-black text-white/55">
+              {channel.name.slice(0, 2).toUpperCase()}
+            </span>
+            {channel.logo ? (
+              <img
+                src={channel.logo}
+                alt={channel.name}
+                className="relative z-[1] block w-full h-full object-contain opacity-100"
+                referrerPolicy="no-referrer"
+                onError={(e) => handleChannelLogoError(channel.name, e.currentTarget)}
+              />
+            ) : null}
           </div>
 
           {/* Informações do programa */}

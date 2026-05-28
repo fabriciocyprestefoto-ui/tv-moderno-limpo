@@ -1,5 +1,6 @@
 import React from 'react';
 import { useImageLoader } from '../../hooks/useImageLoader';
+import { getResponsiveImageSrcSet } from '../../utils/imageProxy';
 
 function safeBtoa(str: string): string {
   return btoa(unescape(encodeURIComponent(str)));
@@ -21,6 +22,10 @@ export interface PosterCardProps {
   aspectRatio?: string;
   objectFit?: 'cover' | 'contain';
   loading?: 'lazy' | 'eager';
+  width?: number;
+  height?: number;
+  sizes?: string;
+  imageType?: 'poster' | 'backdrop';
   onLoad?: () => void;
 }
 
@@ -37,9 +42,14 @@ const PosterCard: React.FC<PosterCardProps> = React.memo(
     aspectRatio = '2/3',
     objectFit = 'cover',
     loading = 'lazy',
+    width,
+    height,
+    sizes,
+    imageType = 'poster',
     onLoad,
   }) => {
     const status = useImageLoader(src);
+    const srcSet = getResponsiveImageSrcSet(src, imageType);
 
     return (
       <div className={`relative overflow-hidden ${className}`} style={{ aspectRatio }}>
@@ -65,7 +75,11 @@ const PosterCard: React.FC<PosterCardProps> = React.memo(
         {status === 'loaded' && (
           <img
             src={src}
+            srcSet={srcSet}
+            sizes={srcSet ? sizes ?? (imageType === 'backdrop' ? '50vw' : '185px') : undefined}
             alt={alt}
+            width={width}
+            height={height}
             loading={loading}
             decoding="async"
             referrerPolicy="no-referrer"

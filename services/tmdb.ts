@@ -166,7 +166,7 @@ const handleResponse = async (response: Response, errorMessage: string) => {
 export async function fetchDetails(id: number, type: 'movie' | 'tv' | 'series'): Promise<any> {
   const t = type === 'series' ? 'tv' : type;
   const response = await fetchTmdb(
-    `${BASE_URL}/${t}/${id}?append_to_response=images,videos&include_image_language=pt,en,null&language=pt-BR`
+    `${BASE_URL}/${t}/${id}?append_to_response=images,videos&include_image_language=pt,en,ja,null&language=pt-BR`
   );
   return handleResponse(response, 'Erro ao buscar detalhes');
 }
@@ -500,12 +500,64 @@ export async function fetchSimilar(
 const heroBannerAssetCache = new Map<string, Promise<any>>();
 const MAX_HERO_BANNER_CACHE = 100;
 
-function pickPngLogoForHero(logos: any[]): any | null {
-  if (!logos || logos.length === 0) return null;
-  const ptLogos = logos.filter((l: any) => l.iso_639_1 === 'pt');
-  const enLogos = logos.filter((l: any) => l.iso_639_1 === 'en');
-  const pool = ptLogos.length > 0 ? ptLogos : enLogos.length > 0 ? enLogos : logos;
-  return pool.sort((a: any, b: any) => b.vote_count - a.vote_count)[0];
+type TmdbLogoCandidate = {
+  iso_639_1?: string | null;
+  iso_3166_1?: string | null;
+  file_path?: string | null;
+  vote_count?: number;
+};
+
+function logoLanguageRank(
+  logo: TmdbLogoCandidate,
+  preferredLanguages: string[] = ['pt-BR', 'pt', 'en-US', 'en']
+): number {
+  const lang = String(logo.iso_639_1 || '').toLowerCase();
+  const region = String(logo.iso_3166_1 || '').toLowerCase();
+  const normalized = region ? `${lang}-${region}` : lang;
+
+  const idxNormalized = preferredLanguages.findIndex(
+    (pref) => pref.toLowerCase() === normalized
+  );
+  if (idxNormalized >= 0) return idxNormalized;
+
+  const idxLangOnly = preferredLanguages.findIndex(
+    (pref) => pref.toLowerCase() === lang
+  );
+  if (idxLangOnly >= 0) return idxLangOnly;
+
+  if (!lang) return preferredLanguages.length;
+  return preferredLanguages.length + 1;
+}
+
+export function pickBestLocalizedLogo(
+  logos: TmdbLogoCandidate[] | null | undefined,
+  preferredLanguages: string[] = ['pt-BR', 'pt', 'en-US', 'en']
+): TmdbLogoCandidate | null {
+  if (!logos?.length) return null;
+
+  const valid = logos.filter(
+    (logo) => typeof logo?.file_path === 'string' && logo.file_path.length > 0
+  );
+  if (!valid.length) return null;
+
+  const chosen = [...valid].sort((a, b) => {
+    const rankDiff = logoLanguageRank(a, preferredLanguages) - logoLanguageRank(b, preferredLanguages);
+    if (rankDiff !== 0) return rankDiff;
+    return Number(b.vote_count || 0) - Number(a.vote_count || 0);
+  })[0] ?? null;
+
+  if (import.meta.env?.DEV && chosen) {
+    const lang = String(chosen.iso_639_1 || '').toLowerCase() || 'null';
+    const rank = logoLanguageRank(chosen, preferredLanguages);
+    const reason = rank < preferredLanguages.length ? 'preferred' : rank === preferredLanguages.length ? 'no-language' : 'fallback';
+    logger.log(`[TMDBLogo] candidates count=${valid.length} selected lang=${lang} reason=${reason}`);
+  }
+
+  return chosen;
+}
+
+function pickPngLogoForHero(logos: TmdbLogoCandidate[]): TmdbLogoCandidate | null {
+  return pickBestLocalizedLogo(logos);
 }
 
 export async function getOfficialHeroBannerAsset(
@@ -520,7 +572,7 @@ export async function getOfficialHeroBannerAsset(
       try {
         const path = type === 'series' ? 'tv' : 'movie';
         const response = await fetchTmdb(
-          `${BASE_URL}/${path}/${tmdbId}?append_to_response=images,videos&include_image_language=pt,en,null&language=pt-BR`
+          `${BASE_URL}/${path}/${tmdbId}?append_to_response=images,videos&include_image_language=pt,en,ja,null&language=pt-BR`
         );
         const data = await handleResponse(response, 'Erro ao carregar assets oficiais');
         const backdropPath = data.backdrop_path || data.images?.backdrops?.[0]?.file_path;
@@ -534,7 +586,7 @@ export async function getOfficialHeroBannerAsset(
           backdrop: getImageUrl(backdropPath, 'w1280')!,
           logo:
             typeof logo?.file_path === 'string' && logo.file_path.startsWith('/')
-              ? getImageUrl(logo.file_path, 'original', 'logo') || null
+              ? getImageUrl(logo.file_path, 'w500', 'logo') || null
               : null,
           trailerKey: trailer?.key ? String(trailer.key).trim() : null,
           description:
@@ -689,18 +741,13 @@ export async function enrichWithTMDB(items: Media[]): Promise<Media[]> {
             // Horizontal (backdrop_path) = imagem 16:9 landscape
             poster_path: tmdbData.poster_path || (item as any).poster_path,
             backdrop_path: tmdbData.backdrop_path || (item as any).backdrop_path,
-            // Logo do TMDB (se disponível nas images)
+            // Logo TMDB com prioridade pt-BR/pt e fallback en-US/en
             logo_url: (() => {
               const logos = tmdbData.images?.logos;
-              if (logos && logos.length > 0) {
-                const ptLogo = logos.find((l: any) => l.iso_639_1 === 'pt');
-                const enLogo = logos.find((l: any) => l.iso_639_1 === 'en');
-                const bestLogo = ptLogo || enLogo || logos[0];
-                return bestLogo?.file_path
-                  ? getImageUrl(bestLogo.file_path, 'w500', 'logo')
-                  : (item as any).logo_url;
-              }
-              return (item as any).logo_url;
+              const bestLogo = pickBestLocalizedLogo(logos);
+              return bestLogo?.file_path
+                ? getImageUrl(bestLogo.file_path, 'w500', 'logo')
+                : (item as any).logo_url;
             })(),
             tmdb_id: tmdbData.id || item.tmdb_id,
             description: item.description || tmdbData.overview || '',
@@ -807,7 +854,7 @@ export async function getTrailer(
 export async function getMediaDetailsByID(id: number, type: 'movie' | 'series') {
   try {
     const res = await fetchTmdb(
-      `${BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/${id}?append_to_response=videos,images&language=pt-BR&include_image_language=pt-BR,pt,en,null`
+      `${BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/${id}?append_to_response=videos,images&language=pt-BR&include_image_language=pt-BR,pt,en,ja,null`
     );
     const data = await handleResponse(res, 'Erro ao buscar detalhes complementares');
 
@@ -824,7 +871,7 @@ export async function getMediaDetailsByID(id: number, type: 'movie' | 'series') 
     return {
       backdrop: data.backdrop_path ? getImageUrl(data.backdrop_path, 'w1280') : undefined,
       poster: data.poster_path ? getImageUrl(data.poster_path, 'w500') : undefined,
-      logo: logo?.file_path ? getImageUrl(logo.file_path, 'original', 'logo') : undefined,
+      logo: logo?.file_path ? getImageUrl(logo.file_path, 'w500', 'logo') : undefined,
       trailer: trailer?.key,
       description:
         typeof data.overview === 'string' && data.overview.trim().length > 0
@@ -844,11 +891,11 @@ export async function getMediaDetailsByID(id: number, type: 'movie' | 'series') 
 export async function getLogo(id: number, type: 'movie' | 'series'): Promise<string | undefined> {
   try {
     const res = await fetchTmdb(
-      `${BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/${id}/images?language=pt-BR&include_image_language=pt-BR,pt,en,null`
+      `${BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/${id}/images?language=pt-BR&include_image_language=pt-BR,pt,en,ja,null`
     );
     const data = await handleResponse(res, 'Erro ao buscar logo');
     const logo = pickPngLogoForHero(data.logos || []);
-    return logo?.file_path ? getImageUrl(logo.file_path, 'original', 'logo') : undefined;
+    return logo?.file_path ? getImageUrl(logo.file_path, 'w500', 'logo') : undefined;
   } catch (error) {
     logger.error('[tmdb] Error fetching logo:', error);
     return undefined;
@@ -863,20 +910,22 @@ export async function getHorizontalCardLogo(
   return getLogo(tmdbId, mediaType);
 }
 
-/** Preferência pt → en → melhor votado (PNG/SVG do TMDB). */
+/** Preferência pt-BR → pt → en-US → en → primeira disponível */
 export function pickLogoEnPtOrNull(
   logos:
-    | Array<{ iso_639_1?: string | null; file_path?: string | null; vote_count?: number }>
+    | Array<{
+        iso_639_1?: string | null;
+        iso_3166_1?: string | null;
+        file_path?: string | null;
+        vote_count?: number;
+      }>
     | null
     | undefined
 ): { file_path: string } | null {
-  if (!logos?.length) return null;
-  const pt = logos.find((l) => l.iso_639_1 === 'pt' && l.file_path);
-  const en = logos.find((l) => l.iso_639_1 === 'en' && l.file_path);
-  const fallback = pickPngLogoForHero(logos as any);
-  const chosen = pt || en || fallback;
-  if (chosen?.file_path && typeof chosen.file_path === 'string')
+  const chosen = pickBestLocalizedLogo(logos);
+  if (chosen?.file_path && typeof chosen.file_path === 'string') {
     return { file_path: chosen.file_path };
+  }
   return null;
 }
 
@@ -1078,7 +1127,7 @@ export async function getTMDBImageSet(
         backdrop: getImageUrl(data.backdrop_path, 'w1280'),
         logo:
           logoPick?.file_path && typeof logoPick.file_path === 'string'
-            ? getImageUrl(logoPick.file_path, 'original', 'logo') || null
+            ? getImageUrl(logoPick.file_path, 'w500', 'logo') || null
             : null,
         releaseDate: data.release_date || data.first_air_date || null,
         year:

@@ -1,4 +1,5 @@
 import { fetchWithCache, supabase, ensureValidSession } from '@/services/supabaseService';
+import { env } from '@/config/env';
 import { logger } from '@/utils/logger';
 import { sanitizeFontezChannels } from '@/utils/sourceSanitizer';
 
@@ -140,6 +141,54 @@ export async function fetchAdultStreamsFromM3U(options?: {
   }
 
   return streams;
+}
+
+/**
+ * Carrega os streams adultos da tabela `adult_streams` via REST cru + anon key,
+ * mesmo padrão de `loadChannelsFromSupabase` (evita travas de auth-lock do
+ * cliente Supabase em alguns WebViews de TV). Leitura anon liberada por RLS.
+ */
+const ADULT_REST_PAGE_SIZE = 1000;
+
+export async function loadAdultStreamsFromSupabase(): Promise<AdultStream[]> {
+  const url = env.supabaseUrl;
+  const key = env.supabaseAnonKey;
+  if (!url || !key || typeof fetch === 'undefined') return [];
+
+  const out: AdultStream[] = [];
+  let offset = 0;
+
+  for (;;) {
+    const path = `adult_streams?select=id,title,logo_url,group_title,stream_url,source&offset=${offset}&limit=${ADULT_REST_PAGE_SIZE}&order=id.asc`;
+    const hasAbort = typeof AbortController !== 'undefined';
+    const controller = hasAbort ? new AbortController() : null;
+    const timeoutId = controller ? setTimeout(() => controller.abort(), 15_000) : null;
+    let response: Response;
+    try {
+      response = await fetch(`${url}/rest/v1/${path}`, {
+        signal: controller?.signal,
+        headers: { apikey: key, Authorization: `Bearer ${key}` },
+      });
+    } catch (err) {
+      logger.warn('[Adulto] fetch error:', err);
+      break;
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+
+    if (!response.ok) {
+      logger.warn('[Adulto] HTTP', response.status);
+      break;
+    }
+
+    const data = (await response.json()) as AdultStream[];
+    if (!data.length) break;
+    out.push(...data);
+    if (data.length < ADULT_REST_PAGE_SIZE) break;
+    offset += ADULT_REST_PAGE_SIZE;
+  }
+
+  return sanitizeFontezChannels(out, 'adultoService:rest');
 }
 
 export function getAdultGroupsFromStreams(streams: AdultStream[]): string[] {

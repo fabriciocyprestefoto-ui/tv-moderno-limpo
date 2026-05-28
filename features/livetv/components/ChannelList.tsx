@@ -159,7 +159,7 @@ const ChannelList: React.FC<ChannelListProps> = ({
 
   return (
     <div
-      className={`${compact ? 'w-50' : 'w-62'} h-[calc(100%-24px)] mt-3 mb-3 mr-3 flex flex-col rounded-4xl border border-white/20 transition-all duration-300 bg-linear-to-b from-white/10 to-white/5 backdrop-blur-xl saturate-120 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_30px_rgba(0,0,0,0.28)]`}
+      className={`livetv-channel-menu ${compact ? 'w-50' : 'w-62'} h-[calc(100%-24px)] mt-3 mb-3 mr-3 flex flex-col rounded-4xl border border-white/20 transition-all duration-300 bg-linear-to-b from-white/10 to-white/5 backdrop-blur-xl saturate-120 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_30px_rgba(0,0,0,0.28)]`}
     >
       {/* Compact count bar */}
       <div className="px-4 py-2.5 flex items-center justify-between border-b border-white/10">

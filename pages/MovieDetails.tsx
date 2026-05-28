@@ -22,17 +22,17 @@ import {
   pickLogoEnPtOrNull,
 } from '../services/tmdb';
 import { getMovieByTmdbId } from '../services/supabaseService';
+import { getLocalizedLogoSync, rememberLocalizedLogo } from '../services/logoService';
 import { logger } from '../utils/logger';
 import {
   getMediaBackdrop,
   getMediaPoster,
   getMediaLogo,
-  hasRequiredTmdbImages,
-  isRecentMedia,
 } from '../utils/mediaUtils';
 import { playBackSound, playSelectSound } from '../utils/soundEffects';
 import { userService } from '../services/userService';
 import { useSpatialNav } from '../hooks/useSpatialNavigation';
+import { getResponsiveImageSrcSet } from '../utils/imageProxy';
 
 interface MovieDetailsProps {
   media: Media;
@@ -68,9 +68,16 @@ const extractPlayableUrl = (item?: Record<string, unknown> | null): string => {
   if (!item) return '';
   const candidates = [
     item.stream_url,
+    item.streamUrl,
+    item.playback_url,
+    item.playbackUrl,
     item.video_url,
     item.videoUrl,
+    item.file_url,
+    item.fileUrl,
     item.source_url,
+    item.sourceUrl,
+    item.src,
     item.url,
     item.link,
   ];
@@ -129,6 +136,7 @@ const RecommendationLogo: React.FC<{
         alt={fallbackTitle}
         className="h-10 max-w-[80%] object-contain object-left drop-shadow-[0_8px_18px_rgba(0,0,0,0.8)]"
         loading="lazy"
+        decoding="async"
       />
     );
   }
@@ -150,7 +158,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
 
   const [loading, setLoading] = useState(true);
   const [detail, setDetail] = useState<SeriesDetail | null>(null);
-  const [logoUrl, setLogoUrl] = useState<string | null>(getMediaLogo(media) || null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(getLocalizedLogoSync(media));
   const [logoError, setLogoError] = useState(false);
   const [dbItem, setDbItem] = useState<Media | null>(null);
   const [invalidReason, setInvalidReason] = useState<string | null>(null);
@@ -211,29 +219,27 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
       setDetail(null);
 
       try {
-        const [tmdbDetail, dbRow] = await Promise.all([
+        const [tmdbDetail, dbRow, localizedLogo] = await Promise.all([
           fetchMovieDetail(tmdbId),
           getMovieByTmdbId(tmdbId),
+          getHorizontalCardLogo(tmdbId, 'movie'),
         ]);
 
         if (cancelled) return;
 
         setDetail(tmdbDetail);
-        setLogoUrl(
-          resolveCatalogLogo(
-            { ...(media as any), ...((dbRow as any) || {}) },
-            (dbRow as any)?.logo_url,
-            media.logo_url
-          ) || null
-        );
+        // Logo localizada (pt→en→null→ja). Não semear com a logo_url armazenada
+        // (pode estar em idioma errado). Sem tmdb localizada → mantém skeleton.
+        if (localizedLogo) {
+          const norm = getMediaLogo({ logo_url: localizedLogo }) || localizedLogo;
+          setLogoUrl(norm);
+          rememberLocalizedLogo(media, norm);
+        }
 
         if (dbRow) {
           setDbItem({ ...(dbRow as any), type: 'movie' } as Media);
         }
 
-        const base = { ...((dbRow as any) || {}), type: 'movie' } as Media;
-        const hasImg = getMediaPoster(base) || getMediaPoster(media) || tmdbDetail?.poster_path;
-        if (!hasImg) setInvalidReason('missing_catalog_images');
       } catch (error) {
         logger.error('[MovieDetails] Falha ao carregar detalhes:', error);
         if (!cancelled) setInvalidReason('load_error');
@@ -266,6 +272,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
   const posterUrl = useMemo(() => getMediaPoster(mediaWithTmdbImages), [mediaWithTmdbImages]);
 
   const logoDisplayUrl = useMemo(() => {
+    // 1) Logo localizada de detail.images (pt→en→null→ja).
     if (detail?.images?.logos?.length) {
       const picked = pickLogoEnPtOrNull(detail.images.logos);
       if (picked?.file_path) {
@@ -273,18 +280,20 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
         if (url.length > 5) return url;
       }
     }
-    const resolved = resolveCatalogLogo(
-      {
-        ...(media as any),
-        ...((dbItem as any) || {}),
-        logo_url: logoUrl || (dbItem as any)?.logo_url || media.logo_url,
-      },
-      logoUrl,
-      (dbItem as any)?.logo_url,
-      media.logo_url
-    );
-    return resolved.length > 5 ? resolved : null;
-  }, [detail?.images?.logos, logoUrl, dbItem, media]);
+    // 2) Logo localizada já buscada (getHorizontalCardLogo).
+    if (logoUrl && logoUrl.length > 5) return logoUrl;
+    // 3) Sem tmdb_id: única fonte é a logo armazenada.
+    if (!tmdbId) {
+      const resolved = resolveCatalogLogo(
+        { ...(media as any), ...((dbItem as any) || {}) },
+        (dbItem as any)?.logo_url,
+        media.logo_url
+      );
+      return resolved.length > 5 ? resolved : null;
+    }
+    // tmdb sem localizada ainda → skeleton (evita flash de logo estrangeira).
+    return null;
+  }, [detail?.images?.logos, logoUrl, dbItem, media, tmdbId]);
 
   useEffect(() => {
     if (logoDisplayUrl || !tmdbId) return;
@@ -345,11 +354,9 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
     return detail?.credits?.crew?.find((c) => c.job === 'Director')?.name || null;
   }, [detail?.credits?.crew]);
 
-  const hasRequiredAssets =
-    hasRequiredTmdbImages(mediaWithTmdbImages) && Boolean(posterUrl && backdropUrl);
-  const meetsYearFilter = isRecentMedia(primaryMedia, 2022);
-
-  const isBlocked = Boolean(invalidReason || !tmdbId || !hasRequiredAssets || !meetsYearFilter);
+  // Não bloquear a página de detalhes quando o conteúdo é reproduzível.
+  // O bloqueio por ano/imagens causava falso "Conteúdo indisponível".
+  const isBlocked = invalidReason === 'load_error';
 
   useEffect(() => {
     if (loading || !isBlocked || hasAutoBackRef.current) return;
@@ -482,9 +489,12 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
         {loadingBg ? (
           <img
             src={loadingBg}
+            srcSet={getResponsiveImageSrcSet(loadingBg, 'backdrop')}
+            sizes="100vw"
             alt=""
             className="absolute inset-0 h-full w-full object-cover opacity-35 blur-sm scale-105"
             loading="eager"
+            decoding="async"
             referrerPolicy="no-referrer"
           />
         ) : null}
@@ -544,12 +554,16 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
       {/* BACKDROP */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         {backdropUrl && (
-          <div
-            className="absolute top-0 left-0 w-full h-full bg-cover"
-            style={{
-              backgroundImage: `url(${backdropUrl})`,
-              backgroundPosition: 'center calc(50% + 0.5cm)',
-            }}
+          <img
+            src={backdropUrl}
+            srcSet={getResponsiveImageSrcSet(backdropUrl, 'backdrop')}
+            sizes="100vw"
+            alt=""
+            className="absolute top-0 left-0 w-full h-full object-cover"
+            style={{ objectPosition: 'center calc(50% + 0.5cm)' }}
+            loading="eager"
+            decoding="async"
+            referrerPolicy="no-referrer"
           />
         )}
         <div className="absolute inset-0 dt-hero-overlay" />
@@ -584,9 +598,14 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
               <div className="w-48 lg:w-60 rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.7)] ring-1 ring-white/10">
                 <img
                   src={posterUrl}
+                  srcSet={getResponsiveImageSrcSet(posterUrl, 'poster')}
+                  sizes="240px"
                   alt={media.title}
                   className="w-full h-auto object-cover"
+                  width={240}
+                  height={360}
                   loading="eager"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -601,6 +620,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
                   alt={media.title || 'Logo'}
                   className="w-44 md:w-64 drop-shadow-lg object-contain object-left"
                   loading="eager"
+                  decoding="async"
                   onError={() => setLogoError(true)}
                 />
               ) : (
@@ -809,7 +829,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
                         src={getImageUrl(actor.profile_path, 'w200') || ''}
                         alt={actor.name}
                         className="w-full h-full object-cover"
+                        width={128}
+                        height={128}
                         loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-500">
@@ -854,7 +877,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
                             src={getImageUrl(person.profile_path, 'w200') || ''}
                             alt={person.name}
                             className="w-full h-full object-cover"
+                            width={128}
+                            height={128}
                             loading="lazy"
+                            decoding="async"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-gray-500">
@@ -888,10 +914,18 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ media, onPlay, onBack, onSe
                 >
                   <div className="relative aspect-video">
                     <img
-                      src={getImageUrl(rec.backdrop_path, 'w1280') || ''}
+                      src={getImageUrl(rec.backdrop_path, 'w780') || ''}
+                      srcSet={getResponsiveImageSrcSet(
+                        getImageUrl(rec.backdrop_path, 'w780') || '',
+                        'backdrop'
+                      )}
+                      sizes="360px"
                       alt={rec.title || rec.name}
                       className="h-full w-full object-cover"
+                      width={360}
+                      height={203}
                       loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
                     <div className="absolute left-4 right-4 bottom-4 space-y-2">

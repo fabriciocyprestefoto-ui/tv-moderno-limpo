@@ -1,6 +1,7 @@
 import { Channel } from '@/types';
 import { stripDiacriticsSafe } from '@/utils/safeUnicodeNormalize';
 import { sanitizeFontezChannels } from '@/utils/sourceSanitizer';
+import { resolveClaroLogo } from '@/utils/claroChannelLogos';
 import { ChannelQuality, ChannelRegion, PitoChannel, PitoCategory, Program } from './types';
 
 /** Ordem de prioridade de qualidade (melhor primeiro) */
@@ -33,11 +34,52 @@ const TRADITIONAL_CHANNELS: TraditionalChannelSpec[] = [
 ];
 
 const TRADITIONAL_RESERVED_NUMBERS = new Set(TRADITIONAL_CHANNELS.map((ch) => ch.number));
+const GITHUB_TV_LOGO_BASE = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main';
+
 const TRADITIONAL_LOGOS: Record<string, string> = {
-  sbt: 'https://i.postimg.cc/7hpBRrwD/sbt1.png',
-  'record-tv': 'https://i.postimg.cc/jdyjDqp6/record1.png',
-  band: 'https://i.postimg.cc/SKhL10tL/band.png',
+  'tv-brasil': `${GITHUB_TV_LOGO_BASE}/countries/brazil/tv-brasil-br.png`,
+  'tv-cultura': `${GITHUB_TV_LOGO_BASE}/countries/brazil/tv-cultura-br.png`,
+  sbt: `${GITHUB_TV_LOGO_BASE}/countries/brazil/sbt-br.png`,
+  globo: `${GITHUB_TV_LOGO_BASE}/countries/brazil/globo-br.png`,
+  'record-news': `${GITHUB_TV_LOGO_BASE}/countries/brazil/record-news-br.png`,
+  'record-tv': `${GITHUB_TV_LOGO_BASE}/countries/brazil/record-br.png`,
+  'rede-vida': `${GITHUB_TV_LOGO_BASE}/countries/brazil/rede-vida-br.png`,
+  redetv: `${GITHUB_TV_LOGO_BASE}/countries/brazil/rede-tv-br.png`,
+  'novo-tempo': `${GITHUB_TV_LOGO_BASE}/countries/brazil/novo-tempo-br.png`,
+  'rede-cnt': `${GITHUB_TV_LOGO_BASE}/countries/brazil/rede-cnt-br.png`,
+  'cancao-nova': `${GITHUB_TV_LOGO_BASE}/countries/brazil/cancao-nova-tv-br.png`,
+  band: `${GITHUB_TV_LOGO_BASE}/countries/brazil/band-br.png`,
+  'tv-aparecida': `${GITHUB_TV_LOGO_BASE}/countries/brazil/tv-aparecida-br.png`,
+  'rit-tv': `${GITHUB_TV_LOGO_BASE}/countries/brazil/rit-br.png`,
 };
+
+const CHANNEL_LOGO_OVERRIDES: Array<{ match: RegExp; logo: string }> = [
+  { match: /\bsbt\b/i, logo: TRADITIONAL_LOGOS.sbt },
+  { match: /\bglobo\b/i, logo: TRADITIONAL_LOGOS.globo },
+  { match: /\brecord\b/i, logo: TRADITIONAL_LOGOS['record-tv'] },
+  { match: /\bnovo tempo\b/i, logo: TRADITIONAL_LOGOS['novo-tempo'] },
+  { match: /\bcan[cç]a?o nova\b/i, logo: TRADITIONAL_LOGOS['cancao-nova'] },
+  { match: /\bband\b/i, logo: TRADITIONAL_LOGOS.band },
+  { match: /\btv brasil\b/i, logo: TRADITIONAL_LOGOS['tv-brasil'] },
+  { match: /\btv cultura\b/i, logo: TRADITIONAL_LOGOS['tv-cultura'] },
+  { match: /\brede vida\b/i, logo: TRADITIONAL_LOGOS['rede-vida'] },
+  { match: /\brede ?tv\b/i, logo: TRADITIONAL_LOGOS.redetv },
+  { match: /\b(cnt|rede cnt)\b/i, logo: TRADITIONAL_LOGOS['rede-cnt'] },
+  { match: /\btv aparecida\b/i, logo: TRADITIONAL_LOGOS['tv-aparecida'] },
+  { match: /\brit\b/i, logo: TRADITIONAL_LOGOS['rit-tv'] },
+  {
+    match: /\bdiscovery (channel|hd|fhd|sd)?\b/i,
+    logo: `${GITHUB_TV_LOGO_BASE}/countries/argentina/discovery-channel-ar.png`,
+  },
+  {
+    match: /\b(discovery h(&|e|and)h|home ?& ?health|home and health)\b/i,
+    logo: `${GITHUB_TV_LOGO_BASE}/countries/argentina/discovery-home-and-health-ar.png`,
+  },
+  {
+    match: /\bhgtv\b/i,
+    logo: `${GITHUB_TV_LOGO_BASE}/countries/argentina/hgtv-ar.png`,
+  },
+];
 
 /** Palavra-chave do afiliado principal de cada estado (para escolher o "mais principal") */
 const STATE_MAIN_KEYWORDS: Record<string, string[]> = {
@@ -148,9 +190,30 @@ function applyEpgTitle(p: Program, raw: Channel): Program {
 }
 
 function pickChannelLogo(variants: VariantEntry[], traditionalSpec: TraditionalChannelSpec | null): string {
+  // Prioridade: ícone do Claro (github raw, estável) casado pelo nome do canal.
+  // Substitui a logo original do provedor, que frequentemente está morta (404).
+  for (const v of variants) {
+    const claro = resolveClaroLogo(String(v.raw.name || ''));
+    if (claro) return claro;
+  }
+
+  if (traditionalSpec) {
+    const traditionalLogo = TRADITIONAL_LOGOS[traditionalSpec.key];
+    if (traditionalLogo) return traditionalLogo;
+  }
+
+  const names = variants
+    .flatMap((v) => [v.raw.name, v.raw.category])
+    .map((value) => String(value || '').trim())
+    .filter(Boolean);
+  const matched = CHANNEL_LOGO_OVERRIDES.find((entry) =>
+    names.some((name) => entry.match.test(name))
+  );
+  if (matched?.logo) return matched.logo;
+
   const fromVariant = variants.map((v) => String(v.raw.logo || '').trim()).find(Boolean);
   if (fromVariant) return fromVariant;
-  return traditionalSpec ? TRADITIONAL_LOGOS[traditionalSpec.key] || '' : '';
+  return '';
 }
 
 /**

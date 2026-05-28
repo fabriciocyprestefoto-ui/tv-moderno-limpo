@@ -146,6 +146,17 @@
   --sidebar-active-bg: rgba(255, 255, 255, 0.1);
   --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
   --sidebar-transition: 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  --exit-glass-bg: linear-gradient(
+    145deg,
+    rgba(88, 28, 135, 0.55) 0%,
+    rgba(30, 10, 60, 0.75) 100%
+  );
+  --exit-glass-border: rgba(168, 85, 247, 0.35);
+  --exit-glass-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 32px 80px rgba(0, 0, 0, 0.55),
+    0 0 60px rgba(109, 40, 217, 0.18);
+  --exit-glass-blur: blur(48px) saturate(180%);
 }
 
 /* Rail fixo — vidro fosco transparente (frosted glass) */
@@ -155,10 +166,11 @@
   top: 0;
   height: 100vh;
   width: var(--sidebar-w);
-  background: rgba(0, 0, 0, 0.18);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  border-right: 1px solid var(--sidebar-border);
+  background: var(--exit-glass-bg);
+  -webkit-backdrop-filter: var(--exit-glass-blur);
+  backdrop-filter: var(--exit-glass-blur);
+  border-right: 1px solid var(--exit-glass-border);
+  border-radius: 0 28px 28px 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -166,7 +178,7 @@
   padding: 6px 0 10px;
   overflow: hidden;
   transition: width var(--sidebar-transition);
-  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--exit-glass-shadow);
 }
 
 /* Expande o sidebar inteiro quando foco entra */
@@ -1062,20 +1074,22 @@ a:focus:not(:focus-visible),
 
 .glass-panel-lilac {
   background: rgba(45, 15, 85, 0.3);
-  -webkit-backdrop-filter:;
-  backdrop-filter:;
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
+  backdrop-filter: blur(40px) saturate(1.6);
   border: 1px solid var(--glass-border-lilac);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 }
 
-/* TV Box: desabilitar blur em painéis glass definidos via CSS (não capturados pelo seletor genérico) */
+/* TV Box: vidro visionOS translúcido (igual desktop), NÃO sólido. Em WebView moderno
+ * (TCL Chromium 148) o blur aplica; em TV fraca o blur degrada mas o fundo translúcido
+ * mantém o look transparente sem custo. */
 .tv-box .glass-panel-lilac,
 .tv-box-mode .glass-panel-lilac,
 .tv-box .vision-glass-panel,
 .tv-box-mode .vision-glass-panel {
-  -webkit-backdrop-filter:;
-  backdrop-filter:;
-  background: rgba(18, 18, 22, 0.92);
+  -webkit-backdrop-filter: blur(30px) saturate(1.6);
+  backdrop-filter: blur(30px) saturate(1.6);
+  background: rgba(45, 15, 85, 0.34);
 }
 
 .lilac-tint-accent {
@@ -1209,34 +1223,27 @@ video {
  * (rgba(0,0,0,0.18)+blur); reforcamos com vidro mais visivel sem opacar. */
 .tv-box .sidebar-rail,
 .tv-box-mode .sidebar-rail {
-  background: linear-gradient(
-    180deg,
-    rgba(15, 10, 25, 0.32) 0%,
-    rgba(15, 10, 25, 0.22) 60%,
-    rgba(15, 10, 25, 0.18) 100%
-  ) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
-  backdrop-filter: blur(22px) saturate(170%) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.14) !important;
-  box-shadow:
-    2px 0 24px rgba(0, 0, 0, 0.35),
-    inset -1px 0 0 rgba(255, 255, 255, 0.08) !important;
+  /* MESMA receita visionOS do modal "Sair do aplicativo?" (LegacyApp). */
+  background: var(--exit-glass-bg) !important;
+  -webkit-backdrop-filter: var(--exit-glass-blur) !important;
+  backdrop-filter: var(--exit-glass-blur) !important;
+  border-right: 1px solid var(--exit-glass-border) !important;
+  border-radius: 0 28px 28px 0 !important;
+  box-shadow: var(--exit-glass-shadow) !important;
 }
 
-/* Sidebar LiveTV (PitoSidebar) em TV box: tambem translucido roxo, sem opacar */
+/* Sidebar LiveTV (PitoSidebar) e lista de canais: mesmo vidro do card Sair. */
 .tv-box .livetv-sidebar-purple,
-.tv-box-mode .livetv-sidebar-purple {
-  background: linear-gradient(
-    180deg,
-    rgba(88, 28, 135, 0.30) 0%,
-    rgba(88, 28, 135, 0.22) 100%
-  ) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  border: 1px solid rgba(167, 139, 250, 0.26) !important;
-  box-shadow:
-    0 16px 48px rgba(88, 28, 135, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+.tv-box-mode .livetv-sidebar-purple,
+.tv-box .livetv-channel-menu,
+.tv-box-mode .livetv-channel-menu {
+  /* MESMA receita visionOS do modal "Sair do aplicativo?" — menu Canais (categorias + lista). */
+  background: var(--exit-glass-bg) !important;
+  -webkit-backdrop-filter: var(--exit-glass-blur) !important;
+  backdrop-filter: var(--exit-glass-blur) !important;
+  border: 1px solid var(--exit-glass-border) !important;
+  border-radius: 28px !important;
+  box-shadow: var(--exit-glass-shadow) !important;
 }
 
 /* TV Box: hairline branco, sem glow (performance + estilo referência streaming) */
@@ -2297,23 +2304,33 @@ select:focus:not(:focus-visible) {
   /* ── Sidebar de categorias — vidro roxo do player (mesma paleta G do Player.tsx) ── */
   /* ── Vidro roxo idêntico ao player (G.surface = rgba(88,28,135,0.32)) ── */
   .livetv-sidebar-purple {
-    background: rgba(88, 28, 135, 0.22); /* ainda mais transparente — igual ao HUD */
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
-    backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid rgba(167, 139, 250, 0.28);
-    border-radius: 2rem;
-    box-shadow:
-      0 16px 48px rgba(88, 28, 135, 0.45),
-      0 0 0 1px rgba(167, 139, 250, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    background: var(--exit-glass-bg);
+    -webkit-backdrop-filter: var(--exit-glass-blur);
+    backdrop-filter: var(--exit-glass-blur);
+    border: 1px solid var(--exit-glass-border);
+    border-radius: 28px;
+    box-shadow: var(--exit-glass-shadow);
     /* −2% de altura: margem vertical de 1vh em cada lado */
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+  }
+
+  .livetv-channel-menu {
+    background: var(--exit-glass-bg) !important;
+    -webkit-backdrop-filter: var(--exit-glass-blur) !important;
+    backdrop-filter: var(--exit-glass-blur) !important;
+    border: 1px solid var(--exit-glass-border) !important;
+    border-radius: 28px !important;
+    box-shadow: var(--exit-glass-shadow) !important;
     margin-top: 1vh;
     margin-bottom: 1vh;
   }
 
   /* Sidebar LiveTV em TV box: translucido roxo (regra detalhada acima @1183). */
   .tv-box .livetv-sidebar-purple,
-  .tv-box-mode .livetv-sidebar-purple {
+  .tv-box-mode .livetv-sidebar-purple,
+  .tv-box .livetv-channel-menu,
+  .tv-box-mode .livetv-channel-menu {
     margin-top: 1vh;
     margin-bottom: 1vh;
   }
@@ -2335,25 +2352,27 @@ select:focus:not(:focus-visible) {
   }
 
   .livetv-sidebar-row--focus {
-    background: rgba(167, 139, 250, 0.18);
-    border-color: rgba(167, 139, 250, 0.35);
-    box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.15);
+    background: rgba(168, 85, 247, 0.35);
+    border-color: rgba(168, 85, 247, 0.6);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+      0 4px 28px rgba(109, 40, 217, 0.45);
     transform: scale(1.02);
   }
 
   /* Seleção ativa: mesmo gradiente do .sidebar-nav-btn.active */
   .livetv-sidebar-row--active {
-    background: linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(219, 39, 119) 100%);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.92) 0%, rgba(219, 39, 119, 0.82) 100%);
+    border-color: rgba(255, 255, 255, 0.28);
     box-shadow:
-      0 4px 15px rgba(124, 58, 237, 0.5),
+      0 4px 24px rgba(109, 40, 217, 0.45),
       inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   }
 
   .tv-box .livetv-sidebar-row--active,
   .tv-box-mode .livetv-sidebar-row--active {
-    background: linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(219, 39, 119) 100%);
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.5);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.92) 0%, rgba(219, 39, 119, 0.82) 100%);
+    box-shadow: 0 4px 24px rgba(109, 40, 217, 0.45);
   }
 
   html[data-page='livetv'] .livetv-vision-boot {

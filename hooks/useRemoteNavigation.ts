@@ -53,6 +53,25 @@ function getCachedRect(el: Element): DOMRect {
   return r;
 }
 
+// ── Cache da LISTA de focáveis ───────────────────────────────────────────────
+// querySelectorAll(doc inteiro) a cada tecla é O(tamanho do DOM). A lista só muda
+// quando o DOM monta/desmonta (virtualização, troca de rota), não a cada navegação.
+// Invalidamos via MutationObserver (instalado no hook); rects continuam medidos por
+// keypress (posições mudam com scroll, membros da lista não).
+const FOCUSABLE_SELECTOR =
+  '[data-nav-item], [data-nav-livetv-category], [data-player-control], [tabindex="0"]';
+let _focusableCache: HTMLElement[] | null = null;
+
+function getFocusables(): HTMLElement[] {
+  if (_focusableCache) return _focusableCache;
+  _focusableCache = Array.from(document.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+  return _focusableCache;
+}
+
+function invalidateFocusables(): void {
+  _focusableCache = null;
+}
+
 /** Verifica se um elemento pode receber foco — rect via cache para evitar reflow múltiplo. */
 function isElementFocusable(el: Element): el is HTMLElement {
   if (!(el instanceof HTMLElement)) return false;
@@ -76,12 +95,9 @@ function getDirectionalTarget(current: HTMLElement, direction: RemoteDir): HTMLE
   const cx = currentRect.left + currentRect.width / 2;
   const cy = currentRect.top + currentRect.height / 2;
 
-  // Pré-filtrar por quadrante antes de chamar isElementFocusable (evita getComputedStyle desnecessário)
-  const all = Array.from(
-    document.querySelectorAll<HTMLElement>(
-      '[data-nav-item], [data-nav-livetv-category], [data-player-control], [tabindex="0"]'
-    )
-  );
+  // Pré-filtrar por quadrante antes de chamar isElementFocusable (evita getComputedStyle desnecessário).
+  // Lista cacheada (invalidada por MutationObserver) — evita querySelectorAll por keypress.
+  const all = getFocusables();
 
   let best: HTMLElement | null = null;
   let bestScore = Number.POSITIVE_INFINITY;
@@ -275,6 +291,29 @@ export function useRemoteNavigation() {
   useEffect(() => {
     resetNavDebounce();
     clearFocusRetry();
+  }, [location.pathname]);
+
+  // ── Invalidação do cache de focáveis ──────────────────────────────────────
+  // A lista de elementos navegáveis só muda quando o DOM monta/desmonta (cards
+  // virtualizados entram/saem, troca de rota). Um MutationObserver marca o cache
+  // sujo; rects seguem medidos por keypress. rAF coalesce rajadas de mutação.
+  useEffect(() => {
+    invalidateFocusables();
+    let scheduled = false;
+    const flush = () => {
+      scheduled = false;
+      invalidateFocusables();
+    };
+    const observer = new MutationObserver(() => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(flush);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      observer.disconnect();
+      invalidateFocusables();
+    };
   }, [location.pathname]);
 
   // ── Handler principal de teclado / D-Pad ─────────────────────────────────

@@ -130,7 +130,11 @@ const ContinueWatchingRow: React.FC<ContinueWatchingRowProps> = ({
                   fallbackSrc={ERROR_SVG}
                   showSkeleton={true}
                   objectFit="cover"
-                  eager={idx < 4}
+                  eager={idx < 2}
+                  imageType="backdrop"
+                  width={CARD_W}
+                  height={CARD_H}
+                  sizes={`${CARD_W}px`}
                 />
               ) : (
                 <div className="absolute inset-0 bg-[#16161e] flex items-center justify-center">

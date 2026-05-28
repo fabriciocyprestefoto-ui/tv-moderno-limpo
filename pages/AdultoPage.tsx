@@ -1,14 +1,15 @@
 /**
  * AdultoPage — Layout full-screen estilo LiveTV (Pito)
  * Vídeo em tela cheia com overlay de lista de canais
- * Fonte única: M3U local (public/adulto-data.m3u)
+ * Fonte única: Supabase (tabela adult_streams), igual à página Canais.
  */
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Hls from 'hls.js';
 
 import AdultPinModal, { isAdultUnlocked } from '@/pages/livetv/AdultPinModal';
-import { fetchAdultStreamsFromM3U, type AdultStream } from '@/services/adultoService';
+import { loadAdultStreamsFromSupabase, type AdultStream } from '@/services/adultoService';
+import { sanitizeUrlForLog } from '@/utils/sanitizeUrlForLog';
 import { useTvBackHandler } from '@/hooks/useTvBackHandler';
 import { logger } from '@/utils/logger';
 import { setSignal } from '@/utils/appSignals';
@@ -93,7 +94,7 @@ export default function AdultoPage() {
     };
   }, []);
 
-  // Carregar streams do M3U local (public/adulto-data.m3u)
+  // Carregar streams do Supabase (tabela adult_streams), igual à página Canais.
   useEffect(() => {
     let cancelled = false;
 
@@ -103,10 +104,10 @@ export default function AdultoPage() {
 
       let list: AdultStream[];
       try {
-        list = await fetchAdultStreamsFromM3U({ limit: ADULT_LIMIT });
+        list = await loadAdultStreamsFromSupabase();
       } catch (err) {
         if (cancelled) return;
-        logger.warn('[AdultoPage] Falha ao carregar adulto-data.m3u:', err);
+        logger.warn('[Adulto] player error reason=load-failed', err);
         setLoadError('Falha ao carregar streams.');
         setLoading(false);
         return;
@@ -114,13 +115,18 @@ export default function AdultoPage() {
 
       if (cancelled) return;
 
-      const filtered = list.filter((s) => Boolean(String(s.stream_url || '').trim()));
+      const filtered = list.filter((s) => Boolean(String(s.stream_url || '').trim())).slice(0, ADULT_LIMIT);
       const adapted = adaptAdultStreams(filtered);
+
+      const categoryCount = new Set(adapted.map((c) => c.category)).size;
+      logger.log(`[Adulto] loaded categories=${categoryCount} items=${adapted.length}`);
 
       setAllChannels(adapted);
       if (adapted.length > 0) {
         setSelectedChannel(adapted[0]);
         setFocusedChannelIndex(0);
+      } else {
+        setLoadError('Nenhum conteúdo disponível.');
       }
       setLoading(false);
     };
@@ -229,6 +235,8 @@ export default function AdultoPage() {
     let cancelled = false;
     setLiveStreamError(null);
     setSignal('playerActive', true);
+    logger.log('[Adulto] using native live player');
+    logger.log(`[Adulto] stream selected url=${sanitizeUrlForLog(selectedChannel.stream_url)}`);
 
     void playNative({
       url: selectedChannel.stream_url,
@@ -257,7 +265,8 @@ export default function AdultoPage() {
       .catch((err) => {
         if (cancelled || nativeAdultLaunchRef.current !== launchId) return;
         setSignal('playerActive', false);
-        logger.error('[AdultoPage] Native adult player failed', err);
+        logger.warn('[Adulto] player error reason=native-error', err);
+        logger.log('[Adulto] UI error shown');
         setLiveStreamError(err instanceof Error ? err.message : 'Falha ao abrir este stream.');
       });
 
@@ -277,6 +286,8 @@ export default function AdultoPage() {
     video.muted = false;
 
     const url = selectedChannel.stream_url;
+    logger.log('[Adulto] using HLS fallback');
+    logger.log(`[Adulto] stream selected url=${sanitizeUrlForLog(url)}`);
     const isHls =
       /\.m3u8(\?|$)/i.test(url) ||
       url.toLowerCase().includes('.m3u8') ||
@@ -315,6 +326,8 @@ export default function AdultoPage() {
             else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
             else {
               hls.destroy();
+              logger.warn('[Adulto] player error reason=hls-fatal');
+              logger.log('[Adulto] UI error shown');
               setLiveStreamError('Falha ao carregar este stream.');
             }
           }
@@ -413,6 +426,8 @@ export default function AdultoPage() {
             className="w-full h-full object-contain"
             style={{ backgroundColor: 'transparent' }}
             onError={() => {
+              logger.warn('[Adulto] player error reason=video-element');
+              logger.log('[Adulto] UI error shown');
               setLiveStreamError('Falha ao carregar este stream.');
             }}
           />

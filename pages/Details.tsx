@@ -26,8 +26,10 @@ import { userService } from '../services/userService';
 import { useToast } from '@/contexts/ToastContext';
 import { playSelectSound, playBackSound } from '../utils/soundEffects';
 import { getMediaBackdrop, getMediaLogo, hasValidVideoUrl } from '../utils/mediaUtils';
+import { getLocalizedLogoSync, rememberLocalizedLogo } from '../services/logoService';
 import { useSpatialNav } from '../hooks/useSpatialNavigation';
 import { pickFirstRealStreamUrlFromRow } from '../utils/streamUrlGuards';
+import { getResponsiveImageSrcSet } from '../utils/imageProxy';
 import {
   Play,
   ArrowLeft,
@@ -139,7 +141,8 @@ const EpisodeCard = React.memo(function EpisodeCard({
   isWatched,
   epProgressPercent = 0,
 }: EpisodeCardProps) {
-  const playable = hasValidVideoUrl(ep as unknown as Record<string, unknown>);
+  const playbackMedia = buildEpisodePlaybackMedia(ep);
+  const playable = hasValidVideoUrl(playbackMedia as unknown as Record<string, unknown>);
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.96 }}
@@ -149,13 +152,13 @@ const EpisodeCard = React.memo(function EpisodeCard({
       onClick={() => {
         if (!playable) return;
         playSelectSound();
-        onPlay(buildEpisodePlaybackMedia(ep));
+        onPlay(playbackMedia);
       }}
       onKeyDown={(e) => {
         if ((e.key === 'Enter' || e.key === ' ') && playable) {
           e.preventDefault();
           playSelectSound();
-          onPlay(buildEpisodePlaybackMedia(ep));
+          onPlay(playbackMedia);
         }
       }}
       tabIndex={0}
@@ -171,9 +174,14 @@ const EpisodeCard = React.memo(function EpisodeCard({
           {ep.still_path ? (
             <img
               src={getImageUrl(ep.still_path, 'w342')}
+              srcSet={getResponsiveImageSrcSet(getImageUrl(ep.still_path, 'w342'), 'backdrop')}
+              sizes="220px"
               alt={ep.name}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-focus-visible:scale-110"
+              width={342}
+              height={192}
               loading="lazy"
+              decoding="async"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-white/[0.03]">
@@ -289,8 +297,9 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
     return getCachedDetails(id, media.type === 'series' ? 'series' : 'movie')?.detail ?? null;
   });
   const [logoUrl, setLogoUrl] = useState<string | null>(() => {
-    const safeLogo = getMediaLogo(media);
-    if (safeLogo) return safeLogo;
+    // Logo localizada conhecida (não a logo_url armazenada, que pode ser ja).
+    const localized = getLocalizedLogoSync(media);
+    if (localized) return localized;
     const id = media.tmdb_id ? Number(media.tmdb_id) : 0;
     if (!id) return null;
     return getCachedDetails(id, media.type === 'series' ? 'series' : 'movie')?.logo ?? null;
@@ -390,14 +399,16 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
               )
               .slice(0, 15) || []
           );
-          setLogoUrl(
-            getMediaLogo({
+          {
+            const finalLogo = getMediaLogo({
               ...media,
               logo_url: logo || enriched?.logo || media.logo_url || null,
               poster_path: det?.poster_path || (enriched as any)?.poster_path,
               backdrop_path: det?.backdrop_path || (enriched as any)?.backdrop_path,
-            }) || null
-          );
+            }) || null;
+            setLogoUrl(finalLogo);
+            if (logo) rememberLocalizedLogo(media, finalLogo);
+          }
           if (isSeries && det?.seasons) {
             const realSeasons = det.seasons.filter((s: any) => s.season_number > 0);
             setSeasons(realSeasons);
@@ -995,9 +1006,12 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
         {loadingBg ? (
           <img
             src={loadingBg}
+            srcSet={getResponsiveImageSrcSet(loadingBg, 'backdrop')}
+            sizes="100vw"
             alt=""
             className="absolute inset-0 h-full w-full object-cover opacity-35 blur-sm scale-105"
             loading="eager"
+            decoding="async"
             referrerPolicy="no-referrer"
           />
         ) : null}
@@ -1143,9 +1157,12 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
         <div className="absolute inset-0 overflow-hidden">
           <img
             src={backdropUrl || ''}
+            srcSet={getResponsiveImageSrcSet(backdropUrl, 'backdrop')}
+            sizes="100vw"
             alt={title}
             className="w-full h-full object-cover"
             loading="eager"
+            decoding="async"
             referrerPolicy="no-referrer"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).style.opacity = '0';
@@ -1198,6 +1215,7 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                 src={logoUrl}
                 alt={title}
                 className="max-h-[84px] max-w-[350px] w-auto object-contain drop-shadow-2xl mb-8 origin-left"
+                decoding="async"
                 onError={() => setLogoError(true)}
               />
             ) : (
@@ -1833,7 +1851,10 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                           src={getImageUrl(actor.profile_path, 'w200')}
                           alt={actor.name}
                           className="w-full h-full object-cover"
+                          width={96}
+                          height={96}
                           loading="lazy"
+                          decoding="async"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-white/5 text-white/20 text-xl font-bold">
@@ -1884,7 +1905,10 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                         src={getImageUrl(person.profile_path, 'w200')}
                         alt={person.name}
                         className="w-full h-full object-cover"
+                        width={144}
+                        height={216}
                         loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-white/20 bg-white/5">
@@ -1924,9 +1948,14 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                   <div className="aspect-video bg-gray-800 rounded-xl overflow-hidden">
                     <img
                       src={getImageUrl(img.file_path, 'w780') || ''}
+                      srcSet={getResponsiveImageSrcSet(getImageUrl(img.file_path, 'w780'), 'backdrop')}
+                      sizes="288px"
                       alt="Galeria"
                       className="w-full h-full object-cover"
+                      width={288}
+                      height={162}
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 </div>
@@ -1940,9 +1969,14 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                   <div className="aspect-[2/3] bg-gray-800 rounded-xl overflow-hidden">
                     <img
                       src={getImageUrl(img.file_path, 'w500') || ''}
+                      srcSet={getResponsiveImageSrcSet(getImageUrl(img.file_path, 'w500'), 'poster')}
+                      sizes="160px"
                       alt="Poster"
                       className="w-full h-full object-cover"
+                      width={160}
+                      height={240}
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 </div>
@@ -1990,9 +2024,17 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
                     <div className="aspect-video bg-gray-800 rounded-xl overflow-hidden relative">
                       <img
                         src={getImageUrl(rec.backdrop_path, 'w780') || ''}
+                        srcSet={getResponsiveImageSrcSet(
+                          getImageUrl(rec.backdrop_path, 'w780'),
+                          'backdrop'
+                        )}
+                        sizes="288px"
                         alt={rec.title || rec.name}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        width={288}
+                        height={162}
                         loading="lazy"
+                        decoding="async"
                       />
                       <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center">

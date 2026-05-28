@@ -24,7 +24,7 @@ import { getAdjacentLiveTvChannelIndex } from '@/utils/liveTvControls';
 import { normalizeRemoteKey } from '@/hooks/useRemoteControl';
 import { runtimeFlags } from '@/config/runtimeFlags';
 import { isNativePlatform, playNative } from '@/services/nativePlayerService';
-import { isFireTV, isLegacyHtml5OnlyTV } from '@/utils/tvBoxDetector';
+import { isFireTV } from '@/utils/tvBoxDetector';
 
 // PIN adulto gerenciado via AdultPinModal/Edge Function; PIN nunca deve ir no bundle.
 
@@ -261,11 +261,14 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
   const [liveStreamError, setLiveStreamError] = useState<string | null>(null);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [streamRetryNonce, setStreamRetryNonce] = useState(0);
+  // Gate idêntico ao VOD (Player.tsx): SEM isLegacyHtml5OnlyTV(). O player nativo é uma
+  // Activity Android (Media3/ExoPlayer) e independe da versão do WebView/Chromium.
+  // TCL Android TV roda OS novo com System WebView antigo (Chromium < 80): bloquear o
+  // nativo por essa heurística fazia LiveTV cair no <video> HTML5 (webview) — regressão.
   const useNativeLivePlayer =
     runtimeFlags.isTvBuild &&
     runtimeFlags.nativeAndroidPlayerEnabled &&
     !isFireTV() &&
-    !isLegacyHtml5OnlyTV() &&
     isNativePlatform();
   const nativeLiveLaunchRef = useRef(0);
   // Chave do último launch nativo (id|url|nonce) — torna o efeito idempotente e
@@ -718,6 +721,14 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     }
   }, [filteredChannels, focusedChannelIndex, selectedChannel]);
 
+  // selectAdjacentLiveChannel muda de identidade a cada navegação de gênero
+  // (deps filteredChannels/focusedChannelIndex). Mantemos em ref para que o
+  // efeito de launch nativo NÃO o tenha como dependência — senão o efeito
+  // re-rodaria a cada tecla do D-pad, re-exibindo o overlay de erro do canal
+  // com falha recente (bug: "ao trocar o gênero sai da tela / pisca erro").
+  const selectAdjacentLiveChannelRef = useRef(selectAdjacentLiveChannel);
+  selectAdjacentLiveChannelRef.current = selectAdjacentLiveChannel;
+
   // TV Moderno: LiveTV abre via NativePlayerPlugin para receber retorno da Activity.
   // Nenhum <video> é montado no APK TV moderno; fallback HTML5 fica apenas web/legacy.
   useEffect(() => {
@@ -807,11 +818,11 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
         }
 
         if (result.action === 'channelUp') {
-          selectAdjacentLiveChannel(1);
+          selectAdjacentLiveChannelRef.current(1);
           return;
         }
         if (result.action === 'channelDown') {
-          selectAdjacentLiveChannel(-1);
+          selectAdjacentLiveChannelRef.current(-1);
           return;
         }
 
@@ -838,7 +849,7 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     return () => {
       cancelled = true;
     };
-  }, [currentRegion?.streamUrl, effectiveStreamUrl, selectedChannel?.id, streamRetryNonce, useNativeLivePlayer, selectAdjacentLiveChannel]);
+  }, [currentRegion?.streamUrl, effectiveStreamUrl, selectedChannel?.id, streamRetryNonce, useNativeLivePlayer]);
 
   const handleSelectCategory = (id: string) => {
     // Trocar categoria limpa o erro visual anterior (registro de falhas preservado).
@@ -903,10 +914,20 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     setActiveCategory(cat.id);
     setFocusedChannelIndex(0);
     setIsGenreExpanded(true);
+    // Limpa o overlay de erro do canal anterior ao trocar de gênero — senão o
+    // erro de um canal com edge morto fica "preso" sobre o menu enquanto navega.
+    resetLivePlaybackState();
     // Sinaliza primeiro canal do genero como "selecionado" para o info card refletir
-    // o genero atual; nao lanca Activity (so o OK / hover-na-grid lanca).
-    const firstChannel = allChannels.find((c) => c.category === cat.id);
-    if (firstChannel) setSelectedChannel(firstChannel);
+    // o genero atual.
+    // IMPORTANTE (TCL/nativo): NÃO atualizar selectedChannel aqui. O efeito de launch
+    // nativo dispara em selectedChannel?.id e abriria a ExoPlayerActivity a cada troca
+    // de gênero (bug: "ao mudar o gênero o player abre/sai"). No build nativo o launch
+    // fica exclusivo de OK / auto-zap na grade (handleSelectChannel). Na web o preview
+    // não lança Activity (efeito de launch tem guard !useNativeLivePlayer), então mantém.
+    if (!useNativeLivePlayer) {
+      const firstChannel = allChannels.find((c) => c.category === cat.id);
+      if (firstChannel) setSelectedChannel(firstChannel);
+    }
   }, [focusedCategoryIndex, focusedSection]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-zap: ao parar sobre um canal na grade por 600ms, abre o player nativo

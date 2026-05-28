@@ -4,8 +4,9 @@ import { Media } from '../types';
 import { playSelectSound } from '../utils/soundEffects';
 import { logger } from '../utils/logger';
 import { getMediaDetailsByID, getLogo, getOfficialHeroBannerAsset } from '../services/tmdb';
-import { toWebP } from '../utils/imageProxy';
+import { getResponsiveImageSrcSet, toWebP } from '../utils/imageProxy';
 import { getMediaLogo, hasValidVideoUrl } from '../utils/mediaUtils';
+import { getLocalizedLogoSync, rememberLocalizedLogo } from '../services/logoService';
 import { Play, Info, RefreshCw } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
 import { isTVBox } from '../utils/tvBoxDetector';
@@ -39,8 +40,17 @@ const isTmdbImageUrl = (url?: string | null): boolean => {
   return value.startsWith('https://image.tmdb.org/');
 };
 
+const isUsableImageUrl = (url?: string | null): boolean => {
+  const value = String(url || '').trim();
+  return Boolean(value) && !value.includes('undefined') && !value.includes('null');
+};
+
 const getTmdbBackdropFromMedia = (media?: Media | null): string => {
   if (!media) return '';
+  const bannerUrl = String(media.banner_url || '').trim();
+  if (isUsableImageUrl(bannerUrl)) {
+    return isTmdbImageUrl(bannerUrl) ? toWebP(bannerUrl, 'backdrop') : bannerUrl;
+  }
   // Banners: TMDB + wsrv (toWebP). Não priorizar Supabase `posters/webp/{id}.webp` aqui — se o
   // objeto não existir no bucket, o <img> recebia 404 e sumia (onError só tratava wsrv).
   // getBannerWebPUrl fica disponível para fluxos que confirmem o ficheiro (ex.: ingestão).
@@ -61,7 +71,7 @@ const getTmdbBackdropFromMedia = (media?: Media | null): string => {
   )
     return media.backdrop;
   if (isTmdbImageUrl(media.backdrop)) return toWebP(String(media.backdrop), 'backdrop');
-  if (isTmdbImageUrl(media.banner_url)) return toWebP(String(media.banner_url), 'backdrop');
+  if (isUsableImageUrl(media.backdrop)) return String(media.backdrop).trim();
   return '';
 };
 
@@ -250,7 +260,9 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
 
         if (enriched.length > 0) {
           setBannerItems(enriched);
-          setCurrentIndex(0);
+          // Não reseta para 0: preserva a posição da auto-rotação se ainda válida
+          // (resetar fazia o banner voltar ao 1º item quando o TMDB enriquecia).
+          setCurrentIndex((i) => (i < enriched.length ? i : 0));
         } else if (initialQuickItems.length === 0) {
           // Nenhum backdrop disponível — usar candidatos sem imagem
           setBannerItems(candidates.slice(0, slideCap));
@@ -288,6 +300,21 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
     retryCount,
   ]);
 
+  // Auto-rotação do banner: troca o slide a cada 10s, ciclando todos os itens.
+  // Count via ref + interval criado UMA vez (mount) — o enriquecimento TMDB atualiza
+  // bannerItems sem reiniciar o timer, garantindo cadência fixa de 10s.
+  const bannerCountRef = useRef(0);
+  useEffect(() => {
+    bannerCountRef.current = bannerItems.length;
+  }, [bannerItems.length]);
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      const n = bannerCountRef.current;
+      if (n > 1) setCurrentIndex((i) => (i + 1) % n);
+    }, 10000);
+    return () => window.clearInterval(id);
+  }, []);
+
   useEffect(() => {
     const movie = bannerItems[currentIndex];
     if (!movie) {
@@ -298,17 +325,22 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
 
     const cacheKey = `${movie.tmdb_id || movie.id}_${movie.type}`;
 
-    // Allow TMDB urls OR our custom /bannert/ bypass
-    const logoFromMedia = getMediaLogo(movie) || null;
+    // Logo localizada já conhecida (pt→en→null→ja). NÃO semear com a logo_url
+    // armazenada — pode estar em idioma errado e causaria o flash ja→en→pt.
+    const localized = getLocalizedLogoSync(movie);
 
     setLogoError(false);
-    setLogoUrl(logoFromMedia || logoCache.current.get(cacheKey) || null);
+    setLogoUrl(localized || logoCache.current.get(cacheKey) || null);
 
     const tmdbId = Number(movie.tmdb_id);
-    if (!Number.isFinite(tmdbId) || tmdbId <= 0) return;
+    if (!Number.isFinite(tmdbId) || tmdbId <= 0) {
+      // Sem tmdb_id: única fonte é a logo armazenada.
+      if (!localized) setLogoUrl(getMediaLogo(movie) || null);
+      return;
+    }
 
     const type = movie.type === 'series' ? 'series' : 'movie';
-    const needsLogo = !logoFromMedia && !logoCache.current.has(cacheKey);
+    const needsLogo = !localized && !logoCache.current.has(cacheKey);
     const needsBackdrop = !getTmdbBackdropFromMedia(movie);
 
     if (!needsLogo && !needsBackdrop) return;
@@ -335,7 +367,10 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
           } catch {
             /* ignore */
           }
-          if (logo) setLogoUrl((prev) => prev || logo);
+          if (logo) {
+            setLogoUrl((prev) => prev || logo);
+            rememberLocalizedLogo(movie, logo);
+          }
         }
       })
       .catch((err) => logger.warn('[HeroBanner] Falha ao enriquecer item:', err));
@@ -413,6 +448,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
   const movie = bannerItems[currentIndex];
   const cacheKey = movie ? `${movie.tmdb_id || movie.id}_${movie.type}` : '';
   const imageUrl = getTmdbBackdropFromMedia(movie) || backdropOverrides[cacheKey] || '';
+  const imageSrcSet = getResponsiveImageSrcSet(imageUrl, 'backdrop');
   const releaseLabel = getReleaseLabel(movie);
   const bannerSynopsis =
     String(movie.description || (movie as any).overview || '').trim() || 'Sem sinopse disponível.';
@@ -462,10 +498,12 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
               {imageUrl ? (
                 <img
                   src={imageUrl}
+                  srcSet={imageSrcSet}
+                  sizes={imageSrcSet ? '100vw' : undefined}
                   alt={movie.title}
                   className="w-full h-full object-cover"
                   loading={currentIndex === 0 ? 'eager' : 'lazy'}
-                  decoding={currentIndex === 0 ? 'sync' : 'async'}
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   {...({
                     fetchpriority: currentIndex === 0 ? 'high' : 'auto',

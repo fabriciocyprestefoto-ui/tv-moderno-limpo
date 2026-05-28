@@ -20,9 +20,22 @@
 const WEBP_QUALITY = 80;
 
 const MAX_WIDTHS: Record<string, number> = {
-  poster: 500,
+  // Cards de poster renderizam ~185px na TV; w342 cobre densidade sem baixar w500 à toa.
+  poster: 342,
   backdrop: 1280, // 1080p TV Box: w1280 para qualidade nítida em telas Full HD
 };
+
+/**
+ * Converte qualquer URL image.tmdb.org para WebP via wsrv.nl no tamanho alvo.
+ * TMDB serve só JPEG/PNG; WebP corta ~40% do byte → carrega mais rápido na TV.
+ * Fallback (wsrv offline → TMDB JPEG original) já é tratado em LazyImage.handleError.
+ */
+function tmdbToWebp(url: string, width: number): string {
+  // URL completa (com https://) — mesmo padrão de LazyImage handleError já testado.
+  // Mantém o protocolo p/ que extractOriginalUrl / onError do HeroBanner reconstruam o
+  // fallback TMDB corretamente se o wsrv falhar.
+  return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&output=webp&q=${WEBP_QUALITY}`;
+}
 
 /**
  * Constrói URL de proxy para poster a partir de poster_path TMDB.
@@ -63,8 +76,14 @@ export function toWebP(
     return `https://wsrv.nl/?url=${encodeURIComponent(cleanUrl)}&w=${width}&output=webp&q=${WEBP_QUALITY}`;
   }
 
-  // https (TMDB e demais) -> direto. image.tmdb.org carrega no WebView (os logos ja provam)
-  // e no desktop; nao depende de proxy de terceiro.
+  // TMDB https (poster/backdrop) -> WebP via wsrv.nl. TMDB não serve WebP nativo; converter
+  // corta ~40% do byte e acelera a grade na TV. LazyImage tem fallback p/ JPEG se wsrv falhar.
+  if (url.includes('image.tmdb.org')) {
+    const width = MAX_WIDTHS[imageType] || MAX_WIDTHS.poster;
+    return tmdbToWebp(url, width);
+  }
+
+  // Demais https -> direto (sem proxy de terceiro).
   return url;
 }
 
@@ -116,6 +135,39 @@ export function extractOriginalUrl(proxyUrl: string | null | undefined): string 
     // URL malformada — retornar original
   }
   return proxyUrl;
+}
+
+type ResponsiveImageType = 'poster' | 'backdrop';
+
+const RESPONSIVE_WIDTHS: Record<ResponsiveImageType, number[]> = {
+  // Posters: 185/342 cobrem cards na TV sem baixar w500 desnecessário.
+  poster: [185, 342],
+  backdrop: [780, 1280],
+};
+
+/** Reescreve TMDB para o tamanho alvo e serve WebP via wsrv (mesma origem do src). */
+function resizeTmdbImageUrl(url: string, width: number): string | null {
+  const original = extractOriginalUrl(url);
+  if (!original || !original.includes('image.tmdb.org/t/p/')) return null;
+  const sized = original.replace(/\/t\/p\/(?:original|w\d+|h\d+)\//i, `/t/p/w${width}/`);
+  return tmdbToWebp(sized, width);
+}
+
+/**
+ * Gera srcset responsivo (WebP) apenas para imagens TMDB. URLs de proxy/local ficam no src normal.
+ */
+export function getResponsiveImageSrcSet(
+  url: string | null | undefined,
+  imageType: ResponsiveImageType
+): string | undefined {
+  if (!url) return undefined;
+  const entries = RESPONSIVE_WIDTHS[imageType]
+    .map((width) => {
+      const resized = resizeTmdbImageUrl(url, width);
+      return resized ? `${resized} ${width}w` : null;
+    })
+    .filter(Boolean);
+  return entries.length > 1 ? entries.join(', ') : undefined;
 }
 
 /**

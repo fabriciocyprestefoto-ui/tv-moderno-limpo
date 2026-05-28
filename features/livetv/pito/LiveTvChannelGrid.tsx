@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
+import { handleChannelLogoError } from '@/utils/channelLogo';
 import type { PitoChannel } from './types';
 
 interface LiveTvChannelGridProps {
@@ -69,7 +70,7 @@ export function LiveTvChannelGrid({
 
   return (
     <div
-      className="relative z-20 flex w-[230px] shrink-0 flex-col overflow-hidden border-r border-white/10 bg-gradient-to-b from-stream-sidebar/95 to-black/85 py-[clamp(8px,2vh,20px)] pl-2 pr-3"
+      className="livetv-channel-menu relative z-20 flex w-[230px] shrink-0 flex-col overflow-hidden border-r border-white/10 bg-gradient-to-b from-stream-sidebar/95 to-black/85 py-[clamp(8px,2vh,20px)] pl-2 pr-3"
       aria-label={activeCategoryName}
     >
       <div
@@ -106,17 +107,20 @@ export function LiveTvChannelGrid({
                       >
                         {channel.number}
                       </span>
-                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white p-1">
-                        <img
-                          src={channel.logo}
-                          alt=""
-                          loading="lazy"
-                          className="h-full w-full object-contain"
-                          referrerPolicy="no-referrer"
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
+                      <div className="relative flex h-7 w-7 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-black/25 border border-white/10 p-1">
+                        <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-white/55">
+                          {channel.name.slice(0, 2).toUpperCase()}
+                        </span>
+                        {channel.logo ? (
+                          <img
+                            src={channel.logo}
+                            alt=""
+                            loading="lazy"
+                            className="relative z-[1] block h-full w-full object-contain opacity-100"
+                            referrerPolicy="no-referrer"
+                            onError={(e) => handleChannelLogoError(channel.name, e.currentTarget)}
+                          />
+                        ) : null}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div

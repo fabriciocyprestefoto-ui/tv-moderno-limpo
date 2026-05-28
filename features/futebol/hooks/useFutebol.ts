@@ -2,65 +2,22 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FutebolEvento,
   JogadorTime,
-  TimeSerieA,
   TabelaBrasileiraoRow,
   TimeDetalhes,
-  buildTeamIdMapFromEventos,
-  getArtilheiroDoTime,
-  getClassificacaoDoTime,
-  getDetalhesTime,
-  getElencoTime,
-  getEventos2026,
-  getProximosJogosFromEventos,
-  getProximosJogosTime,
-  getResultadosRecentesFromEventos,
-  getResultadosTime,
-  getTabelaBrasileirao,
-  getTimesSerieA2026,
+  TimeSerieA,
   normalizeTeamName,
 } from '../services/futebolService';
-import { getTeamDetails, FootballTeam } from '@/services/sportsApi';
-
-/** Converte nome do time (TheSportsDB) em slug da API local */
-function teamNameToApiSlug(name: string | null | undefined): string | null {
-  if (!name) return null;
-  return name
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '') // remove acentos
-    .replace(/\s+/g, '') // remove espaços
-    .replace(/[^a-z0-9]/g, '') // só alfanumérico
-    .replace(/\bfc$/g, '')
-    .replace(/\bec$/g, '')
-    .replace(/\bfr$/g, '')
-    .trim() || null;
-}
-import { getJogosTransmissoes } from '../services/jogosTransmissoesService';
+import {
+  FootballMatch,
+  FootballPlayer,
+  FootballTeam,
+  Competition,
+  getCompetitionStandings,
+  getCompetitions,
+  getRedxFootballFull,
+  getTeamDetails,
+} from '@/services/sportsApi';
 import { dedupeFutebolEventos } from '../utils/dedupeJogos';
-import { initEPG, getJogosFromEPG, EPGJogoFutebol } from '@/services/epgService';
-import { getBrazilTvScheduleToday } from '@/services/theSportsDbApi';
-
-/** Converte EPGJogoFutebol para FutebolEvento para reaproveitamento dos componentes existentes */
-function epgJogoToEvento(j: EPGJogoFutebol): FutebolEvento {
-  return {
-    idEvent: j.idEvent,
-    idHomeTeam: j.idHomeTeam ?? null,
-    idAwayTeam: j.idAwayTeam ?? null,
-    strEvent: j.strEvent,
-    strHomeTeam: j.strHomeTeam,
-    strAwayTeam: j.strAwayTeam,
-    strLeague: j.strLeague,
-    dateEvent: j.dateEvent,
-    strTime: j.strTime,
-    intHomeScore: j.intHomeScore,
-    intAwayScore: j.intAwayScore,
-    strStatus: j.strStatus,
-    strVenue: j.strVenue,
-    strHomeTeamBadge: j.strHomeTeamBadge ?? null,
-    strAwayTeamBadge: j.strAwayTeamBadge ?? null,
-    strTVStation: j.strTVStation,
-  };
-}
 
 interface TeamIdLookup {
   [normalizedTeamName: string]: string;
@@ -73,26 +30,135 @@ interface ElencoPorPosicao {
   atacantes: JogadorTime[];
 }
 
+function scoreToString(value: number | null | undefined): string | null {
+  return value === null || value === undefined ? null : String(value);
+}
+
+function mapStatus(status: string | null | undefined): string | null {
+  const value = String(status || '').toLowerCase();
+  if (value === 'finished') return 'Match Finished';
+  if (value === 'live') return 'Live';
+  if (value === 'postponed') return 'Postponed';
+  if (value === 'cancelled') return 'Cancelled';
+  return 'Scheduled';
+}
+
+function firstBroadcast(match: FootballMatch): { name: string | null; logo: string | null } {
+  const full = match.transmissoes || match.broadcasts || [];
+  const item = full.find((broadcast) => Boolean(broadcast?.canal)) || null;
+  return {
+    name: item?.canal || match.broadcast?.[0] || null,
+    logo: item?.logo || null,
+  };
+}
+
+function matchToEvento(match: FootballMatch): FutebolEvento & { strChannelLogo?: string | null } {
+  const broadcast = firstBroadcast(match);
+  return {
+    idEvent: match.id,
+    idHomeTeam: match.homeTeam?.id || null,
+    idAwayTeam: match.awayTeam?.id || null,
+    strEvent: `${match.homeTeam?.name || 'Mandante'} x ${match.awayTeam?.name || 'Visitante'}`,
+    strHomeTeam: match.homeTeam?.name || null,
+    strAwayTeam: match.awayTeam?.name || null,
+    strLeague: match.competition || null,
+    dateEvent: match.date || null,
+    strTime: match.time || null,
+    intHomeScore: scoreToString(match.score?.home),
+    intAwayScore: scoreToString(match.score?.away),
+    strStatus: mapStatus(match.status),
+    strVenue: match.venue || match.city || null,
+    strHomeTeamBadge: match.homeTeam?.logo || null,
+    strAwayTeamBadge: match.awayTeam?.logo || null,
+    strTVStation: broadcast.name,
+    strChannelLogo: broadcast.logo,
+  };
+}
+
+function standingsToTabela(row: import('@/services/sportsApi').StandingsRow): TabelaBrasileiraoRow {
+  return {
+    teamId: normalizeTeamName(row.time),
+    posicao: row.posicao ?? null,
+    nomeTime: row.time,
+    pontos: row.pontos ?? null,
+    jogos: row.jogos ?? null,
+    vitorias: row.vitorias ?? null,
+    empates: row.empates ?? null,
+    derrotas: row.derrotas ?? null,
+    saldoGols: row.saldoGols ?? null,
+    aproveitamento:
+      row.aproveitamento === null || row.aproveitamento === undefined
+        ? null
+        : `${row.aproveitamento}%`,
+  };
+}
+
+function teamToSerieA(team: { id: string; name: string; logo?: string | null }): TimeSerieA {
+  return {
+    idTeam: team.id,
+    strTeam: team.name,
+    strTeamBadge: team.logo || null,
+  };
+}
+
+function teamToDetalhes(team: FootballTeam): TimeDetalhes {
+  return {
+    idTeam: team.id,
+    strTeam: team.name,
+    strAlternate: team.apelidos?.join(', ') || null,
+    strLeague: 'Brasileirão Série A',
+    strCountry: team.country || 'Brasil',
+    strManager: team.coach || null,
+    intFormedYear: team.founded || null,
+    strStadium: team.stadium?.name || null,
+    strStadiumLocation: [team.city, team.state].filter(Boolean).join(' - ') || null,
+    intStadiumCapacity: team.stadium?.capacity ? String(team.stadium.capacity) : null,
+    strTeamBadge: team.logo || null,
+    strTeamBanner: null,
+    strTeamFanart1: null,
+    strTeamFanart2: null,
+    strTeamFanart3: null,
+    strTeamFanart4: null,
+    strTeamJersey: null,
+    strColour1: team.colors?.[0] || null,
+    strColour2: team.colors?.[1] || null,
+    strWebsite: null,
+    strFacebook: team.redesSociais?.facebook || null,
+    strTwitter: team.redesSociais?.twitter || null,
+    strInstagram: team.redesSociais?.instagram || null,
+    strDescriptionPT: team.historiaCompleta || team.history || null,
+    strDescriptionEN: team.history || null,
+  };
+}
+
+function playerToJogador(player: FootballPlayer, teamId: string, index: number): JogadorTime {
+  return {
+    idPlayer: player.id || `${teamId}-${index + 1}`,
+    strPlayer: player.nome || null,
+    strPosition: player.posicao || null,
+    strCutout: player.foto || null,
+    strThumb: player.foto || null,
+    strNumber: player.numero ? String(player.numero) : null,
+    strNationality: player.nacionalidade || null,
+    intGoals: null,
+  };
+}
+
+function getArtilheiroFromElenco(elenco: JogadorTime[]): JogadorTime | null {
+  return (
+    elenco
+      .map((player) => ({ player, goals: Number(player.intGoals) }))
+      .filter((entry) => Number.isFinite(entry.goals))
+      .sort((a, b) => b.goals - a.goals)[0]?.player || null
+  );
+}
+
 function normalizeLookupKey(value: string | null | undefined): string {
   return normalizeTeamName(value)
     .replace(/saf$/g, '')
     .replace(/fc$/g, '')
     .replace(/futebolclube$/g, '')
     .trim();
-}
-
-function mergeTeamIdsIntoTabela(
-  tabela: TabelaBrasileiraoRow[],
-  teamIdLookup: TeamIdLookup
-): TabelaBrasileiraoRow[] {
-  return tabela.map((row) => ({
-    ...row,
-    teamId:
-      teamIdLookup[normalizeTeamName(row.nomeTime)] ||
-      teamIdLookup[normalizeLookupKey(row.nomeTime)] ||
-      row.teamId ||
-      null,
-  }));
 }
 
 function buildTeamMapFromTimes(times: TimeSerieA[]): TeamIdLookup {
@@ -104,30 +170,6 @@ function buildTeamMapFromTimes(times: TimeSerieA[]): TeamIdLookup {
       map[normalizeLookupKey(team.strTeam)] = team.idTeam;
     });
   return map;
-}
-
-function buildTimesFromEventos(eventos: FutebolEvento[]): TimeSerieA[] {
-  const map = new Map<string, TimeSerieA>();
-
-  eventos.forEach((evento) => {
-    if (evento.idHomeTeam && evento.strHomeTeam) {
-      map.set(evento.idHomeTeam, {
-        idTeam: evento.idHomeTeam,
-        strTeam: evento.strHomeTeam,
-        strTeamBadge: evento.strHomeTeamBadge || null,
-      });
-    }
-
-    if (evento.idAwayTeam && evento.strAwayTeam) {
-      map.set(evento.idAwayTeam, {
-        idTeam: evento.idAwayTeam,
-        strTeam: evento.strAwayTeam,
-        strTeamBadge: evento.strAwayTeamBadge || null,
-      });
-    }
-  });
-
-  return Array.from(map.values()).sort((a, b) => a.strTeam.localeCompare(b.strTeam, 'pt-BR'));
 }
 
 function getBucketFromPosition(position: string | null): keyof ElencoPorPosicao {
@@ -196,6 +238,7 @@ export function useFutebol() {
   const [resultadosRecentes, setResultadosRecentes] = useState<FutebolEvento[]>([]);
   const [tabela, setTabela] = useState<TabelaBrasileiraoRow[]>([]);
   const [timesSerieA, setTimesSerieA] = useState<TimeSerieA[]>([]);
+  const [competitions, setCompetitions] = useState<Competition[]>([]);
   const [teamIdLookup, setTeamIdLookup] = useState<TeamIdLookup>({});
   const [loading, setLoading] = useState(true);
   const [loadingJogos, setLoadingJogos] = useState(true);
@@ -210,78 +253,40 @@ export function useFutebol() {
     setError(null);
     setClassificacaoIndisponivel(false);
 
-    const tabelaPromise = getTabelaBrasileirao();
-    const timesPromise = getTimesSerieA2026();
-
-    let teamMapFromEventos: TeamIdLookup = {};
-    let teamMapFromTimes: TeamIdLookup = {};
-
     try {
-      // 1. Inicializar EPG (mesma fonte da página de canais)
-      await initEPG();
-      const epgJogos = getJogosFromEPG();
-
-      const [supabaseJogos, eventos, tvJogos] = await Promise.all([
-        getJogosTransmissoes(),
-        getEventos2026(),
-        getBrazilTvScheduleToday().catch(() => []),
+      const [full, competitionsData] = await Promise.all([
+        getRedxFootballFull(14),
+        getCompetitions(),
       ]);
-      const teamMap = buildTeamIdMapFromEventos(eventos);
-      teamMapFromEventos = Object.fromEntries(teamMap.entries());
+      if (!full) throw new Error('REDX API indisponivel');
 
-      setTeamIdLookup(teamMapFromEventos);
-      setResultadosRecentes(dedupeFutebolEventos(getResultadosRecentesFromEventos(eventos)));
-      setTimesSerieA(buildTimesFromEventos(eventos));
-
-      const proximosPriorizados = dedupeFutebolEventos([
-        ...epgJogos.map(epgJogoToEvento),
-        ...(supabaseJogos as unknown as FutebolEvento[]),
-        ...(tvJogos as unknown as FutebolEvento[]),
-        ...getProximosJogosFromEventos(eventos),
+      const times = full.times.map((time) =>
+        teamToSerieA({ id: time.id, name: time.name, logo: time.logo || time.escudo || null })
+      );
+      const lookup = buildTeamMapFromTimes(times);
+      const jogos = dedupeFutebolEventos([
+        ...full.jogosDoDia.map(matchToEvento),
+        ...full.proximosJogos.map(matchToEvento),
       ]);
-      setProximosJogos(sortUpcomingFutebolEventos(proximosPriorizados));
+
+      setTeamIdLookup(lookup);
+      setTimesSerieA(times);
+      setCompetitions(competitionsData);
+      setProximosJogos(sortUpcomingFutebolEventos(jogos));
+      setResultadosRecentes(dedupeFutebolEventos((full.ultimosResultados || []).map(matchToEvento)));
+      setTabela(full.tabela.map(standingsToTabela));
     } catch {
       setProximosJogos([]);
       setResultadosRecentes([]);
       setTimesSerieA([]);
+      setCompetitions([]);
       setTeamIdLookup({});
+      setTabela([]);
       setError('Nao foi possivel carregar os jogos do Brasileirao 2026.');
     } finally {
       setLoadingJogos(false);
-      setLoading(false);
-    }
-
-    try {
-      const times = await timesPromise;
-      teamMapFromTimes = buildTeamMapFromTimes(times);
-      if (times.length > 0) {
-        setTimesSerieA(times);
-      }
-      if (Object.keys(teamMapFromTimes).length > 0) {
-        setTeamIdLookup((prev) => ({
-          ...teamMapFromTimes,
-          ...prev,
-        }));
-      }
-    } catch {
-      // best effort: os jogos já renderizam sem bloquear
-    }
-
-    try {
-      const tabelaData = await tabelaPromise;
-      const mergedMap = {
-        ...teamMapFromTimes,
-        ...teamMapFromEventos,
-      };
-
-      window.setTimeout(() => {
-        setTabela(mergeTeamIdsIntoTabela(tabelaData, mergedMap));
-      }, 140);
-    } catch {
-      setTabela([]);
-      setClassificacaoIndisponivel(true);
-    } finally {
       setLoadingTabela(false);
+      setLoading(false);
     }
   }, []);
 
@@ -307,6 +312,7 @@ export function useFutebol() {
     proximosJogos,
     resultadosRecentes,
     timesSerieA,
+    competitions,
     tabela,
     loading,
     loadingJogos,
@@ -345,33 +351,29 @@ export function useFutebolTime(teamId: string | undefined) {
     setClassificacaoIndisponivel(false);
 
     try {
-      const [detalhes, proximos, resultados] = await Promise.all([
-        getDetalhesTime(teamId),
-        getProximosJogosTime(teamId),
-        getResultadosTime(teamId),
+      const [time, tabelaRows] = await Promise.all([
+        getTeamDetails(teamId),
+        getCompetitionStandings('brasileirao-serie-a'),
       ]);
+      if (!time) throw new Error('Time nao encontrado na REDX API');
 
+      const detalhes = teamToDetalhes(time);
       setDetalhesTime(detalhes);
-      setProximosJogos(proximos);
-      setResultadosRecentes(resultados);
+      setDadosLocais(time);
+      setProximosJogos((time.proximosJogos || []).map(matchToEvento));
+      setResultadosRecentes((time.ultimosResultados || []).map(matchToEvento));
 
-      // Busca dados enriquecidos da API local (não bloqueia o restante)
-      const slug = teamNameToApiSlug(detalhes?.strTeam);
-      if (slug) {
-        getTeamDetails(slug)
-          .then(setDadosLocais)
-          .catch(() => setDadosLocais(null));
-      }
-
-      try {
-        const classificacao = await getClassificacaoDoTime(detalhes?.strTeam || null, teamId);
-        setClassificacaoAtual(classificacao);
-      } catch {
-        setClassificacaoAtual(null);
-        setClassificacaoIndisponivel(true);
-      }
+      const tabela = tabelaRows.map(standingsToTabela);
+      const normalized = normalizeTeamName(time.name);
+      const classificacao =
+        tabela.find((row) => normalizeTeamName(row.nomeTime) === normalized) ||
+        tabela.find((row) => normalizeTeamName(row.nomeTime).includes(normalized)) ||
+        null;
+      setClassificacaoAtual(classificacao ?? null);
+      setClassificacaoIndisponivel(!classificacao);
     } catch {
       setDetalhesTime(null);
+      setDadosLocais(null);
       setProximosJogos([]);
       setResultadosRecentes([]);
       setErroResumo('Nao foi possivel carregar os dados principais do time.');
@@ -391,15 +393,14 @@ export function useFutebolTime(teamId: string | undefined) {
     setErroElenco(null);
 
     try {
-      const players = await getElencoTime(teamId);
+      const time = await getTeamDetails(teamId);
+      const players = (time?.elenco || time?.squad || []).map((player, index) =>
+        playerToJogador(player, teamId, index)
+      );
       if (players.length > 0) {
         setElenco(players);
       } else {
-        // Fallback: usar elenco ESPN da API local se TheSportsDB não retornou jogadores
-        setElenco((prev) => {
-          if (prev.length > 0) return prev; // já tem dados de outra fonte
-          return [];
-        });
+        setElenco([]);
       }
     } catch {
       setElenco([]);
@@ -422,7 +423,7 @@ export function useFutebolTime(teamId: string | undefined) {
   }, [teamId, loadElenco]);
 
   const elencoPorPosicao = useMemo(() => groupElencoByPosition(elenco), [elenco]);
-  const artilheiro = useMemo(() => getArtilheiroDoTime(elenco), [elenco]);
+  const artilheiro = useMemo(() => getArtilheiroFromElenco(elenco), [elenco]);
 
   return {
     detalhesTime,

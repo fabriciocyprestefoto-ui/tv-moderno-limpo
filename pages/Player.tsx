@@ -86,7 +86,7 @@ const formatTime = (seconds: number) => {
  * NativeVodPlayer — pipeline oficial de VOD no app Android TV moderno.
  * Não monta <video>, não usa HLS.js e não chama window.Android.openPlayer.
  */
-const NativeVodPlayer: React.FC<PlayerProps> = ({ media, onClose }) => {
+const NativeVodPlayer: React.FC<PlayerProps> = ({ media, onClose, onSelectEpisode }) => {
   const tmdbId =
     typeof (media as { tmdb_id?: number | string }).tmdb_id !== 'undefined'
       ? Number((media as { tmdb_id?: number | string }).tmdb_id)
@@ -97,6 +97,20 @@ const NativeVodPlayer: React.FC<PlayerProps> = ({ media, onClose }) => {
   const sourceUrl = getVodSourceUrl(media);
   const playerType = getVodPlayerType(media);
   const introUrl = toNativeIntroUrl(media.introVideoUrl);
+  const tmdbNumericId = Number(tmdbId || 0);
+  const hasTmdbContext = Number.isFinite(tmdbNumericId) && tmdbNumericId > 0;
+  const canBrowseEpisodes = playerType === 'series' && hasTmdbContext;
+
+  const nativePanelVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [nativePanel, setNativePanel] = useState<'cast' | 'episodes' | null>(null);
+  const [cast, setCast] = useState<CastMember[]>([]);
+  const [seasons, setSeasons] = useState<Season[]>([]);
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [selectedSeasonNum, setSelectedSeasonNum] = useState<number>(
+    Number(seasonNum || 1)
+  );
+  const [focusedSeasonIdx, setFocusedSeasonIdx] = useState(0);
+  const [focusedEpisodeIdx, setFocusedEpisodeIdx] = useState(0);
 
   // Resume: carrega posição salva antes de lançar Activity.
   // null = ainda carregando (gate aguarda); number = pronto para lançar.
@@ -115,6 +129,65 @@ const NativeVodPlayer: React.FC<PlayerProps> = ({ media, onClose }) => {
     return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tmdbId, seasonNum, episodeNum]);
+
+  useEffect(() => {
+    if (nativePanel !== 'cast' || cast.length !== 0 || !hasTmdbContext) return undefined;
+    let mounted = true;
+    const type = playerType === 'series' ? 'series' : 'movie';
+    import('../services/tmdb').then(({ fetchSeriesCredits }) => {
+      fetchSeriesCredits(tmdbNumericId, type).then((data: { cast: CastMember[] }) => {
+        if (mounted) setCast(data?.cast?.slice(0, 40) || []);
+      }).catch((err) => logger.warn('[NativeVodPlayer] Cast fetch failed:', err));
+    }).catch((err) => logger.warn('[NativeVodPlayer] tmdb import failed:', err));
+    return () => { mounted = false; };
+  }, [nativePanel, cast.length, hasTmdbContext, playerType, tmdbNumericId]);
+
+  useEffect(() => {
+    if (nativePanel !== 'episodes' || !canBrowseEpisodes) return undefined;
+    let mounted = true;
+    import('../services/tmdb').then(({ fetchSeriesDetail }) => {
+      fetchSeriesDetail(tmdbNumericId).then(data => {
+        if (!mounted) return;
+        if (data?.seasons) {
+          setSeasons(
+            (data.seasons as unknown as TmdbSeason[])
+              .filter((s) => s.season_number > 0)
+              .map((s) => ({
+                id: Number.isFinite(Number(s?.id)) ? Number(s.id) : s.season_number,
+                season_number: Number(s.season_number || 0),
+                name: s.name || `Temporada ${s.season_number}`,
+                episode_count: Number(s.episode_count || 0),
+                air_date: s.air_date || null,
+                poster_path: s.poster_path || null,
+              }))
+          );
+        }
+      }).catch((err) => logger.warn('[NativeVodPlayer] Season fetch failed:', err));
+    }).catch((err) => logger.warn('[NativeVodPlayer] tmdb import failed:', err));
+    return () => { mounted = false; };
+  }, [nativePanel, canBrowseEpisodes, tmdbNumericId]);
+
+  useEffect(() => {
+    if (!seasons.length) return;
+    const hasSelectedSeason = seasons.some((season) => season.season_number === selectedSeasonNum);
+    if (!hasSelectedSeason) {
+      setSelectedSeasonNum(seasons[0].season_number);
+      setFocusedSeasonIdx(0);
+    }
+  }, [seasons, selectedSeasonNum]);
+
+  useEffect(() => {
+    if (nativePanel !== 'episodes' || !canBrowseEpisodes) return undefined;
+    let mounted = true;
+    import('../services/tmdb').then(({ fetchSeasonEpisodes }) => {
+      fetchSeasonEpisodes(tmdbNumericId, selectedSeasonNum).then(data => {
+        if (!mounted) return;
+        setEpisodes(data || []);
+        setFocusedEpisodeIdx(0);
+      }).catch((err) => logger.warn('[NativeVodPlayer] Episodes fetch failed:', err));
+    }).catch((err) => logger.warn('[NativeVodPlayer] tmdb import failed:', err));
+    return () => { mounted = false; };
+  }, [nativePanel, canBrowseEpisodes, selectedSeasonNum, tmdbNumericId]);
 
   // REGRA DE HOOKS: useNativePlayerGate DEVE ser chamado antes de qualquer return condicional.
   // url=null enquanto startPosition não carregou — Activity não lança antes do resume.
@@ -143,14 +216,13 @@ const NativeVodPlayer: React.FC<PlayerProps> = ({ media, onClose }) => {
       } catch {
         /* noop */
       }
-      // Acoes do HUD nativo (CAST/EPISODES): dispatcha evento para a rota Watch/Details
-      // decidir UX (abrir painel React, navegar para detalhes, etc.).
-      if (action === 'openCast' || action === 'openEpisodes') {
-        try {
-          window.dispatchEvent(new CustomEvent('redx-native-player-action', {
-            detail: { action, position, tmdbId, type: mediaTypeStr, season: seasonNum, episode: episodeNum },
-          }));
-        } catch { /* noop */ }
+      if (action === 'openCast') {
+        setNativePanel('cast');
+        return;
+      }
+      if (action === 'openEpisodes') {
+        setNativePanel('episodes');
+        return;
       }
       onClose();
     },
@@ -273,6 +345,50 @@ const NativeVodPlayer: React.FC<PlayerProps> = ({ media, onClose }) => {
       </div>
     );
   }
+
+  if (nativePanel) {
+    return (
+      <div
+        className="redx-player-viewport fixed inset-0 z-[10000] overflow-hidden bg-black text-white font-sans"
+        style={{
+          background:
+            'radial-gradient(circle at 18% 16%, rgba(126,58,242,0.28), transparent 34%), rgba(0,0,0,0.86)',
+        }}
+      >
+        <style>{PLAYER_CSS}</style>
+        <PlayerCastPanel
+          visible={nativePanel === 'cast'}
+          cast={cast}
+          focusArea={nativePanel === 'cast' ? 'cast' : 'controls'}
+          focusedCastIdx={0}
+          onClose={() => onClose()}
+        />
+        <PlayerEpisodesPanel
+          visible={nativePanel === 'episodes'}
+          seasons={seasons}
+          episodes={episodes}
+          selectedSeasonNum={selectedSeasonNum}
+          focusArea={nativePanel === 'episodes' ? 'episodes-list' : 'controls'}
+          focusedSeasonIdx={focusedSeasonIdx}
+          focusedEpisodeIdx={focusedEpisodeIdx}
+          media={media}
+          videoRef={nativePanelVideoRef}
+          onClose={() => onClose()}
+          onSelectEpisode={onSelectEpisode}
+          onSeasonFocus={(idx, seasonNumber) => {
+            setFocusedSeasonIdx(idx);
+            setSelectedSeasonNum(seasonNumber);
+          }}
+          onSeasonClick={(idx, seasonNumber) => {
+            setFocusedSeasonIdx(idx);
+            setSelectedSeasonNum(seasonNumber);
+            setFocusedEpisodeIdx(0);
+          }}
+        />
+      </div>
+    );
+  }
+
   // Player fechou — render fallback "Voltando" pra evitar tela preta caso o pai
   // demore a desmontar Player ou navegar fora da rota /watch/*.
   if (closed) {

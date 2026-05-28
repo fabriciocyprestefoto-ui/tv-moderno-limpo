@@ -3,6 +3,7 @@ import { getAllChannels, getChannelsPage } from './supabaseService';
 import { logger } from '../utils/logger';
 import { pickFirstRealStreamUrlFromRow } from '../utils/streamUrlGuards';
 import { removeOldDeadSources, sanitizeFontezChannels } from '../utils/sourceSanitizer';
+import { resolveChannelLogo } from '../utils/channelLogo';
 
 const STORAGE_KEY = 'redx-channels-cache-v9';
 const IDB_NAME = 'redx-channels-db-v5';
@@ -19,7 +20,7 @@ let lastBackgroundRefreshAt = 0;
 
 function normalizeChannel(c: any): Channel | null {
   const name = c.name || c.nome || '';
-  const logo = c.logo || c.logo_url || c.thumbnail || '';
+  const { logo } = resolveChannelLogo(c as Record<string, unknown>);
   const category = c.category || c.genero || c.grupo || 'Geral';
   const streamUrl = pickFirstRealStreamUrlFromRow(c as Record<string, unknown>);
 

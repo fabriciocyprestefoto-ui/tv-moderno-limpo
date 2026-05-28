@@ -2,7 +2,8 @@ import { Media } from '../types';
 import { getLogo } from './tmdb';
 import { getMediaLogo } from '../utils/mediaUtils';
 
-const STORAGE_KEY = 'redx-logo-cache-v2';
+// v3: invalida caches v2 que podiam guardar logo armazenada estrangeira (ja).
+const STORAGE_KEY = 'redx-logo-cache-v3';
 const MAX_CONCURRENT = 3;
 const BATCH_DELAY_MS = 150;
 
@@ -92,21 +93,36 @@ function _scheduleDrain() {
   }, BATCH_DELAY_MS);
 }
 
+/**
+ * Logo localizada (síncrona) já conhecida para o item.
+ * - Item COM tmdb_id: retorna a logo localizada já buscada/cacheada, ou null
+ *   (skeleton). NUNCA retorna a logo_url armazenada — ela pode estar em idioma
+ *   errado (ex: ja) e causaria o flash japonês→inglês→português.
+ * - Item SEM tmdb_id: usa a logo_url armazenada (única fonte possível).
+ */
 export function getLogoFromCache(media: Media): string | null {
   _loadFromStorage();
-  const fallback = getMediaLogo(media) || null;
-  if (!media.tmdb_id || media.tmdb_id <= 0) return fallback;
+  if (!media.tmdb_id || media.tmdb_id <= 0) return getMediaLogo(media) || null;
   const key = _makeKey(media);
   const cached = _cache.get(key);
-  if (cached !== undefined) {
-    const sanitizedCached = cached ? getMediaLogo({ ...media, logo_url: cached }) || null : null;
-    if (cached && !sanitizedCached) {
-      _cache.delete(key);
-      _debouncedSave();
-    }
-    return sanitizedCached || fallback;
+  if (cached) {
+    const sanitized = getMediaLogo({ ...media, logo_url: cached }) || null;
+    if (!sanitized) { _cache.delete(key); _debouncedSave(); return null; }
+    return sanitized;
   }
-  return fallback;
+  return null; // sem localizada conhecida → skeleton, não logo estrangeira
+}
+
+/** Alias semântico para uso nos componentes (seed inicial sem flicker). */
+export const getLocalizedLogoSync = getLogoFromCache;
+
+/** Persiste a logo localizada já escolhida por um componente (via getLogo). */
+export function rememberLocalizedLogo(media: Media, url: string | null): void {
+  if (!media.tmdb_id || media.tmdb_id <= 0) return;
+  const key = _makeKey(media);
+  _cache.set(key, url || null);
+  if (url) _debouncedSave();
+  _notify();
 }
 
 export function requestLogo(media: Media): void {
@@ -116,12 +132,8 @@ export function requestLogo(media: Media): void {
 
   if (_cache.has(key)) return;
 
-  const existing = getMediaLogo(media) || null;
-  if (existing) {
-    _cache.set(key, existing);
-    return;
-  }
-
+  // Sempre busca a logo localizada (pt→en→null→ja). Não confia na logo_url
+  // armazenada, que pode estar em idioma errado.
   _cache.set(key, undefined as any);
   const type = media.type === 'series' ? 'series' : 'movie';
   _queue.push({ key, tmdbId: media.tmdb_id, type });

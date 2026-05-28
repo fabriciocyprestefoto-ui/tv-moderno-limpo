@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -555,22 +557,19 @@ public class ExoPlayerActivity extends Activity {
         errorOverlay = new LinearLayout(this);
         errorOverlay.setOrientation(LinearLayout.VERTICAL);
         errorOverlay.setGravity(android.view.Gravity.CENTER);
-        errorOverlay.setBackgroundColor(0x8C000000);
+        errorOverlay.setBackgroundColor(0x12000000);
         errorOverlay.setLayoutParams(new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
         ));
         errorOverlay.setVisibility(View.GONE);
 
-        // Card vision-boot (variante .tv-box: sólido escuro com borda branca sutil)
+        // Card glass igual ao desktop/html: translúcido para manter o vídeo visível atrás.
         LinearLayout errorCard = new LinearLayout(this);
         errorCard.setOrientation(LinearLayout.VERTICAL);
         errorCard.setGravity(android.view.Gravity.CENTER);
-        GradientDrawable errorCardBg = new GradientDrawable();
-        errorCardBg.setColor(0xF4161618);
-        errorCardBg.setCornerRadius(dp(32));
-        errorCardBg.setStroke(dp(1), 0x2EFFFFFF);
-        errorCard.setBackground(errorCardBg);
+        errorCard.setBackground(makeGlassPanelBackground(dp(34), 0x72180A2D));
+        errorCard.setElevation(dp(18));
         errorCard.setPadding(dp(40), dp(28), dp(40), dp(28));
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 dp(440), LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -610,19 +609,20 @@ public class ExoPlayerActivity extends Activity {
         retryButton.setTypeface(Typeface.DEFAULT_BOLD);
         retryButton.setAllCaps(true);
         retryButton.setLetterSpacing(0.18f);
-        GradientDrawable retryBg = new GradientDrawable();
-        retryBg.setColor(0xFFDC2626);
-        retryBg.setCornerRadius(dp(12));
-        retryButton.setBackground(retryBg);
+        retryButton.setBackground(makeGlassActionBackground(false));
         retryButton.setPadding(dp(24), dp(12), dp(24), dp(12));
         retryButton.setFocusable(true);
         retryButton.setFocusableInTouchMode(true);
+        retryButton.setStateListAnimator(null);
+        retryButton.setElevation(0f);
         LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         retryButton.setLayoutParams(btnParams);
         retryButton.setOnClickListener(v -> retryPlayback());
+        retryButton.setOnFocusChangeListener((v, hasFocus) ->
+                retryButton.setBackground(makeGlassActionBackground(hasFocus)));
         errorCard.addView(retryButton);
 
         TextView hint = new TextView(this);
@@ -688,10 +688,22 @@ public class ExoPlayerActivity extends Activity {
         hudLogo.setScaleType(ImageView.ScaleType.FIT_CENTER);
         hudLogo.setMaxWidth(dp(280));
         hudLogo.setVisibility(View.GONE);
-        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                dp(isLive ? 42 : 56)
-        );
+        LinearLayout.LayoutParams logoParams;
+        if (isLive) {
+            // Chip-logo glass ESCURO igual ao PitoChannelInfoOverlay desktop:
+            // rgba(12,6,24,0.46) = 0x750C0618, borda branca rgba(255,255,255,0.18) = 0x2EFFFFFF.
+            GradientDrawable logoChip = new GradientDrawable();
+            logoChip.setColor(0x750C0618);
+            logoChip.setCornerRadius(dp(22));
+            logoChip.setStroke(dp(1), 0x2EFFFFFF);
+            hudLogo.setBackground(logoChip);
+            hudLogo.setPadding(dp(6), dp(6), dp(6), dp(6));
+            logoParams = new LinearLayout.LayoutParams(dp(44), dp(44));
+        } else {
+            logoParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    dp(56));
+        }
         logoParams.rightMargin = dp(14);
         titleWrap.addView(hudLogo, logoParams);
         if (logoUrl != null && !logoUrl.isEmpty()) {
@@ -716,7 +728,7 @@ public class ExoPlayerActivity extends Activity {
             hudYear.setTextSize(10);
             hudYear.setLetterSpacing(0.18f);
             GradientDrawable liveChip = new GradientDrawable();
-            liveChip.setColor(0xCC06B6D4);
+            liveChip.setColor(0xB806B6D4); // desktop LIVE badge = rgba(6,182,212,0.72)
             liveChip.setCornerRadius(dp(10));
             hudYear.setBackground(liveChip);
             hudYear.setPadding(dp(10), dp(4), dp(10), dp(4));
@@ -772,6 +784,7 @@ public class ExoPlayerActivity extends Activity {
             hudSeekBar.setEnabled(false);
             hudSeekBar.setFocusable(false);
             hudSeekBar.setPadding(0, 0, 0, 0);
+            styleHudSeekBar(hudSeekBar);
             LinearLayout.LayoutParams seekParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dp(24)
@@ -797,7 +810,7 @@ public class ExoPlayerActivity extends Activity {
             // coloridos. Replica controles do sitepronto-novo (Player.tsx Row 3).
             leftControls.addView(makeHudButton("◀", false, v -> returnResultAndFinish())); // Back
             leftControls.addView(makeHudButton("⏮", false, v -> seekBy(-30_000L)));        // Rewind 30s
-            hudPlayButton = makeHudButton("❚❚", true, v -> togglePlayPause());            // Play/Pause (large)
+            hudPlayButton = makeHudButton("II", true, v -> togglePlayPause());            // Play/Pause (large)
             leftControls.addView(hudPlayButton);
             leftControls.addView(makeHudButton("⏭", false, v -> seekBy(30_000L)));         // Forward 30s
 
@@ -807,18 +820,19 @@ public class ExoPlayerActivity extends Activity {
             controlsRow.addView(rightControls, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
             // Cast/Elenco (mono icon: triangulo + cabeça simples). Sempre presente em VOD.
-            rightControls.addView(makeHudButton("☆", false, v -> returnLiveActionAndFinish("openCast")));
+            rightControls.addView(makeHudButton("EL", false, v -> returnLiveActionAndFinish("openCast")));
             // Episodios/Temporadas: so para series.
             if ("series".equalsIgnoreCase(typeStr)) {
-                rightControls.addView(makeHudButton("☰", false, v -> returnLiveActionAndFinish("openEpisodes")));
+                rightControls.addView(makeHudButton("TMP", false, v -> returnLiveActionAndFinish("openEpisodes")));
             }
             hudSpeedButton = makeHudButton("1×", false, v -> cycleSpeed());                // Speed
             rightControls.addView(hudSpeedButton);
-            hudVolumeButton = makeHudButton("◉", false, v -> toggleMute());                // Volume
+            hudVolumeButton = makeHudButton("VOL", false, v -> toggleMute());              // Volume
             rightControls.addView(hudVolumeButton);
         }
 
         root.addView(playerHud);
+        playerHud.setElevation(dp(18));
         focusHudButton(focusedHudButtonIndex);
         // scheduleHudHide() removido: HUD inicia GONE e so e revelado por onIsPlayingChanged/onMediaItemTransition.
     }
@@ -837,7 +851,7 @@ public class ExoPlayerActivity extends Activity {
         TextView button = new TextView(this);
         button.setText(label);
         button.setTextColor(0xFFFFFFFF);
-        button.setTextSize(large ? 24 : 15);
+        button.setTextSize(large ? 24 : (label.length() > 2 ? 11 : 15));
         button.setTypeface(Typeface.DEFAULT_BOLD);
         button.setGravity(android.view.Gravity.CENTER);
         button.setFocusable(true);
@@ -863,37 +877,91 @@ public class ExoPlayerActivity extends Activity {
     }
 
     private GradientDrawable makeHudBackground() {
-        // Vision-glass igual ao desktop livetv-vision-floating-header (variante .tv-box):
-        // fundo escuro semi-opaco, borda branca sutil, cantos arredondados.
-        GradientDrawable bg = new GradientDrawable();
-        bg.setColor(0xE0141418);
-        bg.setCornerRadius(dp(24));
-        bg.setStroke(dp(1), 0x29FFFFFF);
-        return bg;
+        // Vision glass do desktop: rgba(24,10,45,0.58) = 0x94180A2D + borda translúcida.
+        return makeGlassPanelBackground(dp(38), 0x94180A2D);
     }
 
     private GradientDrawable makePillBackground() {
         GradientDrawable bg = new GradientDrawable();
-        bg.setColor(0xA4000000);
+        bg.setColor(0x24FFFFFF);
         bg.setCornerRadius(dp(18));
-        bg.setStroke(dp(1), 0x33FFFFFF);
+        bg.setStroke(dp(1), 0x3DD8B4FE);
         return bg;
     }
 
     private GradientDrawable makeRoundButtonBackground(boolean active) {
+        // Idle: branco 8% + borda 16% (desktop .vision-btn). Foco: gradient(135°, 6d28d9@.46,
+        // a855f7@.34) + ring D8B4FE@.58 (desktop .vision-btn:focus-visible). Sem 3º stop rosa.
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.OVAL);
-        bg.setColor(active ? 0x9958D4E8 : 0x30FFFFFF);
-        bg.setStroke(dp(active ? 3 : 1), active ? 0xFF67E8F9 : 0x40FFFFFF);
+        if (active) {
+            bg.setColors(new int[]{0x756D28D9, 0x57A855F7});
+            bg.setOrientation(GradientDrawable.Orientation.TL_BR);
+        } else {
+            bg.setColor(0x14FFFFFF);
+        }
+        bg.setStroke(dp(active ? 2 : 1), active ? 0x94D8B4FE : 0x29FFFFFF);
         return bg;
     }
 
     private GradientDrawable makePlayButtonBackground() {
+        // Desktop .vision-play-btn idle: gradient(135°, 6d28d9@.48, a855f7@.30, ec4899@.20),
+        // borda D8B4FE@.38. (Antes estava opaco demais ~ estado de foco.)
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.OVAL);
-        bg.setColor(0x9958D4E8);
-        bg.setStroke(dp(3), 0xCC67E8F9);
+        bg.setColors(new int[]{0x7A6D28D9, 0x4DA855F7, 0x33EC4899});
+        bg.setOrientation(GradientDrawable.Orientation.TL_BR);
+        bg.setStroke(dp(2), 0x61D8B4FE);
         return bg;
+    }
+
+    private GradientDrawable makeGlassPanelBackground(int radiusPx, int baseColor) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColors(new int[]{baseColor, 0x5C2D174E, 0x42100622});
+        bg.setOrientation(GradientDrawable.Orientation.TL_BR);
+        bg.setCornerRadius(radiusPx);
+        bg.setStroke(dp(1), 0x33D8B4FE);
+        return bg;
+    }
+
+    private GradientDrawable makeGlassActionBackground(boolean focused) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColors(focused
+                ? new int[]{0xB86D28D9, 0x9CA855F7, 0x70EC4899}
+                : new int[]{0x24FFFFFF, 0x10FFFFFF});
+        bg.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
+        bg.setCornerRadius(dp(18));
+        bg.setStroke(dp(focused ? 2 : 1), focused ? 0xCCD8B4FE : 0x3DFFFFFF);
+        return bg;
+    }
+
+    private void styleHudSeekBar(SeekBar seekBar) {
+        GradientDrawable track = new GradientDrawable();
+        track.setColor(0x2EFFFFFF); // desktop .vision-progress-bar track = rgba(255,255,255,0.18)
+        track.setCornerRadius(dp(3));
+
+        GradientDrawable progress = new GradientDrawable();
+        progress.setColors(new int[]{0xFF6D28D9, 0xFFA855F7, 0xFFEC4899});
+        progress.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
+        progress.setCornerRadius(dp(3));
+
+        ClipDrawable progressClip = new ClipDrawable(
+                progress,
+                android.view.Gravity.LEFT,
+                ClipDrawable.HORIZONTAL
+        );
+        LayerDrawable layers = new LayerDrawable(new android.graphics.drawable.Drawable[]{track, progressClip});
+        layers.setId(0, android.R.id.background);
+        layers.setId(1, android.R.id.progress);
+        seekBar.setProgressDrawable(layers);
+
+        GradientDrawable thumb = new GradientDrawable();
+        thumb.setShape(GradientDrawable.OVAL);
+        thumb.setColor(0xFFD8B4FE);
+        thumb.setStroke(dp(1), 0xCCFFFFFF);
+        thumb.setSize(dp(14), dp(14));
+        seekBar.setThumb(thumb);
+        seekBar.setThumbOffset(dp(7));
     }
 
     private void updateHudButtonFocus() {
@@ -901,7 +969,7 @@ public class ExoPlayerActivity extends Activity {
             TextView button = hudButtons.get(i);
             boolean active = i == focusedHudButtonIndex;
             boolean large = button == hudPlayButton;
-            button.setBackground(large && active ? makePlayButtonBackground() : large ? makeRoundButtonBackground(false) : makeRoundButtonBackground(active));
+            button.setBackground(large && active ? makePlayButtonBackground() : makeRoundButtonBackground(active));
         }
     }
 
@@ -979,13 +1047,13 @@ public class ExoPlayerActivity extends Activity {
             }
         }
         if (hudPlayButton != null) {
-            hudPlayButton.setText(player.isPlaying() ? "⏸" : "▶");
+            hudPlayButton.setText(player.isPlaying() ? "II" : "PLAY");
         }
         if (hudSpeedButton != null) {
             hudSpeedButton.setText(formatSpeed(player.getPlaybackParameters().speed));
         }
         if (hudVolumeButton != null) {
-            hudVolumeButton.setText(player.getVolume() <= 0.01f ? "🔇" : "🔊");
+            hudVolumeButton.setText(player.getVolume() <= 0.01f ? "MUTE" : "VOL");
         }
     }
 
@@ -1384,7 +1452,7 @@ public class ExoPlayerActivity extends Activity {
         if (player != null) {
             try { player.stop(); } catch (Exception ignored) {}
         }
-        if (playerView != null) playerView.setVisibility(View.GONE);
+        if (playerView != null) playerView.setVisibility(View.VISIBLE);
         if (errorText != null) errorText.setText(msg);
         if (errorOverlay != null) errorOverlay.setVisibility(View.VISIBLE);
         if (bufferingView != null) bufferingView.setVisibility(View.GONE);

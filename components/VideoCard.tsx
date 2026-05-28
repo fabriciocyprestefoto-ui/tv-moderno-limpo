@@ -230,7 +230,11 @@ const VideoCard: React.FC<VideoCardProps> = React.memo(
                 fallbackSrc={ERROR_SVG}
                 showSkeleton={true}
                 objectFit="cover"
-                eager={colIndex !== undefined && colIndex < 4}
+                eager={colIndex !== undefined && colIndex < 2}
+                imageType={layout === 'landscape' ? 'backdrop' : 'poster'}
+                width={cardW}
+                height={cardH}
+                sizes={`${cardW}px`}
               />
             ) : (
               <div className="absolute inset-0 bg-[#16161e] flex items-center justify-center">

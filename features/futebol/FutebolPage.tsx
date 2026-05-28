@@ -23,17 +23,20 @@ import {
 
 const PLACEHOLDER_BADGE = '/logored.png';
 
-/* ── League badge via TheSportsDB API ───────────────────────────────────── */
-const TSDB_BASE = 'https://www.thesportsdb.com';
-
 /** Mapeamento strLeague (lowercase) → TheSportsDB idLeague */
 const LEAGUE_TSDB_ID: Record<string, string> = {
   'campeonato brasileiro serie a': '4351',
   'campeonato brasileiro série a': '4351',
+  'brasileirão série a': '4351',
   'brazilian serie a': '4351',
   'serie a': '4351',
   brasileiro: '4351',
   'campeonato brasileiro': '4351',
+  'brasileirão série b': 'brasileirao-serie-b',
+  'brasileirao serie b': 'brasileirao-serie-b',
+  'copa do mundo fifa 2026': '4429',
+  'copa do mundo': '4429',
+  'fifa world cup': '4429',
   'copa do brasil': '4853',
   'copa libertadores': '1967',
   'conmebol libertadores': '1967',
@@ -44,24 +47,48 @@ const LEAGUE_TSDB_ID: Record<string, string> = {
   'sul-americana': '1968',
   'uefa champions league': '4480',
   'champions league': '4480',
+  'uefa europa league': '4481',
+  'europa league': '4481',
+  'uefa conference league': 'conference-league',
+  'conference league': 'conference-league',
   'premier league': '4328',
   'la liga': '4335',
   bundesliga: '4331',
   'serie a italiana': '4332',
+  'serie a (itália)': '4332',
   'ligue 1': '4334',
+  'eliminatórias uefa': 'eliminatorias-uefa',
+  'eliminatórias conmebol': 'eliminatorias-conmebol',
+};
+
+const LEAGUE_BADGE_URL: Record<string, string> = {
+  '4328': 'https://r2.thesportsdb.com/images/media/league/badge/gasy9d1737743125.png',
+  '4331': 'https://r2.thesportsdb.com/images/media/league/badge/teqh1b1679952008.png',
+  '4332': 'https://r2.thesportsdb.com/images/media/league/badge/67q3q21679951383.png',
+  '4334': 'https://r2.thesportsdb.com/images/media/league/badge/9f7z9d1742983155.png',
+  '4335': 'https://r2.thesportsdb.com/images/media/league/badge/ja4it51687628717.png',
+  '4429': 'https://r2.thesportsdb.com/images/media/league/badge/e7er5g1696521789.png',
+  '4480': 'https://r2.thesportsdb.com/images/media/league/badge/facv1u1742998896.png',
+  '4481': 'https://r2.thesportsdb.com/images/media/league/badge/mlsr7d1718774547.png',
 };
 
 const LEAGUE_COLOR: Record<string, string> = {
   '4351': '#22c55e',
+  'brasileirao-serie-b': '#10b981',
   '4853': '#16a34a',
   '1967': '#eab308',
   '1968': '#ef4444',
   '4480': '#3b82f6',
+  '4481': '#f97316',
+  'conference-league': '#84cc16',
   '4328': '#8b5cf6',
   '4335': '#f59e0b',
   '4331': '#d97706',
   '4332': '#06b6d4',
   '4334': '#0ea5e9',
+  '4429': '#22c55e',
+  'eliminatorias-uefa': '#60a5fa',
+  'eliminatorias-conmebol': '#facc15',
 };
 
 function getLeagueTsdbId(rawLeague: string): string | null {
@@ -75,13 +102,25 @@ function getLeagueTsdbId(rawLeague: string): string | null {
 
 function getLeagueBadgeUrl(rawLeague: string): string | null {
   const id = getLeagueTsdbId(rawLeague);
-  if (!id) return null;
-  return `${TSDB_BASE}/images/media/league/badge/${id}.png`;
+  if (!id) return createCompetitionBadge(rawLeague, '#a855f7');
+  return LEAGUE_BADGE_URL[id] ?? createCompetitionBadge(rawLeague, LEAGUE_COLOR[id] ?? '#a855f7');
 }
 
 function getLeagueColor(rawLeague: string): string {
   const id = getLeagueTsdbId(rawLeague);
   return (id && LEAGUE_COLOR[id]) ?? '#a855f7';
+}
+
+function createCompetitionBadge(rawLeague: string, color: string): string {
+  const initials = rawLeague
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 3)
+    .map((word) => word[0])
+    .join('')
+    .toUpperCase();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="34" fill="#10131d"/><circle cx="64" cy="64" r="44" fill="${color}" fill-opacity=".18" stroke="${color}" stroke-width="5"/><text x="64" y="73" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#fff">${initials || 'FUT'}</text></svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
 export interface DynamicCompetition {
@@ -243,6 +282,7 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
     resultadosRecentes,
     tabela,
     timesSerieA,
+    competitions,
     loading,
     loadingJogos,
     loadingTabela,
@@ -294,12 +334,27 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
   /** Competitions derived from actual upcoming matches — logos from TheSportsDB */
   const dynamicCompetitions = useMemo<DynamicCompetition[]>(() => {
     const seen = new Map<string, DynamicCompetition>();
+    competitions.forEach((comp) => {
+      seen.set(comp.id, {
+        id: comp.id,
+        label: comp.name,
+        logo: comp.logo || getLeagueBadgeUrl(comp.name),
+        color: getLeagueColor(comp.name),
+        count: 0,
+      });
+    });
     proximosJogos.forEach((j) => {
       const league = (j.strLeague || '').trim();
       if (!league) return;
       const id = league.toLowerCase();
-      if (seen.has(id)) {
-        seen.get(id)!.count++;
+      const existing =
+        seen.get(id) ||
+        Array.from(seen.values()).find((comp) => {
+          const label = comp.label.toLowerCase();
+          return label === id || label.includes(id) || id.includes(label);
+        });
+      if (existing) {
+        existing.count++;
       } else {
         seen.set(id, {
           id,
@@ -310,16 +365,18 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
         });
       }
     });
-    return Array.from(seen.values()).sort((a, b) => b.count - a.count);
-  }, [proximosJogos]);
+    return Array.from(seen.values()).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'pt-BR'));
+  }, [competitions, proximosJogos]);
 
   const filteredCards = useMemo(() => {
     if (!selectedLeague) return proximosJogos;
     return proximosJogos.filter((j) => {
       const league = (j.strLeague || '').toLowerCase().trim();
-      return league === selectedLeague;
+      const selected = dynamicCompetitions.find((comp) => comp.id === selectedLeague);
+      const selectedLabel = selected?.label.toLowerCase().trim() || selectedLeague;
+      return league === selectedLeague || league === selectedLabel || league.includes(selectedLabel) || selectedLabel.includes(league);
     });
-  }, [proximosJogos, selectedLeague]);
+  }, [dynamicCompetitions, proximosJogos, selectedLeague]);
 
   const cards = filteredCards;
   const topTable = useMemo(() => mergeTableComTimes(tabela, 20), [tabela]);

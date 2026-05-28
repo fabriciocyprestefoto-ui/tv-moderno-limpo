@@ -7,7 +7,7 @@
  */
 
 import { supabase } from './supabaseService';
-import { fetchDetails, getImageUrl } from './tmdb';
+import { fetchDetails, getImageUrl, pickBestLocalizedLogo } from './tmdb';
 import { Media } from '../types';
 import { getFetchOptions } from './tmdbKeys';
 
@@ -37,11 +37,7 @@ const TRAILER_OVERRIDES: Record<number, string> = {
 function normalizeDetails(data: any, tmdbId?: number): any {
   if (!data || data.status_code) return null;
   const id = tmdbId ?? data.id;
-  const logo =
-    data.images?.logos?.find((l: any) => l.iso_639_1 === 'pt-BR') ||
-    data.images?.logos?.find((l: any) => l.iso_639_1 === 'pt') ||
-    data.images?.logos?.find((l: any) => l.iso_639_1 === 'en') ||
-    data.images?.logos?.find((l: any) => l.iso_639_1 === null);
+  const logo = pickBestLocalizedLogo(data.images?.logos);
   const trailerObj = data.videos?.results?.find(
     (v: any) => v.type === 'Trailer' && v.site === 'YouTube'
   );
@@ -52,7 +48,7 @@ function normalizeDetails(data: any, tmdbId?: number): any {
   return {
     backdrop: getImageUrl(data.backdrop_path, 'w1280'),
     poster,
-    logo: logo ? getImageUrl(logo.file_path, 'original', 'logo') : undefined,
+    logo: logo ? getImageUrl(logo.file_path, 'w500', 'logo') : undefined,
     trailer,
     description: data.overview,
     year:
