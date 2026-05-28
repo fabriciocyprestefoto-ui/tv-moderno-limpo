@@ -31,6 +31,29 @@ import { isTVBox } from '../utils/tvBoxDetector';
 
 type RemoteDir = 'up' | 'down' | 'left' | 'right';
 
+// ── Restauração de posição por rota ───────────────────────────────────────────
+// Guarda scroll + foco (linha/coluna) das páginas de catálogo para que voltar de
+// Detalhes/Player caia na mesma posição. Module-level: sobrevive ao remount da rota.
+interface NavPosition {
+  scrollY: number;
+  row: string | null;
+  col: string | null;
+}
+const _navPositions = new Map<string, NavPosition>();
+const NAV_RESTORABLE_PATHS = new Set([
+  '/',
+  '/filmes',
+  '/series',
+  '/kids',
+  '/generos',
+  '/lista',
+  '/busca',
+  '/search',
+]);
+function normalizeNavPath(p: string): string {
+  return p.replace(/\/$/, '') || '/';
+}
+
 // ── Cache de rects por tick de navegação ─────────────────────────────────────
 // getBoundingClientRect() força layout reflow — com 80+ cards na Home, chamar
 // uma vez por elemento por keypress gera 80 reflows. O cache de 150ms cobre
@@ -219,16 +242,43 @@ export function useRemoteNavigation() {
     }
   }, [location.pathname, navigate]);
 
-  // ── Focar primeiro elemento ao mudar de rota ──────────────────────────────
+  // ── Foco + restauração de posição ao mudar de rota ────────────────────────
+  // Páginas de catálogo (grids/rows) guardam scroll+foco ao sair e restauram ao
+  // voltar (ex.: Home → Detalhes → Back cai na mesma linha/posição, estilo Netflix).
+  // Demais rotas mantêm o comportamento antigo: focar o 1º item.
   useEffect(() => {
     if (isSpatialNavActive()) return;
+
+    const path = normalizeNavPath(location.pathname);
+    const saved = NAV_RESTORABLE_PATHS.has(path) ? _navPositions.get(path) : undefined;
 
     const selectors =
       location.pathname === '/canais'
         ? ['#chan-0', '[id^="chan-"]', '[data-nav-livetv-category]', '[tabindex="0"]']
         : ['[data-nav-item]', '[tabindex="0"]'];
 
+    // Tenta restaurar o elemento salvo (linha+coluna). Reaplica o scrollY salvo.
+    const tryRestore = (): boolean => {
+      if (!saved || (!saved.row && !saved.col)) return false;
+      let target: HTMLElement | null = null;
+      if (saved.row != null && saved.col != null) {
+        target = document.querySelector<HTMLElement>(
+          `[data-nav-row="${saved.row}"] [data-nav-col="${saved.col}"]`
+        );
+      }
+      if (!target && saved.col != null) {
+        target = document.querySelector<HTMLElement>(`[data-nav-col="${saved.col}"]`);
+      }
+      if (target && target.getBoundingClientRect().width > 0) {
+        target.focus({ preventScroll: true });
+        if (typeof saved.scrollY === 'number') window.scrollTo(0, saved.scrollY);
+        return true;
+      }
+      return false;
+    };
+
     const tryFocus = (): boolean => {
+      if (tryRestore()) return true;
       for (const sel of selectors) {
         const el = document.querySelector<HTMLElement>(sel);
         if (el && typeof el.focus === 'function' && el.getBoundingClientRect().width > 0) {
@@ -240,28 +290,47 @@ export function useRemoteNavigation() {
     };
 
     // Tenta imediatamente (rota já renderizada) ou aguarda via MutationObserver
-    if (tryFocus()) return;
+    const focusedNow = tryFocus();
 
-    const observer = new MutationObserver(() => {
-      if (tryFocus()) observer.disconnect();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    const observer = focusedNow
+      ? null
+      : new MutationObserver(() => {
+          if (tryFocus()) observer?.disconnect();
+        });
+    observer?.observe(document.body, { childList: true, subtree: true });
 
-    // Retentativas intermediárias para TV Boxes lentos (Android 7/8 WebView demora 2-4s)
+    // Retentativas intermediárias para TV Boxes lentos (Android 7/8 WebView demora 2-4s).
+    // Reaplicam o scrollY salvo conforme o conteúdo cresce (rows virtualizadas montam tarde).
+    const reapply = () => {
+      if (saved && typeof saved.scrollY === 'number') window.scrollTo(0, saved.scrollY);
+    };
     const retry300 = window.setTimeout(() => {
-      tryFocus();
+      if (!focusedNow) tryFocus();
+      reapply();
     }, 300);
     const retry800 = window.setTimeout(() => {
-      tryFocus();
+      if (!focusedNow) tryFocus();
+      reapply();
     }, 800);
     // Fallback de segurança: desconecta após 2.5s mesmo sem encontrar elemento
-    const fallback = window.setTimeout(() => observer.disconnect(), 2500);
+    const fallback = window.setTimeout(() => observer?.disconnect(), 2500);
 
     return () => {
-      observer.disconnect();
+      observer?.disconnect();
       window.clearTimeout(retry300);
       window.clearTimeout(retry800);
       window.clearTimeout(fallback);
+      // Salva posição da rota que está sendo deixada (apenas páginas de catálogo).
+      if (NAV_RESTORABLE_PATHS.has(path)) {
+        const active = document.activeElement as HTMLElement | null;
+        const card = active?.closest('[data-nav-col]') as HTMLElement | null;
+        const rowEl = active?.closest('[data-nav-row]') as HTMLElement | null;
+        _navPositions.set(path, {
+          scrollY: window.scrollY,
+          row: rowEl?.getAttribute('data-nav-row') ?? null,
+          col: card?.getAttribute('data-nav-col') ?? null,
+        });
+      }
     };
   }, [location.pathname]);
 

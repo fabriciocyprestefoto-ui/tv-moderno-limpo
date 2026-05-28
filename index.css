@@ -521,9 +521,10 @@ textarea:focus-visible:not([data-nav-custom-focus]),
   background: transparent !important;
 }
 
-/* ── MediaCard: seleção via expansão (sem outline CSS — componente gerencia o próprio foco) ── */
+/* ── MediaCard: MESMA linha de foco dos demais posters (2px roxo, sem glow) ── */
 [data-nav-media-card]:focus-visible {
-  outline: none !important;
+  outline: 2px solid rgba(139, 92, 246, 0.85) !important;
+  outline-offset: 2px !important;
   box-shadow: none !important;
   transform: none !important;
 }
@@ -535,6 +536,15 @@ textarea:focus-visible:not([data-nav-custom-focus]),
   box-shadow: none !important;
   border-radius: 1rem !important;
   transform: scale(var(--focus-scale)) !important;
+}
+
+/* ── Botão Voltar (Detalhes/Player): foco = vidro roxo translúcido (igual sidebar) ── */
+[data-nav-back]:focus,
+[data-nav-back]:focus-visible {
+  background: var(--exit-glass-bg) !important;
+  border: 1px solid var(--exit-glass-border) !important;
+  box-shadow: var(--exit-glass-shadow) !important;
+  outline: none !important;
 }
 
 /* ── LiveTV menu categorias ── */
@@ -3363,6 +3373,16 @@ select:focus:not(:focus-visible) {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   background: rgba(15, 15, 25, 0.95) !important;
+}
+
+/* 17b — Menu de canais (categorias + lista): MESMO vidro do sidebar Home no lite-mode
+   (gradiente translucido sem blur, para poupar GPU em TV box). */
+.lite-mode .livetv-channel-menu,
+.lite-mode .livetv-sidebar-purple {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: var(--exit-glass-bg) !important;
+  border: 1px solid var(--exit-glass-border) !important;
 }
 
 /* 18 — Foco D-pad visível em lite-mode (sem glow pesado, contorno leve e sólido) */

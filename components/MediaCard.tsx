@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { setSignal } from '@/utils/appSignals';
 import { Media } from '../types';
 import { getMediaDetailsByID } from '@/services/tmdb';
@@ -507,6 +507,12 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
       };
     }, []);
 
+    // Progresso de "continuar assistindo" — lê localStorage 1x por card (não a cada render).
+    const watchProgress = useMemo(
+      () => getWatchProgress(media.tmdb_id || media.id),
+      [media.tmdb_id, media.id]
+    );
+
     // Pre-compute NOVO badge, match percentage e quality badge
     const isNew = isRecentContent(media);
     const matchInfo = getMatchPercentage(media);
@@ -608,20 +614,17 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
               {/* Poster vertical limpo: sem overlay de logo/titulo no estado retraido */}
             </div>
             {/* F5: Progress bar — conteúdo parcialmente assistido */}
-            {(() => {
-              const wp = getWatchProgress(media.tmdb_id || media.id);
-              return wp > 0 ? (
-                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/20 z-20 rounded-b-2xl overflow-hidden pointer-events-none">
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${wp}%`,
-                      background: 'linear-gradient(90deg, #a855f7, #7c3aed)',
-                    }}
-                  />
-                </div>
-              ) : null;
-            })()}
+            {watchProgress > 0 ? (
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/20 z-20 rounded-b-2xl overflow-hidden pointer-events-none">
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${watchProgress}%`,
+                    background: 'linear-gradient(90deg, #a855f7, #7c3aed)',
+                  }}
+                />
+              </div>
+            ) : null}
             {/* Borda sutil — sem sombra/glow */}
             <div className="absolute inset-0 rounded-2xl border border-white/6 pointer-events-none" />
           </div>
@@ -796,18 +799,8 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
           )}
         </div>
 
-        {/* Foco — linha branca fina e sólida, sem glow/sombra */}
-        {isFocused && (
-          <div
-            className="absolute pointer-events-none z-50"
-            style={{
-              inset: '0px',
-              borderRadius: '1rem',
-              border: '3px solid rgba(168, 85, 247, 0.8)',
-              boxShadow: '0 0 20px rgba(168, 85, 247, 0.4)',
-            }}
-          />
-        )}
+        {/* Foco: linha padrão via CSS [data-nav-media-card]:focus-visible + lite-mode
+            (mesma dos demais posters) — sem borda inline duplicada. */}
       </div>
     );
   }

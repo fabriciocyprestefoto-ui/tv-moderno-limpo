@@ -133,28 +133,37 @@ const LazyImage: React.FC<LazyImageProps> = React.memo(
       };
     }, [eager, isValid, shouldLoad]);
 
-    // Timeout: se a imagem não carregar, tentar URL original antes de desistir
+    // Timeout: se a imagem demora, primeiro tenta a URL original (proxy lento) e dá
+    // uma SEGUNDA janela antes de desistir. Evita marcar "Indisponível" cedo demais
+    // em rede de TV Box lenta (causava o efeito de piscar/quebrar falso).
     useEffect(() => {
       if (!shouldLoad || isLoaded || hasError) return;
+      let secondTimer: ReturnType<typeof setTimeout> | null = null;
+      const giveUp = () => {
+        setHasError(true);
+        if (imgRef.current && fallbackSrc) imgRef.current.src = fallbackSrc;
+      };
       loadTimeoutRef.current = setTimeout(() => {
         loadTimeoutRef.current = null;
-        // Se o src é proxy wsrv.nl e nunca tentou fallback no timeout: extrair URL original
+        // 1ª janela: proxy lento → trocar para a URL TMDB original e esperar de novo.
         if (!triedTimeoutFallbackRef.current && imgRef.current) {
           const original = extractOriginalUrl(src);
           if (original && original !== src) {
             triedTimeoutFallbackRef.current = true;
             imgRef.current.src = original;
+            secondTimer = setTimeout(giveUp, LOAD_TIMEOUT_MS);
             return;
           }
         }
-        setHasError(true);
-        if (imgRef.current && fallbackSrc) imgRef.current.src = fallbackSrc;
+        // Sem fallback possível ou já tentado → desistir.
+        giveUp();
       }, LOAD_TIMEOUT_MS);
       return () => {
         if (loadTimeoutRef.current) {
           clearTimeout(loadTimeoutRef.current);
           loadTimeoutRef.current = null;
         }
+        if (secondTimer) clearTimeout(secondTimer);
       };
     }, [src, shouldLoad, isLoaded, hasError, fallbackSrc]);
 
