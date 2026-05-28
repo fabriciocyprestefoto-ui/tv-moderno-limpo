@@ -1,11 +1,11 @@
 import './index.css';
 import ReactDOM from 'react-dom/client';
-import { installNativeHttpFetchForAndroidTV } from './services/nativeHttpFetch';
 import App from './App';
 import { initTVBoxMode, syncTvBoxClassWithHtml } from './utils/tvBoxDetector';
 import { initLiteMode, updateLiteModeAsync, watchAndUpdateLiteMode } from './utils/liteMode';
+import { purgeDeadSourceCaches } from './utils/sourceSanitizer';
 
-installNativeHttpFetchForAndroidTV();
+void purgeDeadSourceCaches();
 
 function installLegacyWebViewPolyfills(): void {
   if (typeof window === 'undefined') return;

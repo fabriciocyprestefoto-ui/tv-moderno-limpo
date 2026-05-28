@@ -3,6 +3,8 @@
  * ficam na base (ex.: https://example.com/...) e quebram playback sem fallback útil.
  */
 
+import { isOldDeadSourceUrl } from './sourceSanitizer';
+
 const FAKE_HOSTS = new Set([
   'example.com',
   'example.org',
@@ -18,6 +20,7 @@ export function isPlaceholderOrFakeStreamUrl(url: string | null | undefined): bo
   if (!raw) return true;
   const low = raw.toLowerCase();
   if (!low.startsWith('http')) return true;
+  if (isOldDeadSourceUrl(low)) return true;
 
   try {
     const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';

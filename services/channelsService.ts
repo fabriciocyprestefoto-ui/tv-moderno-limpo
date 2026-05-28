@@ -2,9 +2,10 @@ import { Channel } from '../types';
 import { getAllChannels, getChannelsPage } from './supabaseService';
 import { logger } from '../utils/logger';
 import { pickFirstRealStreamUrlFromRow } from '../utils/streamUrlGuards';
+import { removeOldDeadSources, sanitizeFontezChannels } from '../utils/sourceSanitizer';
 
-const STORAGE_KEY = 'redx-channels-cache-v8';
-const IDB_NAME = 'redx-channels-db-v4';
+const STORAGE_KEY = 'redx-channels-cache-v9';
+const IDB_NAME = 'redx-channels-db-v5';
 const IDB_STORE = 'channels';
 const STORAGE_TTL_MS = 2 * 60 * 60 * 1000; // 2 horas (aumentado para reduzir fetches)
 const BG_REFRESH_MIN_INTERVAL_MS = 60 * 1000; // Evita spam de refresh em segundo plano
@@ -16,7 +17,7 @@ let inFlightLoad: Promise<Channel[]> | null = null;
 let inFlightBackgroundRefresh: Promise<void> | null = null;
 let lastBackgroundRefreshAt = 0;
 
-function normalizeChannel(c: any): Channel {
+function normalizeChannel(c: any): Channel | null {
   const name = c.name || c.nome || '';
   const logo = c.logo || c.logo_url || c.thumbnail || '';
   const category = c.category || c.genero || c.grupo || 'Geral';
@@ -33,7 +34,7 @@ function normalizeChannel(c: any): Channel {
     );
   }
 
-  return {
+  return removeOldDeadSources({
     id: c.id,
     name,
     logo,
@@ -41,7 +42,7 @@ function normalizeChannel(c: any): Channel {
     stream_url: streamUrl,
     number: c.number || c.numero,
     is_premium: c.is_premium,
-  };
+  });
 }
 
 /** Canais removidos da UI (pedido do produto). */
@@ -62,9 +63,10 @@ function sortChannels(channels: Channel[]): Channel[] {
 function normalizeAndSortChannels(rows: any[]): Channel[] {
   const normalized = (rows || [])
     .map((c: any) => normalizeChannel(c))
+    .filter((c: Channel | null): c is Channel => Boolean(c))
     .filter((c: Channel) => String(c.id) !== '112')
     .filter((c: Channel) => !isHiddenAbertosChannel(c));
-  return sortChannels(normalized);
+  return sortChannels(sanitizeFontezChannels(normalized, 'channelsService'));
 }
 
 function channelsAreEquivalent(a: Channel[], b: Channel[]): boolean {
@@ -251,13 +253,17 @@ function saveToCache(channels: Channel[]): void {
 
 export function getCachedChannelsSync(): Channel[] {
   if (cachedChannels.length > 0) {
-    const cleaned = applyOpenChannelExclusions(cachedChannels);
+    const cleaned = applyOpenChannelExclusions(
+      sanitizeFontezChannels(cachedChannels, 'channelsService:memory')
+    );
     if (cleaned !== cachedChannels) cachedChannels = cleaned;
     return cachedChannels;
   }
   const fromStorage = loadFromLocalStorage();
   if (fromStorage?.length) {
-    const cleaned = applyOpenChannelExclusions(fromStorage);
+    const cleaned = applyOpenChannelExclusions(
+      sanitizeFontezChannels(fromStorage, 'channelsService:localStorage')
+    );
     cachedChannels = cleaned;
     return cachedChannels;
   }
@@ -265,12 +271,14 @@ export function getCachedChannelsSync(): Channel[] {
 }
 
 async function loadFromAnyCache(): Promise<Channel[] | null> {
-  if (cachedChannels.length > 0) return cachedChannels;
+  if (cachedChannels.length > 0) {
+    return sanitizeFontezChannels(cachedChannels, 'channelsService:memory');
+  }
   const fromLS = loadFromLocalStorage();
-  if (fromLS?.length) return fromLS;
+  if (fromLS?.length) return sanitizeFontezChannels(fromLS, 'channelsService:localStorage');
   if (checkIDBAvailable()) {
     const fromIDB = await loadFromIDB();
-    if (fromIDB?.length) return fromIDB;
+    if (fromIDB?.length) return sanitizeFontezChannels(fromIDB, 'channelsService:indexedDB');
   }
   return null;
 }
@@ -280,7 +288,9 @@ export const channelsService = {
     onFresh?: (channels: Channel[], isComplete: boolean) => void
   ): Promise<Channel[]> => {
     if (cachedChannels.length > 0) {
-      const cleaned = applyOpenChannelExclusions(cachedChannels);
+      const cleaned = applyOpenChannelExclusions(
+        sanitizeFontezChannels(cachedChannels, 'channelsService:memory')
+      );
       if (cleaned !== cachedChannels) {
         cachedChannels = cleaned;
         saveToCache(cleaned);
@@ -292,7 +302,9 @@ export const channelsService = {
 
     const fromCache = await loadFromAnyCache();
     if (fromCache?.length) {
-      const cleaned = applyOpenChannelExclusions(fromCache);
+      const cleaned = applyOpenChannelExclusions(
+        sanitizeFontezChannels(fromCache, 'channelsService:cache')
+      );
       cachedChannels = cleaned;
       if (cleaned !== fromCache) saveToCache(cleaned);
       onFresh?.(cachedChannels, true);

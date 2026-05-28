@@ -1,4 +1,14 @@
-.rowSection {
+/*
+ * MovieRow.css — CSS GLOBAL (nao-module).
+ *
+ * Convertido de MovieRow.module.css: no build TV (plugin-legacy com
+ * renderModernChunks:false) o CSS-module era descartado do bundle e os cards
+ * colapsavam (altura ~0), aparecendo so o logo do titulo sobre o gradiente.
+ * CSS global plano entra no style.css junto com Tailwind/index.css e sobrevive.
+ * Classes prefixadas com `mvrow-` para evitar colisao no escopo global.
+ */
+
+.mvrow-rowSection {
   padding-left: 72px;
   padding-right: 72px;
   position: relative;
@@ -6,7 +16,7 @@
   overflow: visible;
 }
 
-.rowTitle {
+.mvrow-rowTitle {
   font-size: 1.875rem;
   line-height: 2.25rem;
   font-weight: 700;
@@ -17,13 +27,13 @@
   color: #f0f0f0;
 }
 
-.rowTitleLine {
+.mvrow-rowTitleLine {
   height: 1px;
   flex: 1;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
 }
 
-.rowShell {
+.mvrow-rowShell {
   position: relative;
   display: flex;
   align-items: center;
@@ -33,7 +43,7 @@
   transition: width 0.22s ease-out;
 }
 
-.rowShellExpanded {
+.mvrow-rowShellExpanded {
   width: 100vw;
   margin-left: -72px;
   padding-left: 72px;
@@ -42,15 +52,13 @@
   box-sizing: border-box;
 }
 
-.highlightSlot {
+.mvrow-highlightSlot {
   flex: 0 0 auto;
   min-width: 0;
   overflow: hidden;
   border-radius: 1rem;
   border: 1px solid transparent;
   background: rgba(18, 18, 24, 0.9);
-  /* 0.22s em vez de 0.4s — transição mais rápida e leve.
-   * Height removido: animar height causa layout reflow em cada frame. */
   transition:
     width 0.22s ease-out,
     min-width 0.22s ease-out,
@@ -63,30 +71,30 @@
   align-self: center;
 }
 
-.highlightSlotOpen {
+.mvrow-highlightSlotOpen {
   border-color: transparent;
   box-shadow: none;
 }
 
-.highlightSlot:focus-visible {
+.mvrow-highlightSlot:focus-visible {
   outline: none !important;
   box-shadow: none !important;
 }
 
-.verticalFeaturedCard,
-.horizontalCard {
+.mvrow-verticalFeaturedCard,
+.mvrow-horizontalCard {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
-.verticalFeaturedCard {
+.mvrow-verticalFeaturedCard {
   background: #16161e;
 }
 
-.verticalFeaturedImage,
-.horizontalImage {
+.mvrow-verticalFeaturedImage,
+.mvrow-horizontalImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -94,17 +102,16 @@
   display: block;
 }
 
-.horizontalOverlay {
+.mvrow-horizontalOverlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  /* Gradiente mínimo — só na base para legibilidade do logo/título */
   background:
     linear-gradient(180deg, transparent 70%, rgba(0, 0, 0, 0.2) 100%),
     linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, transparent 50%, rgba(0, 0, 0, 0.08) 100%);
 }
 
-.horizontalLogo {
+.mvrow-horizontalLogo {
   position: absolute;
   left: 14px;
   bottom: 14px;
@@ -117,7 +124,7 @@
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.85));
 }
 
-.trackWrapper {
+.mvrow-trackWrapper {
   position: relative;
   min-width: 0;
   flex: 1 1 auto;
@@ -126,7 +133,7 @@
   contain: layout paint;
 }
 
-.navButton {
+.mvrow-navButton {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -147,27 +154,27 @@
     transform 150ms ease;
 }
 
-.rowShell:hover .navButton {
+.mvrow-rowShell:hover .mvrow-navButton {
   opacity: 1;
 }
 
-.navButton:hover,
-.navButton:focus-visible {
+.mvrow-navButton:hover,
+.mvrow-navButton:focus-visible {
   background: rgba(30, 30, 36, 0.9);
   transform: translateY(-50%) scale(1.03);
   opacity: 1;
   outline: none;
 }
 
-.navButtonLeft {
+.mvrow-navButtonLeft {
   left: -44px;
 }
 
-.navButtonRight {
+.mvrow-navButtonRight {
   right: -44px;
 }
 
-.rowTrack {
+.mvrow-rowTrack {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -181,16 +188,16 @@
   contain: layout paint;
 }
 
-.rowTrack::-webkit-scrollbar {
+.mvrow-rowTrack::-webkit-scrollbar {
   display: none;
 }
 
-.cardWrap {
+.mvrow-cardWrap {
   position: relative;
   flex-shrink: 0;
 }
 
-.card {
+.mvrow-card {
   position: relative;
   width: var(--movie-row-card-width, 186px);
   height: var(--movie-row-card-height, 250px);
@@ -207,15 +214,15 @@
     border-color 160ms ease;
 }
 
-.card:hover,
-.card:focus-visible {
+.mvrow-card:hover,
+.mvrow-card:focus-visible {
   transform: scale(1.03);
   outline: none !important;
   box-shadow: none !important;
   z-index: 100;
 }
 
-.cardImage {
+.mvrow-cardImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -223,11 +230,10 @@
   display: block;
 }
 
-.cardGradient {
+.mvrow-cardGradient {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  /* Gradiente mais forte na base para destacar o logo */
   background: linear-gradient(
     180deg,
     transparent 0%,
@@ -238,7 +244,7 @@
   opacity: 1;
 }
 
-.cardLogo {
+.mvrow-cardLogo {
   position: absolute;
   left: 0.75rem;
   right: 0.75rem;
@@ -251,7 +257,7 @@
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
 }
 
-.progress {
+.mvrow-progress {
   position: absolute;
   left: 0.75rem;
   right: 0.75rem;
@@ -262,14 +268,14 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
-.progressFill {
+.mvrow-progressFill {
   width: 60%;
   height: 100%;
   border-radius: 999px;
   background: #a855f7;
 }
 
-.placeholder {
+.mvrow-placeholder {
   height: var(--movie-row-card-height, 250px);
   width: 100%;
   border-radius: 1rem;
@@ -277,7 +283,7 @@
   animation: movieRowPulse 1.6s ease-in-out infinite;
 }
 
-.sentinel {
+.mvrow-sentinel {
   width: 1px;
   height: 1px;
   flex-shrink: 0;
@@ -299,17 +305,17 @@
 
 /* TV Box 1280x720 — cards menores para evitar transbordamento */
 @media (max-width: 1280px) and (max-height: 800px) {
-  .rowSection {
+  .mvrow-rowSection {
     padding-left: 24px;
     padding-right: 24px;
   }
 
-  .card {
+  .mvrow-card {
     width: 160px;
     height: var(--movie-row-card-height, 250px);
   }
 
-  .rowTitle {
+  .mvrow-rowTitle {
     font-size: 1.5rem;
   }
 }

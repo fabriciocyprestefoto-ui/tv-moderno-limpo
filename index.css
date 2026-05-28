@@ -2,6 +2,7 @@
 @import './modern-home.css';
 @import './animations.css';
 @import './redx-bg.css';
+@import './components/MovieRow.css';
 
 /* Fallback global: remove overlays ::before de #root e #app (corrige overlay roxo em todas as páginas) */
 #root::before,

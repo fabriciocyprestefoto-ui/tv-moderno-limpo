@@ -24,17 +24,6 @@ const MAX_WIDTHS: Record<string, number> = {
   backdrop: 1280, // 1080p TV Box: w1280 para qualidade nítida em telas Full HD
 };
 
-function isNativeCapacitorApp(): boolean {
-  if (typeof window === 'undefined') return false;
-  const cap = (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor;
-  if (!cap) return false;
-  try {
-    return typeof cap.isNativePlatform === 'function' ? cap.isNativePlatform() : true;
-  } catch {
-    return true;
-  }
-}
-
 /**
  * Constrói URL de proxy para poster a partir de poster_path TMDB.
  * Valida entrada e retorna null se inválida.
@@ -65,21 +54,17 @@ export function toWebP(
     if (isTmdbLogo) return url;
   }
 
-  // Só aplicamos o proxy WebP se for uma imagem do TMDB
-  const isTmdb = url.includes('tmdb.org') || url.includes('themoviedb.org');
-
-  if (isTmdb) {
-    // No APK (TCL/Fire Stick), usar TMDB direto. O proxy wsrv.nl funciona bem no
-    // desktop, mas em WebView/TV pode falhar e deixar só logos na Home.
-    if (isNativeCapacitorApp()) return url;
-
+  // Imagem http insegura (qualquer host) -> wsrv.nl https para evitar Mixed Content no WebView.
+  // wsrv busca a origem http server-side e serve via https (ex.: http://file.gstaticontent.com,
+  // que NAO tem https). Tambem redimensiona/converte para WebP (menor).
+  if (url.startsWith('http://')) {
     const cleanUrl = url.replace(/^https?:\/\//, '');
     const width = MAX_WIDTHS[imageType] || 500;
-    // Força a saída como WebP para economia de banda e performance na TV Box
     return `https://wsrv.nl/?url=${encodeURIComponent(cleanUrl)}&w=${width}&output=webp&q=${WEBP_QUALITY}`;
   }
 
-  // Se for Supabase ou qualquer outra URL direta (conforme pedido anterior), não usa proxy
+  // https (TMDB e demais) -> direto. image.tmdb.org carrega no WebView (os logos ja provam)
+  // e no desktop; nao depende de proxy de terceiro.
   return url;
 }
 

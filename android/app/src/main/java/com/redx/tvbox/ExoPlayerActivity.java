@@ -31,6 +31,7 @@ import androidx.media3.common.VideoSize;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DefaultDataSource;
 import androidx.media3.datasource.DefaultHttpDataSource;
+import androidx.media3.datasource.HttpDataSource;
 import androidx.media3.datasource.cache.CacheDataSource;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
@@ -90,10 +91,10 @@ public class ExoPlayerActivity extends Activity {
         String mfg  = android.os.Build.MANUFACTURER == null ? "" : android.os.Build.MANUFACTURER.toLowerCase();
         String brand = android.os.Build.BRAND == null ? "" : android.os.Build.BRAND.toLowerCase();
         String model = android.os.Build.MODEL == null ? "" : android.os.Build.MODEL.toLowerCase();
-        // TCL/Realtek: o decoder OMX.realtek.video.decoder TRAVA ao configurar contra
-        // uma surface de TextureView (player fica em STATE_BUFFERING para sempre, sem erro).
-        // SurfaceView funciona — a "tela preta" antiga é resolvida com setZOrderMediaOverlay
-        // aplicado no buildLayout. Portanto TCL NÃO deve usar TextureView.
+        // TCL/Google TV: voltar ao comportamento do backup funcional.
+        // Nesses firmwares, SurfaceView pode resultar em tela preta/overlay incorreto
+        // mesmo com áudio; TextureView renderiza pelo compositor da UI.
+        if (mfg.contains("tcl") || brand.contains("tcl")) return true;
         // FireStick / Fire TV: SurfaceView e overlays do WebView variam bastante por firmware.
         if (mfg.contains("amazon") || brand.contains("amazon") || model.startsWith("aft") || model.contains("fire tv")) return true;
         // Google TV reference devices (Chromecast com Google TV, Sabrina)
@@ -105,13 +106,18 @@ public class ExoPlayerActivity extends Activity {
 
     public static final String RESULT_POSITION  = "position";
     public static final String RESULT_ACTION    = "action";
+    public static final String RESULT_ERROR     = "error";
+    public static final String RESULT_ERROR_MESSAGE = "errorMessage";
 
     private static final int  MAX_RETRIES          = 3;
-    private static final int  MAX_RETRIES_LIVE      = 7;
+    private static final int  MAX_RETRIES_LIVE      = 2;
     private static final long RETRY_BASE_DELAY_MS   = 1500L;
-    private static final long RETRY_MAX_DELAY_MS    = 30_000L;
+    private static final long RETRY_MAX_DELAY_MS    = 8_000L;
+    private static final int  HTTP_CONNECT_TIMEOUT_MS = 8_000;
+    private static final int  HTTP_READ_TIMEOUT_MS    = 12_000;
     private static final long INTRO_STALL_TIMEOUT_MS = 9_000L;
-    private static final long MAIN_STALL_TIMEOUT_MS = 30_000L;
+    private static final long MAIN_STALL_TIMEOUT_MS = 18_000L;
+    private static final String LIVE_STREAM_UNAVAILABLE_MESSAGE = "Canal indisponível ou servidor não respondeu.";
 
     // Vinheta pré-VOD: sequência de frames .webp (mesma do boot NativeBootActivity).
     // Substitui o antigo asset:///public/vinheta-tv.mp4 que travava em STATE_BUFFERING
@@ -226,6 +232,54 @@ public class ExoPlayerActivity extends Activity {
         Log.i(TAG, "DIAG " + msg);
     }
 
+    private static boolean isSensitiveQueryKey(String key) {
+        if (key == null) return false;
+        return key.equalsIgnoreCase("token")
+                || key.equalsIgnoreCase("access_token")
+                || key.equalsIgnoreCase("auth")
+                || key.equalsIgnoreCase("authorization")
+                || key.equalsIgnoreCase("signature")
+                || key.equalsIgnoreCase("sig")
+                || key.equalsIgnoreCase("expires")
+                || key.equalsIgnoreCase("expires_at")
+                || key.equalsIgnoreCase("key")
+                || key.equalsIgnoreCase("jwt");
+    }
+
+    private static String maskUrlForLog(@Nullable String raw) {
+        if (raw == null || raw.trim().isEmpty()) return "null";
+        try {
+            Uri uri = Uri.parse(raw);
+            if (uri.getHost() == null) {
+                return raw.replaceAll("(?i)([?&](?:token|access_token|auth|authorization|signature|sig|expires|expires_at|key|jwt)=)[^&\\s]+", "$1***MASKED***");
+            }
+            StringBuilder out = new StringBuilder();
+            out.append(uri.getHost());
+            if (uri.getPort() >= 0) out.append(":").append(uri.getPort());
+            String path = uri.getEncodedPath();
+            if (path != null) out.append(path);
+            String query = uri.getEncodedQuery();
+            if (query != null && !query.isEmpty()) {
+                out.append("?");
+                String[] parts = query.split("&");
+                for (int i = 0; i < parts.length; i++) {
+                    if (i > 0) out.append("&");
+                    String part = parts[i];
+                    int eq = part.indexOf('=');
+                    String key = eq >= 0 ? part.substring(0, eq) : part;
+                    if (isSensitiveQueryKey(Uri.decode(key))) {
+                        out.append(key).append("=***MASKED***");
+                    } else {
+                        out.append(part);
+                    }
+                }
+            }
+            return out.toString();
+        } catch (Exception ignored) {
+            return raw.replaceAll("(?i)([?&](?:token|access_token|auth|authorization|signature|sig|expires|expires_at|key|jwt)=)[^&\\s]+", "$1***MASKED***");
+        }
+    }
+
     private String              sourceUrl;
     private String              titleStr;
     private String              yearStr;
@@ -298,6 +352,25 @@ public class ExoPlayerActivity extends Activity {
             finish();
             return;
         }
+        // Guard: blob: URLs vêm de URL.createObjectURL no WebView. O processo ExoPlayer
+        // não pode resolver esse escopo de origem. Rejeitar com mensagem clara em vez
+        // de deixar o decoder explodir silenciosamente.
+        String lowerScheme = sourceUrl.toLowerCase();
+        if (lowerScheme.startsWith("blob:")) {
+            Log.e(TAG, "URL blob recebida — incompatível com ExoPlayer: " + maskUrlForLog(sourceUrl));
+            Toast.makeText(this, "Erro: URL blob não suportada no player nativo", Toast.LENGTH_LONG).show();
+            returnErrorAndFinish("URL blob não suportada no player nativo.");
+            return;
+        }
+        if (!(lowerScheme.startsWith("http://") || lowerScheme.startsWith("https://")
+                || lowerScheme.startsWith("file://") || lowerScheme.startsWith("asset://")
+                || lowerScheme.startsWith("content://") || lowerScheme.startsWith("rtmp://")
+                || lowerScheme.startsWith("rtsp://"))) {
+            Log.e(TAG, "Scheme não suportado: " + maskUrlForLog(sourceUrl));
+            Toast.makeText(this, "Erro: URL com scheme inválido", Toast.LENGTH_LONG).show();
+            returnErrorAndFinish("URL com scheme inválido.");
+            return;
+        }
         titleStr  = getIntent().getStringExtra(EXTRA_TITLE);
         if (titleStr == null) titleStr = "";
         yearStr = getIntent().getStringExtra(EXTRA_YEAR);
@@ -331,15 +404,16 @@ public class ExoPlayerActivity extends Activity {
                 + " posMs=" + startPositionMs
                 + " intro=" + (introUrl != null && !introUrl.isEmpty())
                 + " poster=" + (posterUrl != null && !posterUrl.isEmpty())
-                + " url=" + sourceUrl.substring(0, Math.min(120, sourceUrl.length())));
+                + " url=" + maskUrlForLog(sourceUrl));
 
         Log.i(TAG, "[RED_EXOPLAYER] onCreate");
         Log.i(TAG, "[RED_EXOPLAYER]   device=" + android.os.Build.MODEL + " API=" + android.os.Build.VERSION.SDK_INT);
-        Log.i(TAG, "[RED_EXOPLAYER]   url=" + (sourceUrl != null ? sourceUrl.substring(0, Math.min(sourceUrl.length(), 100)) : "null"));
-        Log.i(TAG, "[RED_EXOPLAYER]   fallbackUrl=" + (fallbackUrl != null ? fallbackUrl.substring(0, Math.min(fallbackUrl.length(), 80)) : "null"));
+        Log.i(TAG, "[RED_EXOPLAYER]   url=" + maskUrlForLog(sourceUrl));
+        Log.i(TAG, "[RED_EXOPLAYER]   fallbackUrl=" + maskUrlForLog(fallbackUrl));
         Log.i(TAG, "[RED_EXOPLAYER]   introUrl=" + introUrl);
         Log.i(TAG, "[RED_EXOPLAYER]   type=" + typeStr + " isLive=" + isLive + " position=" + startPositionMs);
         Log.i(TAG, "[RED_PLAYBACK_CONTRACT]   streamType=" + (sourceUrl != null && sourceUrl.contains(".m3u8") ? "HLS" : sourceUrl != null && sourceUrl.startsWith("p2p://") ? "P2P" : "MP4/OTHER"));
+        if (isLive) Log.i(TAG, "[ExoPlayerActivity] received live url=" + maskUrlForLog(sourceUrl));
         debugOverlayEnabled = getIntent().getBooleanExtra("debug", false) && BuildConfig.DEBUG;
 
         try {
@@ -946,13 +1020,13 @@ public class ExoPlayerActivity extends Activity {
                         ? headers.get("User-Agent")
                         : "Mozilla/5.0 (Linux; Android TV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36 RedflixTV/1.0")
                 .setAllowCrossProtocolRedirects(true)
-                .setConnectTimeoutMs(15000)
-                .setReadTimeoutMs(15000)
+                .setConnectTimeoutMs(HTTP_CONNECT_TIMEOUT_MS)
+                .setReadTimeoutMs(HTTP_READ_TIMEOUT_MS)
                 .setDefaultRequestProperties(headers);
 
-        // Buffer otimizado pra TV Box moderna e rede instável (32-64s).
+        // Buffer agressivo pra rede instável de TV Box (60-120s).
         DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
-                .setBufferDurationsMs(32_000, 64_000, 5_000, 5_000)
+                .setBufferDurationsMs(60_000, 120_000, 2_500, 5_000)
                 .setPrioritizeTimeOverSizeThresholds(true)
                 .build();
 
@@ -967,10 +1041,8 @@ public class ExoPlayerActivity extends Activity {
         androidx.media3.datasource.DataSource.Factory sourceFactory = dsFactory;
 
         // Decoder fallback: tenta próximo decoder se primário falha (HEVC em Firestick antigo, etc.)
-        // FORÇAR DECODIFICADOR DE HARDWARE REALTEK (Mudar de PREFER_EXTENSIONS para EXTENSION_RENDERER_MODE_OFF)
         androidx.media3.exoplayer.DefaultRenderersFactory renderersFactory =
                 new androidx.media3.exoplayer.DefaultRenderersFactory(this)
-                        .setExtensionRendererMode(androidx.media3.exoplayer.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF)
                         .setEnableDecoderFallback(true)
                         .setMediaCodecSelector(
                                 androidx.media3.exoplayer.mediacodec.MediaCodecSelector.DEFAULT);
@@ -1046,6 +1118,7 @@ public class ExoPlayerActivity extends Activity {
                 }
                 if (state == Player.STATE_READY) {
                     readyTimestamp = System.currentTimeMillis();
+                    Log.i(TAG, "[ExoPlayerActivity] STATE_READY");
                     long bufferToReady = firstBufferingTimestamp > 0 ? (readyTimestamp - firstBufferingTimestamp) : -1;
                     Log.i(TAG, "[RED_EXOPLAYER] STATE_READY pos=" + (player != null ? player.getCurrentPosition() : -1) + "ms duration=" + (player != null ? player.getDuration() : -1) + "ms buffered=" + (player != null ? player.getBufferedPosition() : -1) + "ms bufferToReadyMs=" + bufferToReady);
                     if (introQueuedForCurrentPlayback && player != null && player.getCurrentMediaItemIndex() == 0) {
@@ -1077,6 +1150,7 @@ public class ExoPlayerActivity extends Activity {
                     return;
                 }
                 Log.e(TAG, "ExoPlayer error: " + error.getErrorCodeName() + " (" + error.errorCode + ")", error);
+                Log.e(TAG, "[ExoPlayerActivity] PlayerError reason=" + error.getErrorCodeName());
                 mainHandler.removeCallbacks(mainBufferWatchdog);
                 Throwable cause = error.getCause();
                 String causeMsg = cause != null ? cause.getClass().getSimpleName() + ": " + cause.getMessage() : "";
@@ -1171,8 +1245,8 @@ public class ExoPlayerActivity extends Activity {
             return;
         }
 
-        // Sem mais retries e sem fallback — mostrar overlay de erro.
-        showError("Falha ao reproduzir: " + error.getErrorCodeName());
+        // Sem mais retries e sem fallback — mostrar/retornar erro claro.
+        showError(userFacingPlaybackError(error));
     }
 
     private boolean isPossibleHlsMimeMismatch(PlaybackException error) {
@@ -1207,10 +1281,40 @@ public class ExoPlayerActivity extends Activity {
                 || code == PlaybackException.ERROR_CODE_IO_INVALID_HTTP_CONTENT_TYPE;
     }
 
+    private boolean hasCause(Throwable error, Class<?> cls) {
+        Throwable current = error;
+        while (current != null) {
+            if (cls.isInstance(current)) return true;
+            current = current.getCause();
+        }
+        return false;
+    }
+
+    private boolean isNetworkTimeoutError(PlaybackException error) {
+        return error.errorCode == PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT
+                || hasCause(error, java.net.SocketTimeoutException.class)
+                || hasCause(error, java.net.ConnectException.class);
+    }
+
+    private boolean isHttpDataSourceError(PlaybackException error) {
+        return hasCause(error, HttpDataSource.HttpDataSourceException.class);
+    }
+
+    private String userFacingPlaybackError(PlaybackException error) {
+        if (isNetworkTimeoutError(error) || isHttpDataSourceError(error)) {
+            return LIVE_STREAM_UNAVAILABLE_MESSAGE;
+        }
+        return "Falha ao reproduzir: " + error.getErrorCodeName();
+    }
+
     private void showError(String msg) {
         mainHandler.removeCallbacks(mainBufferWatchdog);
         terminalErrorShown = true;
         Log.e(TAG, "showError: " + msg);
+        if (isLive) {
+            returnErrorAndFinish(msg);
+            return;
+        }
         if (player != null) {
             try { player.stop(); } catch (Exception ignored) {}
         }
@@ -1247,15 +1351,15 @@ public class ExoPlayerActivity extends Activity {
         MediaItem.Builder b = new MediaItem.Builder().setUri(Uri.parse(url));
         if (isHls) {
             b.setMimeType(MimeTypes.APPLICATION_M3U8);
-            Log.d(TAG, "→ HLS: " + url.substring(0, Math.min(80, url.length())));
+            Log.d(TAG, "→ HLS: " + maskUrlForLog(url));
         } else if (isMpegTs) {
             b.setMimeType(MimeTypes.VIDEO_MP2T);
-            Log.d(TAG, "→ MPEG-TS: " + url.substring(0, Math.min(80, url.length())));
+            Log.d(TAG, "→ MPEG-TS: " + maskUrlForLog(url));
         } else {
             if (lower.endsWith(".mp4") || lower.contains(".mp4?")) {
                 b.setMimeType(MimeTypes.VIDEO_MP4);
             }
-            Log.d(TAG, "→ progressive: " + url.substring(0, Math.min(80, url.length())));
+            Log.d(TAG, "→ progressive: " + maskUrlForLog(url));
         }
         return b.build();
     }
@@ -1271,30 +1375,30 @@ public class ExoPlayerActivity extends Activity {
         player.stop();
         player.clearMediaItems();
 
-        // Vinheta agora é overlay de frames .webp (ver startWebpIntro), não um item de
-        // playlist do ExoPlayer. O main stream é sempre o item 0.
         introQueuedForCurrentPlayback = false;
-
-        boolean useWebpIntro = !isLive && !webpIntroConsumed
-                && introUrl != null && !introUrl.isEmpty();
-        diag("introUrl=" + (introUrl == null ? "NULL" : introUrl) + " webpIntro=" + useWebpIntro);
-
+        diag("introUrl=" + (introUrl == null ? "NULL" : introUrl));
+        if (introUrl != null && !introUrl.isEmpty()) {
+            try {
+                MediaItem intro = MediaItem.fromUri(Uri.parse(introUrl));
+                player.addMediaItem(intro);
+                introQueuedForCurrentPlayback = true;
+                diag("Vinheta enfileirada OK");
+            } catch (Exception e) {
+                Log.w(TAG, "intro inválida — ignorando", e);
+                diag("Vinheta ERRO: " + e.getMessage());
+            }
+        } else {
+            diag("Sem vinheta (introUrl vazio)");
+        }
         player.addMediaItem(main);
-        if (!isLive && startPositionMs > 0) {
+
+        // Seek para VOD sem intro: aplica posição inicial direto no main stream.
+        // COM intro: o seek é adiado para onMediaItemTransition; seekar aqui pularia a intro.
+        if (!isLive && startPositionMs > 0 && !introQueuedForCurrentPlayback) {
             player.seekTo(0, startPositionMs);
         }
-
-        if (useWebpIntro) {
-            // NÃO prepara/toca o player ainda: a vinheta webp roda sobre fundo preto.
-            // prepare()+play são chamados em finishWebpIntro() — assim a SurfaceView do
-            // vídeo (setZOrderMediaOverlay no TCL) não renderiza um frame do filme por
-            // cima da vinheta.
-            webpIntroConsumed = true;
-            startWebpIntro();
-        } else {
-            player.setPlayWhenReady(true);
-            player.prepare();
-        }
+        player.setPlayWhenReady(true);
+        player.prepare();
     }
 
     // ───────────────────────── Vinheta webp (overlay) ─────────────────────────
@@ -1411,13 +1515,13 @@ public class ExoPlayerActivity extends Activity {
     private void handleMainBufferStall() {
         if (player == null) return;
         
-        android.util.Log.e(TAG, "TIMEOUT: Buffer travado por mais de 30s. Encerrando.");
-        fecharActivityComErro("Erro de timeout na rede. Tente novamente.");
+        android.util.Log.e(TAG, "TIMEOUT: Buffer travado por mais de " + MAIN_STALL_TIMEOUT_MS + "ms. Encerrando.");
+        fecharActivityComErro(LIVE_STREAM_UNAVAILABLE_MESSAGE);
     }
 
     private void fecharActivityComErro(String mensagem) {
         // Encerra a activity nativa devolvendo o foco para a WebView do React
-        returnResultAndFinish();
+        returnErrorAndFinish(mensagem);
     }
 
     private String normalizeAndroidAssetUri(@Nullable String uri) {
@@ -1696,6 +1800,19 @@ public class ExoPlayerActivity extends Activity {
         }
         Intent res = new Intent();
         res.putExtra(RESULT_POSITION, positionSec);
+        setResult(RESULT_OK, res);
+        pausePlayerBeforeFinish();
+        finish();
+    }
+
+    private void returnErrorAndFinish(String message) {
+        Intent res = new Intent();
+        res.putExtra(RESULT_ERROR, true);
+        res.putExtra(RESULT_ERROR_MESSAGE,
+                message == null || message.trim().isEmpty()
+                        ? LIVE_STREAM_UNAVAILABLE_MESSAGE
+                        : message);
+        res.putExtra(RESULT_POSITION, 0);
         setResult(RESULT_OK, res);
         pausePlayerBeforeFinish();
         finish();

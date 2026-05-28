@@ -1,6 +1,7 @@
 import type { Channel } from '@/types';
 import { env } from '@/config/env';
 import { pickFirstRealStreamUrlFromRow } from '@/utils/streamUrlGuards';
+import { sanitizeFontezChannels } from '@/utils/sourceSanitizer';
 
 // Supabase REST default cap = 1000. Carregar em 1-2 requests reduz spinner em ~1s
 // na TV (Wi-Fi lenta) vs 7 requests de 200 cada.
@@ -94,5 +95,5 @@ export async function loadChannelsFromSupabase(): Promise<Channel[]> {
     offset += PAGE_SIZE;
   }
 
-  return out;
+  return sanitizeFontezChannels(out, 'channelsFromSupabase');
 }

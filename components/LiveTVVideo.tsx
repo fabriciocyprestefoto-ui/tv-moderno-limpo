@@ -4,17 +4,46 @@ import { logger } from '@/utils/logger';
 import { isModernAndroidTVWebView, isTVBox, isLowPower } from '@/utils/tvBoxDetector';
 import { playWhenVideoReady, playWithAutoplayPolicy, prepareVideoForAutoplay } from '@/utils/videoAutoplay';
 import { normalizeRemoteKey } from '@/hooks/useRemoteControl';
-import {
-  getLiveTvRecoveryDecision,
-  LIVE_TV_EMBEDDED_MAX_MEDIA_RECOVERIES,
-  LIVE_TV_EMBEDDED_MAX_NETWORK_RECOVERIES,
-} from '@/utils/liveTvControls';
 
 type HlsErrorData = {
   fatal: boolean;
   type: string;
   details?: string;
 };
+
+const LIVE_STREAM_UNAVAILABLE_MESSAGE = 'Canal indisponível ou servidor não respondeu.';
+const LIVE_HLS_LOAD_TIMEOUT_MS = 12_000;
+const LIVE_HLS_TIMEOUT_MS = 8_000;
+const LIVE_HLS_MAX_RETRIES = 0;
+const SENSITIVE_QUERY_RE = /^(token|access_token|auth|authorization|signature|sig|expires|expires_at|key|jwt)$/i;
+
+function maskLiveTvUrlForLog(value: string): string {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+
+  try {
+    const parsed = new URL(raw);
+    for (const key of Array.from(parsed.searchParams.keys())) {
+      if (SENSITIVE_QUERY_RE.test(key)) {
+        parsed.searchParams.set(key, '***MASKED***');
+      }
+    }
+    const query = parsed.searchParams.toString();
+    return `${parsed.host}${parsed.pathname}${query ? `?${query}` : ''}`;
+  } catch {
+    return raw
+      .replace(/([?&](?:token|access_token|auth|authorization|signature|sig|expires|expires_at|key|jwt)=)[^&\s]+/gi, '$1***MASKED***')
+      .slice(0, 180);
+  }
+}
+
+function isHlsTimeoutDetails(details: unknown): boolean {
+  return String(details || '').toLowerCase().includes('timeout');
+}
+
+function isHlsManifestLoadError(details: unknown): boolean {
+  return String(details || '').toLowerCase().includes('manifestloaderror');
+}
 
 interface LiveTVVideoProps {
   streamUrl: string;
@@ -50,6 +79,7 @@ const LiveTVVideo: React.FC<LiveTVVideoProps> = ({
   const [muted, setMuted] = useState(false);
   const [showMutedHint, setShowMutedHint] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [streamError, setStreamError] = useState<string | null>(null);
 
   const clearRetryTimers = useCallback(() => {
     retryTimersRef.current.forEach((timerId) => window.clearTimeout(timerId));
@@ -61,7 +91,38 @@ const LiveTVVideo: React.FC<LiveTVVideoProps> = ({
     if (!video || !streamUrl || isYouTube) return;
     const url = streamUrl.trim();
     if (!url) return;
+    const maskedUrl = maskLiveTvUrlForLog(url);
     let cancelled = false;
+    let loadTimeoutId: number | null = null;
+
+    const clearLoadTimeout = () => {
+      if (loadTimeoutId !== null) {
+        window.clearTimeout(loadTimeoutId);
+        loadTimeoutId = null;
+      }
+    };
+
+    const markUnavailable = (reason: string) => {
+      if (cancelled) return;
+      clearLoadTimeout();
+      logger.warn('[LiveTV] canal indisponível', { reason, url: maskedUrl });
+      setLoading(false);
+      setStreamError(LIVE_STREAM_UNAVAILABLE_MESSAGE);
+      onStreamError?.();
+      try {
+        hlsRef.current?.stopLoad?.();
+      } catch {
+        /* noop */
+      }
+    };
+
+    const startLoadTimeout = () => {
+      clearLoadTimeout();
+      loadTimeoutId = window.setTimeout(() => {
+        logger.warn(`[LiveTV] HLS timeout url=${maskedUrl} timeoutMs=${LIVE_HLS_LOAD_TIMEOUT_MS}`);
+        markUnavailable('timeout');
+      }, LIVE_HLS_LOAD_TIMEOUT_MS);
+    };
 
     const scheduleRetry = (callback: () => void, delayMs: number) => {
       const timerId = window.setTimeout(() => {
@@ -72,6 +133,7 @@ const LiveTVVideo: React.FC<LiveTVVideoProps> = ({
     };
 
     setLoading(true);
+    setStreamError(null);
     setShowMutedHint(false);
     readyNotifiedForRef.current = '';
     clearRetryTimers();
@@ -88,9 +150,7 @@ const LiveTVVideo: React.FC<LiveTVVideoProps> = ({
     video.load();
     activeUrlRef.current = url;
 
-    logger.log('[LiveTV] Carregando stream:', url);
-    let networkRetries = 0;
-    let mediaRetries = 0;
+    logger.log('[LiveTV] Carregando stream:', maskedUrl);
     const requiresMutedAutoplay = isModernAndroidTVWebView();
 
     const isHLS = url.includes('.m3u8');
@@ -117,58 +177,57 @@ const LiveTVVideo: React.FC<LiveTVVideoProps> = ({
           const constrained = isTVBox() || isLowPower();
           const hls = new Hls({
             enableWorker: !constrained,
-            lowLatencyMode: !constrained,
+            lowLatencyMode: false,
             backBufferLength: constrained ? 10 : 30,
             maxBufferLength: constrained ? 15 : 30,
+            manifestLoadingTimeOut: LIVE_HLS_TIMEOUT_MS,
+            manifestLoadingMaxRetry: LIVE_HLS_MAX_RETRIES,
+            manifestLoadingRetryDelay: 1000,
+            manifestLoadingMaxRetryTimeout: 3000,
+            levelLoadingTimeOut: LIVE_HLS_TIMEOUT_MS,
+            levelLoadingMaxRetry: LIVE_HLS_MAX_RETRIES,
+            levelLoadingRetryDelay: 1000,
+            levelLoadingMaxRetryTimeout: 3000,
+            fragLoadingTimeOut: LIVE_HLS_TIMEOUT_MS,
+            fragLoadingMaxRetry: LIVE_HLS_MAX_RETRIES,
+            fragLoadingRetryDelay: 1000,
+            fragLoadingMaxRetryTimeout: 3000,
           });
           hlsRef.current = hls;
 
           // Evita ícone de play nativo em WebView moderno ao anexar mídia HLS.
           prepareVideoForAutoplay(video, requiresMutedAutoplay);
+          console.warn(`[LiveTV] HLS loadSource url=${maskedUrl}`);
+          startLoadTimeout();
           hls.loadSource(url);
           hls.attachMedia(video);
 
           hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            clearLoadTimeout();
             logger.log('[LiveTV] HLS manifest parsed');
             if (!cancelled) tryPlayWhenReady(video);
           });
 
           hls.on(Hls.Events.ERROR, (_event: unknown, data: HlsErrorData) => {
+            if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+              logger.warn(`[LiveTV] HLS NETWORK_ERROR details=${String(data.details || '')} fatal=${Boolean(data.fatal)} url=${maskedUrl}`);
+              if (isHlsTimeoutDetails(data.details) || isHlsManifestLoadError(data.details)) {
+                logger.warn(`[LiveTV] HLS timeout details=${String(data.details || '')} url=${maskedUrl}`);
+              }
+            }
             if (!data.fatal) return;
             logger.error('[LiveTV] HLS fatal error:', data.type, data.details);
             if (cancelled) return;
 
-            const decision = getLiveTvRecoveryDecision({
-              errorType: data.type,
-              networkRetries,
-              mediaRetries,
-              maxNetworkRetries: LIVE_TV_EMBEDDED_MAX_NETWORK_RECOVERIES,
-              maxMediaRetries: LIVE_TV_EMBEDDED_MAX_MEDIA_RECOVERIES,
-              delayMode: 'exponential',
-            });
-
-            if (decision.action === 'retry-network') {
-              networkRetries++;
-              logger.warn(
-                `[LiveTV] Retry rede ${networkRetries}/${LIVE_TV_EMBEDDED_MAX_NETWORK_RECOVERIES} em ${decision.delayMs}ms`
-              );
-              scheduleRetry(() => hls.startLoad(), decision.delayMs);
-              return;
-            }
-
-            if (decision.action === 'recover-media') {
-              mediaRetries++;
-              const delayMs = Math.min(1000 * Math.pow(2, mediaRetries - 1), 16000);
-              logger.warn(
-                `[LiveTV] Recuperação mídia ${mediaRetries}/${LIVE_TV_EMBEDDED_MAX_MEDIA_RECOVERIES} em ${delayMs}ms`
-              );
-              scheduleRetry(() => hls.recoverMediaError(), delayMs);
-              return;
-            }
-
-            logger.error('[LiveTV] Max retries HLS atingido, desistindo');
-            setLoading(false);
-            onStreamError?.();
+            markUnavailable(
+              isHlsManifestLoadError(data.details)
+                ? 'manifestLoadError'
+                : isHlsTimeoutDetails(data.details)
+                  ? 'timeout'
+                  : data.type === Hls.ErrorTypes.NETWORK_ERROR
+                    ? 'network'
+                    : 'fatal'
+            );
           });
         })
         .catch((err) => {
@@ -234,6 +293,7 @@ const LiveTVVideo: React.FC<LiveTVVideoProps> = ({
 
     return () => {
       cancelled = true;
+      clearLoadTimeout();
       clearRetryTimers();
       readyPlayCleanupRef.current?.();
       readyPlayCleanupRef.current = null;
@@ -245,6 +305,7 @@ const LiveTVVideo: React.FC<LiveTVVideoProps> = ({
       video.removeAttribute('src');
       video.load();
       setLoading(true);
+      setStreamError(null);
       setShowMutedHint(false);
       activeUrlRef.current = '';
     };
@@ -314,6 +375,16 @@ const LiveTVVideo: React.FC<LiveTVVideoProps> = ({
           <span>Pressione OK para ativar o som</span>
         </div>
       )}
+      {streamError && (
+        <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-black/60 px-8 text-center">
+          <div className="rounded-xl border border-white/10 bg-black/70 px-6 py-5 text-white/85">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-white/45">
+              Canal indisponível
+            </p>
+            <p className="mt-2 text-sm font-bold">{streamError}</p>
+          </div>
+        </div>
+      )}
       <video
         ref={(el) => {
           (videoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
@@ -333,8 +404,9 @@ const LiveTVVideo: React.FC<LiveTVVideoProps> = ({
         onLoadedData={handleReady}
         onCanPlay={handleReady}
         onError={() => {
-          logger.warn('[LiveTV] Erro no stream:', streamUrl?.substring(0, 50));
+          logger.warn('[LiveTV] Erro no stream:', maskLiveTvUrlForLog(streamUrl || ''));
           setLoading(false);
+          setStreamError(LIVE_STREAM_UNAVAILABLE_MESSAGE);
           // Notificar erro para o componente pai (LiveTV.tsx)
           onStreamError?.();
         }}

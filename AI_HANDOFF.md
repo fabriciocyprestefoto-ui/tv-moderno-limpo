@@ -1,8 +1,46 @@
 # AI_HANDOFF.md
 
-Ultima atualizacao: 2026-05-13 06:35 -03:00 (Sprint 1 polimento)
+Ultima atualizacao: 2026-05-27 18:30 -03:00 (recuperacao + fix player nativo na TCL)
 
 Fonte oficial de continuidade para GPT/Codex/Claude/futuras sessoes. Atualizar ao final de cada etapa antes de parar.
+
+## 0. Estado Atual (2026-05-27)
+
+### 0.1 Contexto de recuperacao
+- Projeto atual em `C:\Users\Fabricio\Desktop\tv-moderno-limpo`.
+- Backup `redflix-tvbox-app-backup-tv-moderno-2026-05-13.zip` = snapshot de 13/05 07:51. Conferido: o projeto atual e SUPERSET do backup (0 arquivos perdidos).
+- Comparacao backup x atual: 518 arquivos com hash diferente, mas 467 eram apenas conversao de fim de linha LF->CRLF (Windows). Mudanca REAL de conteudo: 51 arquivos, quase todos codigo mais novo (player nativo, sportsApi, vite.config, etc.). NAO reverter para o backup — perderia ~2 semanas de trabalho.
+
+### 0.2 Dispositivo de teste (TCL)
+- Modelo: Smart TV "G07_4K_GB_NF" (RealTek). Android 11 (SDK 30). WebView Chromium 148.
+- ADB sobre WiFi (Depuracao sem fio / wireless debugging, Android 11+): parear com `adb pair IP:portaPareamento <codigo>`, depois `adb connect IP:5555`. IP via DHCP (mudou 192.168.0.7 -> 192.168.0.4).
+- adb.exe: `C:\Users\Fabricio\AppData\Local\Android\Sdk\platform-tools\adb.exe`.
+- appId: `com.redflix.tvmoderno`. UA inclui ` RedflixTV/1.0` (detector trata como TV Box).
+
+### 0.3 Build e instalacao do APK
+- `npm run build:apk:debug` (vite build -> `npx cap sync android` -> `gradlew assembleDebug` -> copia para `redflix-tvmoderno.apk`).
+- `npm_lifecycle_event` casa `/apk/i` em `vite.config.ts` => `isCapacitorBuild=true` => `isTvBuild=true` e `nativeAndroidPlayerEnabled=true` (player nativo ligado).
+- Instalar: `adb -s 192.168.0.4:5555 install -r android\app\build\outputs\apk\debug\app-debug.apk`.
+
+### 0.4 Fix do player nativo (regressao corrigida) — RESOLVIDO
+- Sintoma: clicar "Assistir" nao abria vinheta nem filme/serie (funcionava em 13/05).
+- Causa: o refactor "TV Moderno" gateou o player nativo atras de `!isFireTV() && !isLegacyHtml5OnlyTV()` em DOIS lugares: `pages/Player.tsx` (decisao `NativeVodPlayer`) e `utils/tvModernoBridge.ts` (`hasNativePlayer()`). `isLegacyHtml5OnlyTV()` testa a VERSAO do WebView (Chrome<80 ou Android<=7), mas o player nativo e uma Activity Android (Media3/ExoPlayer) que NAO depende do WebView. Em 13/05 o player era usado sempre que `isTvBuild && isNativePlatform()`.
+- Fix: removido `!isLegacyHtml5OnlyTV()` da decisao nativa nos dois arquivos (mantido `!isFireTV()`). Confirmado: player abre e reproduz na TCL.
+- Observacao: nesta TCL especifica `isLegacyHtml5OnlyTV()` ja era `false` (Android 11 / Chrome 148), entao o fix nao a desbloqueou diretamente — o que resolveu na pratica foi rebuildar o APK a partir da fonte atual (o APK instalado antes era de um build antigo). O fix protege TVs de WebView realmente antigo e permanece correto.
+
+### 0.5 Pipeline de imagem atual (posters/logos)
+- `utils/mediaUtils.ts::getPosterUrl` resolve poster: tmdb_id+poster_path -> `${IMAGE_BASE}/w500${path}`; senao usa `media.poster` (URL completa). Sempre passa por `utils/imageProxy.ts::toWebP(url, 'poster')`.
+- `imageProxy.toWebP`: em APK nativo (`isNativeCapacitorApp()`), retorna a URL TMDB DIRETA (sem proxy). Fora do nativo, posters/backdrops vao por `wsrv.nl` (WebP, w500/w1280). Logos TMDB retornam sempre DIRETO (mantem PNG transparente).
+- Catalogo bundled (`public/data/*.json`): movies 4644 itens / 13690 URLs https TMDB + 133 http `file.gstaticontent.com`; series 5045 itens / 17 http; channels 2171 logos com 526 http (img.onetv.plus, postimg.cc, etc.).
+
+### 0.6 Bug ABERTO — posters nao aparecem na TCL (so o logo do titulo)
+- Sintoma: nas fileiras, aparece so o LOGO do titulo (PNG TMDB) sobre gradiente; o POSTER (JPG) fica em branco.
+- Diagnostico ate agora:
+  - Posters dos itens visiveis (ex.: Devil May Cry, Frieren, Maquina de Guerra) sao `https://image.tmdb.org/t/p/w500/*.jpg` validos (PC retorna HTTP 200). Hosts alcancaveis da TCL (ping OK). Logcat NAO mostra requests a `wsrv.nl` (bypass nativo ativo => posters vao direto).
+  - Logos TMDB (https, /original/*.png) renderizam; posters TMDB (https, /w500/*.jpg) nao — mesma origem/scheme.
+  - Mixed Content confirmado para as URLs http do catalogo (`http://file.gstaticontent.com//t/p/...`) — bloqueadas pelo Chromium 148 mesmo com `allowMixedContent:true`. `file.gstaticontent.com` so serve HTTP (https da SSL error), entao rewrite http->https nao resolve esse host.
+  - `MediaCard`/`LazyImage`/`VirtualGrid`/`getPosterUrl` sao identicos a 13/05 (so CRLF). O que mudou foi `imageProxy.ts` (bypass nativo, 21/05): em 13/05 posters iam por wsrv.nl WebP (menor) e funcionavam; agora vao TMDB direto (JPG full-size).
+- Hipotese principal: na TCL com pouca RAM, muitos JPG w500 full-size diretos falham ao decodificar/renderizar (memoria), enquanto o WebP menor via wsrv.nl cabia. Fix candidato: rotear posters/backdrops por wsrv.nl WebP tambem no nativo, e rotear qualquer URL http de imagem por wsrv.nl (https) para matar o mixed content. Validar com screenshot via adb apos rebuild.
 
 ## 1. Visao Geral
 

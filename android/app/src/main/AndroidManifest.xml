@@ -23,11 +23,12 @@
 
 
         <activity
-            android:name=".NativeBootActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|uiMode|navigation|density"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:hardwareAccelerated="true"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:exported="true"
             android:banner="@drawable/tv_banner">
 
@@ -44,16 +45,6 @@
             </intent-filter>
 
         </activity>
-
-        <activity
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBarLaunch"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:exported="false"
-            android:banner="@drawable/tv_banner" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

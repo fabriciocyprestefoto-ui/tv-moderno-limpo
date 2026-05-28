@@ -1,5 +1,5 @@
 /**
- * Service Worker — RedX Streaming v5
+ * Service Worker — RedX Streaming v6
  * Cache inteligente — HTML5 apenas
  *
  * Estratégias:
@@ -11,9 +11,10 @@
  * Zero dependência externa (sem Workbox).
  */
 
-const CACHE_VERSION = 'redx-v5';
-const CACHE_IMAGES = 'redx-images-v5';
-const CACHE_API = 'redx-api-v5';
+const CACHE_VERSION = 'redx-v6';
+const CACHE_IMAGES = 'redx-images-v6';
+const CACHE_API = 'redx-api-v6';
+const OLD_DEAD_SOURCE_RE = /newoneblue(?:\.site)?/i;
 
 // TTLs em ms
 const TTL_IMAGES = 7 * 24 * 60 * 60 * 1000; // 7 dias
@@ -31,6 +32,10 @@ function isImageRequest(url) {
     url.includes('/img-proxy/') ||
     /\.(webp|jpg|jpeg|png|gif|svg)(\?|$)/i.test(url)
   );
+}
+
+function isDeadSourceRequest(url) {
+  return OLD_DEAD_SOURCE_RE.test(String(url || ''));
 }
 
 /** Detecta ambiente de desenvolvimento (localhost) */
@@ -236,7 +241,22 @@ self.addEventListener('activate', (event) => {
           .filter((key) => !CURRENT_CACHES.has(key))
           .map((key) => caches.delete(key))
       )
-    ).then(() => self.clients.claim())
+    )
+      .then(async () => {
+        const currentKeys = await caches.keys();
+        await Promise.all(
+          currentKeys.map(async (cacheName) => {
+            const cache = await caches.open(cacheName);
+            const requests = await cache.keys();
+            await Promise.all(
+              requests
+                .filter((request) => isDeadSourceRequest(request.url))
+                .map((request) => cache.delete(request))
+            );
+          })
+        );
+      })
+      .then(() => self.clients.claim())
   );
 });
 
@@ -249,6 +269,11 @@ self.addEventListener('fetch', (event) => {
 
   // Ignorar requests de extensão, chrome-extension, etc.
   if (!url.startsWith('http')) return;
+
+  if (isDeadSourceRequest(url)) {
+    event.respondWith(new Response('', { status: 410, statusText: 'Dead source removed' }));
+    return;
+  }
 
   // ── Imagens (WebP proxy, TMDB) ──
   // Em dev: NetworkFirst para evitar ERR_CACHE_READ_FAILURE com cache corrompido

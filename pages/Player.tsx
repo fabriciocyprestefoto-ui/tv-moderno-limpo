@@ -18,7 +18,7 @@ import { type ResumeAction } from '../utils/playerTvControls';
 import { useProgressHeartbeat } from './player/useProgressHeartbeat';
 import { usePlayerIntro } from './player/usePlayerIntro';
 import { usePlayerKeyboard } from './player/usePlayerKeyboard';
-import { isFireTV, isModernAndroidTVWebView, isLegacyHtml5OnlyTV, isTVBox } from '../utils/tvBoxDetector';
+import { isFireTV, isModernAndroidTVWebView, isTVBox } from '../utils/tvBoxDetector';
 import { playWhenVideoReady } from '../utils/videoAutoplay';
 import { normalizeRemoteKey } from '../hooks/useRemoteControl';
 import { hasNativePlayer } from '../utils/tvModernoBridge';
@@ -1607,14 +1607,16 @@ const PlayerImpl: React.FC<PlayerProps> = ({
 
 /**
  * Player principal.
- * TV moderno usa Media3; Firestick/Android antigo fica no HTML5/HLS.js.
+ * TV nativa usa Media3 (ExoPlayer) — inclusive WebView antigo, porque o player é uma
+ * Activity Android nativa e independe da versão do Chromium. Só Firestick fica no
+ * HTML5/HLS.js. NÃO recolocar isLegacyHtml5OnlyTV() neste gate: bloquear o nativo por
+ * versão de WebView quebra VOD em TVs com WebView antigo (ex.: TCL) — regressão 2026-05.
  */
 const Player: React.FC<PlayerProps> = (props) => {
   if (
     runtimeFlags.isTvBuild &&
     runtimeFlags.nativeAndroidPlayerEnabled &&
     !isFireTV() &&
-    !isLegacyHtml5OnlyTV() &&
     isNativePlatform()
   ) {
     return <NativeVodPlayer {...props} />;

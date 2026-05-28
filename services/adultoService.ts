@@ -1,5 +1,6 @@
 import { fetchWithCache, supabase, ensureValidSession } from '@/services/supabaseService';
 import { logger } from '@/utils/logger';
+import { sanitizeFontezChannels } from '@/utils/sourceSanitizer';
 
 export type AdultMenuSection = {
   id: string;
@@ -120,10 +121,13 @@ export async function fetchAdultStreamsFromM3U(options?: {
   }
 
   const raw = await res.text();
-  let streams = parseAdultoTxt(raw).map((s) => ({
-    ...s,
-    source: 'adulto-data.m3u',
-  }));
+  let streams = sanitizeFontezChannels(
+    parseAdultoTxt(raw).map((s) => ({
+      ...s,
+      source: 'adulto-data.m3u',
+    })),
+    'adultoService'
+  );
 
   if (groupTitle) {
     streams = streams.filter((s) => (s.group_title || '').trim() === groupTitle);
@@ -204,7 +208,7 @@ export async function fetchAdultStreamsFromSupabase(options?: {
 
     const { data, error } = await q;
     if (error) throw error;
-    return data || [];
+    return sanitizeFontezChannels(data || [], 'adultoService:supabase');
   });
 }
 

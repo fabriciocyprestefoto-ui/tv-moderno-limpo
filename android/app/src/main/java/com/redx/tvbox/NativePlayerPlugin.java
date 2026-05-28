@@ -33,7 +33,7 @@ public class NativePlayerPlugin extends Plugin {
             call.reject("URL é obrigatória");
             return;
         }
-        Log.i(TAG, "URL: " + url.substring(0, Math.min(100, url.length())));
+        Log.i(TAG, "URL: " + maskUrlForLog(url));
 
         String title = call.getString("title", "");
         String year = call.getString("year", "");
@@ -43,6 +43,7 @@ public class NativePlayerPlugin extends Plugin {
         String introUrl = call.getString("introUrl", "");
         int position = call.getInt("position", 0);
         boolean isLive = call.getBoolean("isLive", false) || "live".equalsIgnoreCase(type);
+        Log.i(TAG, "[NativePlayer] start " + (isLive ? "live" : "vod") + " url=" + maskUrlForLog(url));
 
         android.app.Activity activity = getActivity();
         if (activity == null) {
@@ -133,6 +134,15 @@ public class NativePlayerPlugin extends Plugin {
             return;
         }
 
+        if (data != null && data.getBooleanExtra(ExoPlayerActivity.RESULT_ERROR, false)) {
+            String message = data.getStringExtra(ExoPlayerActivity.RESULT_ERROR_MESSAGE);
+            if (message == null || message.trim().isEmpty()) {
+                message = "Canal indisponível ou servidor não respondeu.";
+            }
+            call.reject(message);
+            return;
+        }
+
         int position = 0;
         if (data != null && data.hasExtra(ExoPlayerActivity.RESULT_POSITION)) {
             position = data.getIntExtra(ExoPlayerActivity.RESULT_POSITION, 0);
@@ -149,6 +159,54 @@ public class NativePlayerPlugin extends Plugin {
             ret.put("action", action);
         }
         call.resolve(ret);
+    }
+
+    private static boolean isSensitiveQueryKey(String key) {
+        if (key == null) return false;
+        return key.equalsIgnoreCase("token")
+                || key.equalsIgnoreCase("access_token")
+                || key.equalsIgnoreCase("auth")
+                || key.equalsIgnoreCase("authorization")
+                || key.equalsIgnoreCase("signature")
+                || key.equalsIgnoreCase("sig")
+                || key.equalsIgnoreCase("expires")
+                || key.equalsIgnoreCase("expires_at")
+                || key.equalsIgnoreCase("key")
+                || key.equalsIgnoreCase("jwt");
+    }
+
+    private static String maskUrlForLog(String raw) {
+        if (raw == null || raw.trim().isEmpty()) return "";
+        try {
+            android.net.Uri uri = android.net.Uri.parse(raw);
+            if (uri.getHost() == null) {
+                return raw.replaceAll("(?i)([?&](?:token|access_token|auth|authorization|signature|sig|expires|expires_at|key|jwt)=)[^&\\s]+", "$1***MASKED***");
+            }
+            StringBuilder out = new StringBuilder();
+            out.append(uri.getHost());
+            if (uri.getPort() >= 0) out.append(":").append(uri.getPort());
+            String path = uri.getEncodedPath();
+            if (path != null) out.append(path);
+            String query = uri.getEncodedQuery();
+            if (query != null && !query.isEmpty()) {
+                out.append("?");
+                String[] parts = query.split("&");
+                for (int i = 0; i < parts.length; i++) {
+                    if (i > 0) out.append("&");
+                    String part = parts[i];
+                    int eq = part.indexOf('=');
+                    String key = eq >= 0 ? part.substring(0, eq) : part;
+                    if (isSensitiveQueryKey(android.net.Uri.decode(key))) {
+                        out.append(key).append("=***MASKED***");
+                    } else {
+                        out.append(part);
+                    }
+                }
+            }
+            return out.toString();
+        } catch (Exception ignored) {
+            return raw.replaceAll("(?i)([?&](?:token|access_token|auth|authorization|signature|sig|expires|expires_at|key|jwt)=)[^&\\s]+", "$1***MASKED***");
+        }
     }
 
     private void restoreWebViewVisibility() {

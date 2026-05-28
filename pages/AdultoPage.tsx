@@ -17,6 +17,7 @@ import { isNativePlatform, playNative } from '@/services/nativePlayerService';
 import { isFireTV, isLegacyHtml5OnlyTV } from '@/utils/tvBoxDetector';
 
 const ADULT_LIMIT = 400;
+const LOCAL_CHANNEL_PLACEHOLDER = '/logored.webp';
 
 /** Adapta AdultStream para formato usado pela página Adultos. */
 function adaptAdultStreams(streams: AdultStream[]): Array<{
@@ -31,7 +32,7 @@ function adaptAdultStreams(streams: AdultStream[]): Array<{
     id: s.id,
     number: index + 1,
     name: s.title,
-    logo: s.logo_url || 'https://i.imgur.com/PbZS1ej.png',
+    logo: s.logo_url || LOCAL_CHANNEL_PLACEHOLDER,
     category: (s.group_title || 'xxx-adultos').trim(),
     stream_url: s.stream_url,
   }));
@@ -482,6 +483,9 @@ export default function AdultoPage() {
                 alt={selectedChannel.name}
                 className="h-10 object-contain brightness-200"
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  e.currentTarget.src = LOCAL_CHANNEL_PLACEHOLDER;
+                }}
               />
             )}
             <span className="text-lg font-black text-white uppercase tracking-tighter">
@@ -528,6 +532,9 @@ export default function AdultoPage() {
                       alt=""
                       className="h-8 w-10 object-contain"
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = LOCAL_CHANNEL_PLACEHOLDER;
+                      }}
                     />
                   )}
                   <span className="min-w-0 flex-1 truncate text-sm font-bold">

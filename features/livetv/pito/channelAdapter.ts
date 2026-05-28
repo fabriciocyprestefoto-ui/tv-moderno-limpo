@@ -1,5 +1,6 @@
 import { Channel } from '@/types';
 import { stripDiacriticsSafe } from '@/utils/safeUnicodeNormalize';
+import { sanitizeFontezChannels } from '@/utils/sourceSanitizer';
 import { ChannelQuality, ChannelRegion, PitoChannel, PitoCategory, Program } from './types';
 
 /** Ordem de prioridade de qualidade (melhor primeiro) */
@@ -294,12 +295,13 @@ export function adaptChannels(rawChannels: Channel[]): {
   channels: PitoChannel[];
   categories: PitoCategory[];
 } {
+  const safeRawChannels = sanitizeFontezChannels(rawChannels, 'channelAdapter');
   const pitoCats = new Map<string, PitoCategory>();
 
   // Mapa: baseName__catId → array de variantes
   const groupMap = new Map<string, VariantEntry[]>();
 
-  rawChannels.forEach((c) => {
+  safeRawChannels.forEach((c) => {
     let rawCat = (c.category || 'Variedades').trim();
     if (!rawCat) rawCat = 'Variedades';
     rawCat = mapToCanonicalGenre(rawCat);

@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.os.Build;
 
@@ -30,7 +29,6 @@ public class MainActivity extends BridgeActivity {
      */
     private final AtomicBoolean inputFocused = new AtomicBoolean(false);
     private final AtomicBoolean jsBridgeInstalled = new AtomicBoolean(false);
-    private final AtomicBoolean webChromeGuardInstalled = new AtomicBoolean(false);
     // Evita dupla injeção de deviceInfo em onResume + onWindowFocusChanged no mesmo ciclo
     private final AtomicBoolean deviceInfoInjectedOnResume = new AtomicBoolean(false);
 
@@ -212,7 +210,7 @@ public class MainActivity extends BridgeActivity {
                                 intent.putExtra(ExoPlayerActivity.EXTRA_IS_LIVE, true);
                             }
                             startActivity(intent);
-                            android.util.Log.d("RED-X", "openPlayer → " + url);
+                            android.util.Log.d("RED-X", "openPlayer → " + maskUrlForLog(url));
                         } catch (Exception e) {
                             android.util.Log.e("RED-X", "openPlayer failed: " + e.getMessage());
                         }
@@ -224,24 +222,10 @@ public class MainActivity extends BridgeActivity {
                 }, "Android");
             }
 
-            if (shouldForceNativePlayback() && webChromeGuardInstalled.compareAndSet(false, true)) {
-                webView.setWebChromeClient(new WebChromeClient() {
-                    @Override
-                    public void onShowCustomView(View view, CustomViewCallback callback) {
-                        android.util.Log.w("RED-X", "HTML5 fullscreen bloqueado: usar ExoPlayerActivity nativo");
-                        pauseAllHtmlVideos();
-                        try {
-                            if (callback != null) callback.onCustomViewHidden();
-                        } catch (Exception ignored) {}
-                    }
-
-                    @Override
-                    public void onHideCustomView() {
-                        android.util.Log.d("RED-X", "HTML5 fullscreen hide ignorado");
-                    }
-                });
-                android.util.Log.d("RED-X", "WebChromeClient guard instalado: fullscreen HTML5 bloqueado no Android TV moderno");
-            }
+            // NOTA: WebChromeClient e WebViewClient NÃO são sobrescritos aqui — Capacitor precisa
+            // dos próprios pra bridge. Bloqueio de player WebView é feito 100% no lado web:
+            // - Nenhum <video> é montado quando window.Android.openPlayer existe.
+            // - Vídeo abre direto no ExoPlayerActivity nativo via bridge JS.
 
             return true;
 
@@ -252,20 +236,52 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
-    private boolean shouldForceNativePlayback() {
-        // TV moderno usa Media3/ExoPlayer; WebView fica só para UI/catálogo.
-        // Fire TV e Android antigo preservam o caminho HTML5/HLS.js legado.
-        String mfg = Build.MANUFACTURER == null ? "" : Build.MANUFACTURER.toLowerCase();
-        String brand = Build.BRAND == null ? "" : Build.BRAND.toLowerCase();
-        String model = Build.MODEL == null ? "" : Build.MODEL.toLowerCase();
-        boolean isFireTv = mfg.contains("amazon") || brand.contains("amazon")
-                || model.startsWith("aft") || model.contains("fire tv");
-        boolean isLegacyAndroid = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1;
-        return !isFireTv && !isLegacyAndroid;
+    private static boolean isSensitiveQueryKey(String key) {
+        if (key == null) return false;
+        return key.equalsIgnoreCase("token")
+                || key.equalsIgnoreCase("access_token")
+                || key.equalsIgnoreCase("auth")
+                || key.equalsIgnoreCase("authorization")
+                || key.equalsIgnoreCase("signature")
+                || key.equalsIgnoreCase("sig")
+                || key.equalsIgnoreCase("expires")
+                || key.equalsIgnoreCase("expires_at")
+                || key.equalsIgnoreCase("key")
+                || key.equalsIgnoreCase("jwt");
     }
 
-    private void pauseAllHtmlVideos() {
-        runJS("(function(){try{document.querySelectorAll('video').forEach(function(v){try{v.pause();v.removeAttribute('src');v.load();}catch(e){}});}catch(e){}})();");
+    private static String maskUrlForLog(String raw) {
+        if (raw == null || raw.trim().isEmpty()) return "";
+        try {
+            android.net.Uri uri = android.net.Uri.parse(raw);
+            if (uri.getHost() == null) {
+                return raw.replaceAll("(?i)([?&](?:token|access_token|auth|authorization|signature|sig|expires|expires_at|key|jwt)=)[^&\\s]+", "$1***MASKED***");
+            }
+            StringBuilder out = new StringBuilder();
+            out.append(uri.getHost());
+            if (uri.getPort() >= 0) out.append(":").append(uri.getPort());
+            String path = uri.getEncodedPath();
+            if (path != null) out.append(path);
+            String query = uri.getEncodedQuery();
+            if (query != null && !query.isEmpty()) {
+                out.append("?");
+                String[] parts = query.split("&");
+                for (int i = 0; i < parts.length; i++) {
+                    if (i > 0) out.append("&");
+                    String part = parts[i];
+                    int eq = part.indexOf('=');
+                    String key = eq >= 0 ? part.substring(0, eq) : part;
+                    if (isSensitiveQueryKey(android.net.Uri.decode(key))) {
+                        out.append(key).append("=***MASKED***");
+                    } else {
+                        out.append(part);
+                    }
+                }
+            }
+            return out.toString();
+        } catch (Exception ignored) {
+            return raw.replaceAll("(?i)([?&](?:token|access_token|auth|authorization|signature|sig|expires|expires_at|key|jwt)=)[^&\\s]+", "$1***MASKED***");
+        }
     }
 
     /**

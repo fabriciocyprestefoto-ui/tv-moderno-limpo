@@ -24,6 +24,8 @@ export interface NativePlayerResult {
   cancelled: boolean;
   /** Ação opcional devolvida por LiveTV (ex.: zapping ChannelUp/ChannelDown). */
   action?: string;
+  error?: boolean;
+  errorMessage?: string;
 }
 
 interface NativePlayerPlugin {
@@ -47,9 +49,32 @@ export function isNativePlatform(): boolean {
  * Use sempre que `isNativePlatform()` for true em vez do `<video>` HTML5,
  * para evitar tela preta com áudio em m3u8 e o ícone gigante de play em TVs novas.
  */
+function isBlobUrl(url: string): boolean {
+  return typeof url === 'string' && /^blob:/i.test(url.trim());
+}
+
+function isAcceptableNativeUrl(url: string): boolean {
+  if (!url) return false;
+  return /^(https?:\/\/|file:\/\/|asset:\/\/|content:\/\/|rtmp:\/\/|rtsp:\/\/)/i.test(url.trim());
+}
+
 export async function playNative(options: NativePlayerOptions): Promise<NativePlayerResult> {
   if (!options.url) {
     throw new Error('[NativePlayer] url obrigatória');
+  }
+  // Guard 1: blob: URLs vêm de URL.createObjectURL no WebView e NÃO podem ser
+  // lidas pelo processo ExoPlayer nativo (escopo de origem do WebView). Rejeitar
+  // cedo evita Activity abrir e morrer com erro silencioso.
+  if (isBlobUrl(options.url)) {
+    // eslint-disable-next-line no-console
+    console.error('[NativePlayer] URL blob não pode ser usada no ExoPlayer:', options.url);
+    throw new Error('[NativePlayer] blob URL inválida para Activity nativa: ' + options.url.slice(0, 80));
+  }
+  // Guard 2: schemes desconhecidos (data:, javascript:, ws:, etc.) também não rolam.
+  if (!isAcceptableNativeUrl(options.url)) {
+    // eslint-disable-next-line no-console
+    console.error('[NativePlayer] scheme não suportado:', options.url);
+    throw new Error('[NativePlayer] scheme inválido: ' + options.url.slice(0, 80));
   }
   try {
     const result = await NativePlayer.play({
@@ -68,6 +93,8 @@ export async function playNative(options: NativePlayerOptions): Promise<NativePl
       position: result?.position ?? 0,
       cancelled: result?.cancelled ?? false,
       action: result?.action,
+      error: result?.error,
+      errorMessage: result?.errorMessage,
     };
   } catch (err) {
     // eslint-disable-next-line no-console

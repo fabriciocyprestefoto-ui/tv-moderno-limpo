@@ -1,5 +1,5 @@
 import { runtimeFlags } from '@/config/runtimeFlags';
-import { isFireTV, isLegacyHtml5OnlyTV } from '@/utils/tvBoxDetector';
+import { isFireTV } from '@/utils/tvBoxDetector';
 
 /**
  * RedFlix TV Moderno — Bridge para player nativo Android (Media3/ExoPlayer).
@@ -35,10 +35,11 @@ declare global {
 /** True se o bridge nativo Android está disponível (build TV Moderno em APK Capacitor). */
 export function hasNativePlayer(): boolean {
   try {
+    // Sem gate de isLegacyHtml5OnlyTV(): o player nativo é Activity Android e independe
+    // da versão do WebView. Bloqueá-lo por Chromium antigo quebrava VOD na TCL (2026-05).
     return (
       runtimeFlags.nativeAndroidPlayerEnabled &&
       !isFireTV() &&
-      !isLegacyHtml5OnlyTV() &&
       typeof window !== 'undefined' &&
       typeof window.Android?.openPlayer === 'function' &&
       window.Android.isAvailable?.() === true

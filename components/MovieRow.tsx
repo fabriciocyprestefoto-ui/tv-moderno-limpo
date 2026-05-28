@@ -11,8 +11,40 @@ import {
 import { playNavigateSound, playSelectSound } from '../utils/soundEffects';
 import { getMediaDetailsByID, getLogo } from '../services/tmdb';
 import LazyImage, { ERROR_SVG } from '../components/LazyImage';
-import styles from './MovieRow.module.css';
 import { isTVBox } from '../utils/tvBoxDetector';
+
+// CSS-module convertido para CSS global: no build TV (plugin-legacy renderModernChunks:false)
+// o CSS-module era descartado do bundle e os cards colapsavam (altura ~0) — aparecia so o logo.
+// Este mapa preserva todas as referencias `styles.X` do JSX apontando para classes globais.
+const styles = {
+  rowSection: 'mvrow-rowSection',
+  rowTitle: 'mvrow-rowTitle',
+  rowTitleLine: 'mvrow-rowTitleLine',
+  rowShell: 'mvrow-rowShell',
+  rowShellExpanded: 'mvrow-rowShellExpanded',
+  highlightSlot: 'mvrow-highlightSlot',
+  highlightSlotOpen: 'mvrow-highlightSlotOpen',
+  verticalFeaturedCard: 'mvrow-verticalFeaturedCard',
+  horizontalCard: 'mvrow-horizontalCard',
+  verticalFeaturedImage: 'mvrow-verticalFeaturedImage',
+  horizontalImage: 'mvrow-horizontalImage',
+  horizontalOverlay: 'mvrow-horizontalOverlay',
+  horizontalLogo: 'mvrow-horizontalLogo',
+  trackWrapper: 'mvrow-trackWrapper',
+  navButton: 'mvrow-navButton',
+  navButtonLeft: 'mvrow-navButtonLeft',
+  navButtonRight: 'mvrow-navButtonRight',
+  rowTrack: 'mvrow-rowTrack',
+  cardWrap: 'mvrow-cardWrap',
+  card: 'mvrow-card',
+  cardImage: 'mvrow-cardImage',
+  cardGradient: 'mvrow-cardGradient',
+  cardLogo: 'mvrow-cardLogo',
+  progress: 'mvrow-progress',
+  progressFill: 'mvrow-progressFill',
+  placeholder: 'mvrow-placeholder',
+  sentinel: 'mvrow-sentinel',
+} as const;
 
 const LOGO_CACHE_MAX = 200;
 const _logoCache = new Map<string, string | null>();

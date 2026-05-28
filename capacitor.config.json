@@ -8,7 +8,7 @@
   "android": {
     "allowMixedContent": true,
     "captureInput": false,
-    "webContentsDebuggingEnabled": false,
+    "webContentsDebuggingEnabled": true,
     "mediaPlaybackRequiresUserGesture": false,
     "backgroundColor": "#000000",
     "appendUserAgent": " RedflixTV/1.0"

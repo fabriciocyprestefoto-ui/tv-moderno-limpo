@@ -19,6 +19,7 @@ import AdultPinModal, {
 } from '@/pages/livetv/AdultPinModal';
 
 import { setSignal } from '@/utils/appSignals';
+import { sanitizeUrlForLog } from '@/utils/sanitizeUrlForLog';
 import { getAdjacentLiveTvChannelIndex } from '@/utils/liveTvControls';
 import { normalizeRemoteKey } from '@/hooks/useRemoteControl';
 import { runtimeFlags } from '@/config/runtimeFlags';
@@ -37,6 +38,135 @@ const LIVETV_LOADING_SURFACE = {
   backgroundRepeat: 'no-repeat' as const,
   backgroundSize: 'cover' as const,
 };
+const LOCAL_CHANNEL_PLACEHOLDER = '/logored.webp';
+const LIVE_STREAM_UNAVAILABLE_MESSAGE = 'Canal indisponível ou servidor não respondeu.';
+// Timeouts HLS.js (web/Fire Stick). O painel fontez.cc faz 302 rápido para uma CDN
+// edge; uma edge lenta-mas-viva pode levar >8s para o manifest. 28s dá folga para
+// edge lenta sem deixar "CARREGANDO..." infinito quando a edge está morta.
+const LIVE_HLS_TIMEOUT_MS = 28_000;        // manifest/level/frag loadingTimeOut
+const LIVE_HLS_LOAD_TIMEOUT_MS = 30_000;   // watchdog JS geral (> manifest p/ HLS.js errar primeiro)
+const LIVE_HLS_MAX_RETRIES = 1;            // retry baixo — não martelar edge morta
+// Após falha de um canal, pula auto-zap desse canal+url por 2 min. Enter/ChannelUp/
+// ChannelDown/clique e o botão "Tentar novamente" ignoram/limpam o bloqueio.
+const LIVE_FAILURE_STORAGE_KEY = 'redx:liveChannelFailures';
+const LIVE_FAILURE_TTL_MS = 2 * 60_000;
+
+/** Alias retrocompat — mascara token/credencial antes de logar (aparece no logcat da TV). */
+const maskLiveTvUrlForLog = sanitizeUrlForLog;
+
+function isHlsTimeoutDetails(details: unknown): boolean {
+  return String(details || '').toLowerCase().includes('timeout');
+}
+
+function isHlsManifestLoadError(details: unknown): boolean {
+  return String(details || '').toLowerCase().includes('manifestloaderror');
+}
+
+/** Fábrica única de Hls configurado para Live (timeouts e retry padronizados). */
+function createHlsForLiveChannel(): any {
+  return new Hls({
+    enableWorker: true,
+    lowLatencyMode: false,
+    manifestLoadingTimeOut: LIVE_HLS_TIMEOUT_MS,
+    manifestLoadingMaxRetry: LIVE_HLS_MAX_RETRIES,
+    manifestLoadingRetryDelay: 1000,
+    manifestLoadingMaxRetryTimeout: 8000,
+    levelLoadingTimeOut: LIVE_HLS_TIMEOUT_MS,
+    levelLoadingMaxRetry: LIVE_HLS_MAX_RETRIES,
+    levelLoadingRetryDelay: 1000,
+    levelLoadingMaxRetryTimeout: 8000,
+    fragLoadingTimeOut: LIVE_HLS_TIMEOUT_MS,
+    fragLoadingMaxRetry: LIVE_HLS_MAX_RETRIES,
+    fragLoadingRetryDelay: 1000,
+    fragLoadingMaxRetryTimeout: 8000,
+  });
+}
+
+/**
+ * URL base aproximada de um canal (para checagem de auto-zap antes de selecionar).
+ * Respeita região SP quando o canal é regional; o efetivo final (qualidade/região
+ * escolhida) é resolvido em `effectiveStreamUrl` só para o canal selecionado.
+ */
+function baseStreamUrlOf(channel: PitoChannel): string {
+  if (channel.regions && channel.regions.length > 0) {
+    const sp = channel.regions.find((r) => r.state === 'SP');
+    return (sp ?? channel.regions[0]).streamUrl || channel.streamUrl || '';
+  }
+  return channel.streamUrl || '';
+}
+
+// ── Registro de falhas por canal+url (TTL 2 min) ───────────────────────────
+// Substitui o slot único anterior por um mapa, para que trocar de canal não
+// apague a memória de falha de OUTROS canais (auto-zap continua pulando-os).
+interface LiveChannelFailure {
+  reason: string;
+  message: string;
+  timestamp: number;
+}
+type LiveFailureMap = Record<string, LiveChannelFailure>;
+
+function liveFailureKey(channelId: string, url: string): string {
+  return `${channelId}|${url}`;
+}
+
+function writeLiveFailureMap(map: LiveFailureMap): void {
+  try {
+    sessionStorage.setItem(LIVE_FAILURE_STORAGE_KEY, JSON.stringify(map));
+  } catch { /* noop */ }
+}
+
+function readLiveFailureMap(): LiveFailureMap {
+  try {
+    const raw = sessionStorage.getItem(LIVE_FAILURE_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as LiveFailureMap;
+    const now = Date.now();
+    let mutated = false;
+    for (const [key, value] of Object.entries(parsed)) {
+      if (!value || now - value.timestamp > LIVE_FAILURE_TTL_MS) {
+        delete parsed[key];
+        mutated = true;
+      }
+    }
+    if (mutated) writeLiveFailureMap(parsed);
+    return parsed;
+  } catch {
+    return {};
+  }
+}
+
+function markChannelFailed(
+  channelId: string,
+  url: string,
+  reason: string,
+  message: string = LIVE_STREAM_UNAVAILABLE_MESSAGE
+): void {
+  if (!channelId || !url) return;
+  const map = readLiveFailureMap();
+  map[liveFailureKey(channelId, url)] = { reason, message, timestamp: Date.now() };
+  writeLiveFailureMap(map);
+}
+
+function getRecentChannelFailure(channelId: string, url: string): LiveChannelFailure | null {
+  if (!channelId || !url) return null;
+  return readLiveFailureMap()[liveFailureKey(channelId, url)] ?? null;
+}
+
+/** True se este canal+url falhou nos últimos 2 min — auto-zap deve pulá-lo. */
+function shouldSkipAutoZap(channelId: string, url: string): boolean {
+  return getRecentChannelFailure(channelId, url) !== null;
+}
+
+/** Limpa o bloqueio de um canal+url específico (usado pelo "Tentar novamente"). */
+function clearChannelFailure(channelId: string, url: string): void {
+  if (!channelId || !url) return;
+  const map = readLiveFailureMap();
+  const key = liveFailureKey(channelId, url);
+  if (map[key]) {
+    delete map[key];
+    writeLiveFailureMap(map);
+  }
+}
 
 function isRemovedSbtSpChannel(name: string): boolean {
   const normalized = name.trim().toUpperCase();
@@ -130,6 +260,7 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
   const hlsRef = useRef<any | null>(null);
   const [liveStreamError, setLiveStreamError] = useState<string | null>(null);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [streamRetryNonce, setStreamRetryNonce] = useState(0);
   const useNativeLivePlayer =
     runtimeFlags.isTvBuild &&
     runtimeFlags.nativeAndroidPlayerEnabled &&
@@ -137,6 +268,15 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     !isLegacyHtml5OnlyTV() &&
     isNativePlatform();
   const nativeLiveLaunchRef = useRef(0);
+  // Chave do último launch nativo (id|url|nonce) — torna o efeito idempotente e
+  // evita duplo loadSource quando o efeito re-roda por troca de identidade de callback.
+  const lastNativeLaunchKeyRef = useRef('');
+
+  /** Limpa só o estado VISUAL de playback (erro + ready). Não apaga o registro de falhas. */
+  const resetLivePlaybackState = useCallback(() => {
+    setLiveStreamError(null);
+    setIsVideoReady(false);
+  }, []);
 
   // ── Região padrão ────────────────────────────────────────────────────────
   // Sem geolocalização IP. Padrão = SP (maior cobertura BR). Usuário troca via
@@ -257,7 +397,8 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
 
 
   const handleVideoElementError = useCallback(() => {
-    setLiveStreamError('Falha ao carregar este canal.');
+    console.warn('[LiveTV] canal indisponível');
+    setLiveStreamError(LIVE_STREAM_UNAVAILABLE_MESSAGE);
   }, []);
 
   // Canal selecionado sem URL: exibe erro em vez de tela preta silenciosa
@@ -275,11 +416,24 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     const video = videoRef.current;
     if (!video || !effectiveStreamUrl) return;
 
+    const url = effectiveStreamUrl;
+    const maskedUrl = maskLiveTvUrlForLog(url);
+    console.warn(`[LiveTV] opening channel number=${selectedChannel?.number} name=${selectedChannel?.name} url=${maskedUrl}`);
+    const recentStreamError = selectedChannel
+      ? getRecentChannelFailure(selectedChannel.id, url)
+      : null;
+    if (recentStreamError) {
+      console.warn(`[LiveTV] canal indisponível reason=hls-recent-error url=${maskedUrl}`);
+      console.warn('[LiveTV] UI error shown');
+      setIsVideoReady(false);
+      setLiveStreamError(recentStreamError.message);
+      return;
+    }
+
     setLiveStreamError(null);
     setIsVideoReady(false);
     video.muted = false;
 
-    const url = effectiveStreamUrl;
     const isHls =
       /\.m3u8(\?|$)/i.test(url) ||
       url.toLowerCase().includes('.m3u8') ||
@@ -291,12 +445,61 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     }
 
     let playOnMetadata: (() => void) | null = null;
+    let closed = false;
+    let loadTimeout: number | null = null;
+
+    const clearLoadTimeout = () => {
+      if (loadTimeout !== null) {
+        window.clearTimeout(loadTimeout);
+        loadTimeout = null;
+      }
+    };
+
+    const markReady = () => {
+      clearLoadTimeout();
+      setIsVideoReady(true);
+    };
+
+    const markUnavailable = (reason: string) => {
+      if (closed) return;
+      clearLoadTimeout();
+      console.warn(`[LiveTV] channel failed reason=${reason} url=${maskedUrl}`);
+      if (selectedChannel) {
+        markChannelFailed(selectedChannel.id, url, reason);
+      }
+      setIsVideoReady(false);
+      setLiveStreamError(LIVE_STREAM_UNAVAILABLE_MESSAGE);
+      console.warn('[LiveTV] UI error shown');
+      try {
+        hlsRef.current?.stopLoad?.();
+      } catch { /* noop */ }
+    };
+
+    const startLoadTimeout = () => {
+      clearLoadTimeout();
+      loadTimeout = window.setTimeout(() => {
+        console.warn(`[LiveTV] HLS timeout url=${maskedUrl} timeoutMs=${LIVE_HLS_LOAD_TIMEOUT_MS}`);
+        markUnavailable('timeout');
+      }, LIVE_HLS_LOAD_TIMEOUT_MS);
+    };
+
+    video.addEventListener('loadedmetadata', markReady);
+    video.addEventListener('loadeddata', markReady);
+    video.addEventListener('canplay', markReady);
+    video.addEventListener('playing', markReady);
 
     if (!isHls) {
+      startLoadTimeout();
       video.src = url;
       void video.play().catch(() => {});
       return () => {
+        closed = true;
+        clearLoadTimeout();
         try {
+          video.removeEventListener('loadedmetadata', markReady);
+          video.removeEventListener('loadeddata', markReady);
+          video.removeEventListener('canplay', markReady);
+          video.removeEventListener('playing', markReady);
           video.removeAttribute('src');
           video.load();
         } catch { /* noop */ }
@@ -307,63 +510,94 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     // não suporta dynamic import. plugin-legacy transpila o resto.
     try {
       if (Hls && Hls.isSupported()) {
-        const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+        const hls = createHlsForLiveChannel();
         hlsRef.current = hls;
+        console.warn(`[LiveTV] HLS loadSource url=${maskedUrl}`);
+        startLoadTimeout();
         hls.loadSource(url);
         hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_LOADED, () => {
+          console.warn(`[LiveTV] HLS MANIFEST_LOADED channel=${selectedChannel?.number}`);
+        });
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          console.warn(`[LiveTV] HLS MANIFEST_PARSED channel=${selectedChannel?.number}`);
+          clearLoadTimeout();
           video.play().catch(() => {});
         });
         hls.on(Hls.Events.ERROR, (_event: unknown, data: any) => {
-          if (data.fatal) {
-            if (data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
-            else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
-            else hls.destroy();
+          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            console.warn(`[LiveTV] HLS NETWORK_ERROR details=${String(data.details || '')} fatal=${Boolean(data.fatal)} url=${maskedUrl}`);
+            if (isHlsTimeoutDetails(data.details) || isHlsManifestLoadError(data.details)) {
+              console.warn(`[LiveTV] HLS timeout details=${String(data.details || '')} url=${maskedUrl}`);
+            }
+          }
+
+          if (!data.fatal) return;
+
+          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            markUnavailable(
+              isHlsManifestLoadError(data.details)
+                ? 'manifestLoadError'
+                : isHlsTimeoutDetails(data.details)
+                  ? 'timeout'
+                  : 'network'
+            );
+          } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+            markUnavailable('media');
+          } else {
+            hls.destroy();
+            markUnavailable('fatal');
           }
         });
       } else if (video.canPlayType('application/vnd.apple.mpegurl') !== '') {
         // Fallback Safari / native HLS
+        startLoadTimeout();
         video.src = url;
         playOnMetadata = () => {
           video.play().catch(() => {});
         };
         video.addEventListener('loadedmetadata', playOnMetadata, { once: true });
       } else {
+        startLoadTimeout();
         video.src = url;
         video.play().catch(() => {});
       }
     } catch (err) {
       console.error('[LiveTV] Failed to init player', err);
+      startLoadTimeout();
       video.src = url;
       video.play().catch(() => {});
     }
 
     return () => {
+      closed = true;
+      clearLoadTimeout();
       if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
       }
       try {
         if (playOnMetadata) video.removeEventListener('loadedmetadata', playOnMetadata);
+        video.removeEventListener('loadedmetadata', markReady);
+        video.removeEventListener('loadeddata', markReady);
+        video.removeEventListener('canplay', markReady);
+        video.removeEventListener('playing', markReady);
         video.removeAttribute('src');
         video.load();
       } catch { /* noop */ }
     };
-  }, [effectiveStreamUrl, useNativeLivePlayer]);
+  }, [effectiveStreamUrl, selectedChannel?.id, useNativeLivePlayer, streamRetryNonce]);
 
   const retryLiveStream = useCallback(() => {
+    // Manual: limpa o bloqueio só deste canal+url e força relançar (novo nonce).
+    if (selectedChannel && effectiveStreamUrl) {
+      clearChannelFailure(selectedChannel.id, effectiveStreamUrl);
+    }
+    lastNativeLaunchKeyRef.current = '';
     setLiveStreamError(null);
     setIsVideoReady(false);
-    // força reload do effect via toggle de src
-    const v = videoRef.current;
-    if (v && effectiveStreamUrl) {
-      try {
-        v.src = effectiveStreamUrl;
-        v.load();
-        void v.play().catch(() => {});
-      } catch { /* noop */ }
-    }
-  }, [effectiveStreamUrl]);
+    setStreamRetryNonce((value) => value + 1);
+  }, [selectedChannel?.id, effectiveStreamUrl]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Navegação por número ─────────────────────────────────────────────────
   useEffect(() => {
@@ -424,11 +658,11 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
       selectGuardTimeoutRef.current = null;
     }, 600);
 
-    // Limpa overlays antes de trocar canal
+    // Trocar de canal limpa o erro VISUAL anterior (mas mantém o registro de
+    // falhas, para o auto-zap continuar pulando canais que falharam há <2 min).
+    resetLivePlaybackState();
     setIsInfoOverlayVisible(false);
     setIsMenuVisible(false);
-    setLiveStreamError(null);
-    setIsVideoReady(false);
 
     // Controle parental — adulto (normalizado para 'adultos')
     if (
@@ -465,6 +699,9 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     }, 1000);
   };
 
+  /** Nome público do fluxo de abrir canal (Enter/clique/zap manual). */
+  const openLiveChannel = handleSelectChannel;
+
   const selectAdjacentLiveChannel = useCallback((direction: 1 | -1) => {
     const currentIndex = selectedChannel
       ? filteredChannels.findIndex((ch) => ch.id === selectedChannel.id)
@@ -488,12 +725,65 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
 
     const launchId = ++nativeLiveLaunchRef.current;
     let cancelled = false;
+
+    const isBlobUrl = /^blob:/i.test(effectiveStreamUrl);
+    const rawChannelUrl = currentRegion?.streamUrl ?? selectedChannel.streamUrl ?? '';
+    const maskedRawChannelUrl = maskLiveTvUrlForLog(rawChannelUrl);
+    const maskedEffectiveStreamUrl = maskLiveTvUrlForLog(effectiveStreamUrl);
+    // eslint-disable-next-line no-console
+    console.warn(`[LiveTV] canal clicado: ${selectedChannel.name} id=${selectedChannel.id}`);
+    // eslint-disable-next-line no-console
+    console.warn(`[LiveTV] raw url do Supabase: ${maskedRawChannelUrl}`);
+    // eslint-disable-next-line no-console
+    console.warn(`[LiveTV] url enviada ao Android: ${maskedEffectiveStreamUrl}`);
+    // eslint-disable-next-line no-console
+    console.warn(`[LiveTV] isBlobUrl: ${isBlobUrl}`);
+
+    // Guard: nunca enviar blob: para o player nativo (URL.createObjectURL é local ao WebView).
+    if (isBlobUrl) {
+      // eslint-disable-next-line no-console
+      console.error('[LiveTV] ERRO: URL blob não pode ser usada no ExoPlayer', effectiveStreamUrl);
+      const fallback = rawChannelUrl && !/^blob:/i.test(rawChannelUrl) ? rawChannelUrl : '';
+      if (!fallback) {
+        setIsVideoReady(false);
+        setLiveStreamError('URL inválida (blob) — canal sem fonte original.');
+        setSignal('playerActive', false);
+        return;
+      }
+      // eslint-disable-next-line no-console
+      console.warn('[LiveTV] recuperando rawUrl do canal:', fallback);
+    }
+
+    const urlToPlay = isBlobUrl ? rawChannelUrl : effectiveStreamUrl;
+    const maskedPlayUrl = maskLiveTvUrlForLog(urlToPlay);
+    console.warn(`[LiveTV] opening channel number=${selectedChannel.number} name=${selectedChannel.name} url=${maskedPlayUrl}`);
+
+    // Canal com falha recente (<2 min): mostra erro sem relançar (não martela edge morta).
+    const recentNativeError = getRecentChannelFailure(selectedChannel.id, urlToPlay);
+    if (recentNativeError) {
+      console.warn(`[LiveTV] channel failed reason=native-last-error url=${maskedPlayUrl}`);
+      console.warn('[LiveTV] UI error shown');
+      setSignal('playerActive', false);
+      setIsVideoReady(false);
+      setIsMenuVisible(true);
+      setFocusedSection('grid');
+      setLiveStreamError(recentNativeError.message);
+      return;
+    }
+
+    // Idempotência: não relançar a Activity para o mesmo canal+url+nonce se o efeito
+    // re-rodar por troca de identidade de callback (selectAdjacentLiveChannel muda ref).
+    const launchKey = `${selectedChannel.id}|${urlToPlay}|${streamRetryNonce}`;
+    if (lastNativeLaunchKeyRef.current === launchKey) return;
+    lastNativeLaunchKeyRef.current = launchKey;
+
+    console.warn(`[NativePlayer] start live url=${maskedPlayUrl}`);
     setLiveStreamError(null);
     setIsVideoReady(true);
     setSignal('playerActive', true);
 
     void playNative({
-      url: effectiveStreamUrl,
+      url: urlToPlay,
       title: selectedChannel.name,
       type: 'live',
       poster: selectedChannel.logo || '',
@@ -503,6 +793,18 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
       .then((result) => {
         if (cancelled || nativeLiveLaunchRef.current !== launchId) return;
         setSignal('playerActive', false);
+
+        if (result.error) {
+          const message = result.errorMessage || LIVE_STREAM_UNAVAILABLE_MESSAGE;
+          markChannelFailed(selectedChannel.id, urlToPlay, 'native-result-error', message);
+          console.warn(`[LiveTV] channel failed reason=native-result-error url=${maskedPlayUrl}`);
+          console.warn('[LiveTV] UI error shown');
+          setIsVideoReady(false);
+          setIsMenuVisible(true);
+          setFocusedSection('grid');
+          setLiveStreamError(message);
+          return;
+        }
 
         if (result.action === 'channelUp') {
           selectAdjacentLiveChannel(1);
@@ -521,19 +823,26 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
         if (cancelled || nativeLiveLaunchRef.current !== launchId) return;
         setSignal('playerActive', false);
         console.error('[LiveTV] Native live player failed:', err);
+        const message = err instanceof Error && err.message
+          ? err.message
+          : LIVE_STREAM_UNAVAILABLE_MESSAGE;
+        markChannelFailed(selectedChannel.id, urlToPlay, 'native-error', message);
+        console.warn(`[LiveTV] channel failed reason=native-error url=${maskedPlayUrl}`);
+        console.warn('[LiveTV] UI error shown');
         setIsVideoReady(false);
         setIsMenuVisible(true);
         setFocusedSection('grid');
-        setLiveStreamError(err instanceof Error ? err.message : 'Falha ao abrir o canal.');
+        setLiveStreamError(message);
       });
 
     return () => {
       cancelled = true;
     };
-  }, [effectiveStreamUrl, selectedChannel?.id, useNativeLivePlayer, selectAdjacentLiveChannel]);
+  }, [currentRegion?.streamUrl, effectiveStreamUrl, selectedChannel?.id, streamRetryNonce, useNativeLivePlayer, selectAdjacentLiveChannel]);
 
   const handleSelectCategory = (id: string) => {
-    // Limpa overlays ao trocar categoria
+    // Trocar categoria limpa o erro visual anterior (registro de falhas preservado).
+    resetLivePlaybackState();
     setIsInfoOverlayVisible(false);
     setIsMenuVisible(true);
     setActiveCategory(id);
@@ -605,16 +914,26 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
   // zapping de IPTV. Debounce evita lancar Activity a cada tick do D-pad.
   useEffect(() => {
     if (focusedSection !== 'grid') return;
+    if (liveStreamError) return;
     if (focusedChannelIndex < 0) return;
     const ch = filteredChannels[focusedChannelIndex];
     if (!ch) return;
-    if (selectedChannel?.id === ch.id && isVideoReady) return;
+    // Canal já selecionado (carregando ou tocando): não relançar via foco.
+    if (selectedChannel?.id === ch.id) return;
+    // Outro canal ainda carregando: não interromper. Só Enter/ChannelUp/ChannelDown/
+    // clique trocam de canal durante o carregamento (ações explícitas do usuário).
+    if (selectedChannel && !isVideoReady) return;
+    // Falha recente (<2 min) deste canal+url: pula auto-zap (não martela edge morta).
+    if (shouldSkipAutoZap(ch.id, baseStreamUrlOf(ch))) {
+      console.warn('[LiveTV] auto-zap skipped due to recent error');
+      return;
+    }
     const t = window.setTimeout(() => {
       handleSelectChannel(ch);
     }, 600);
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusedSection, focusedChannelIndex, filteredChannels]);
+  }, [focusedSection, focusedChannelIndex, filteredChannels, liveStreamError, selectedChannel, isVideoReady]);
 
   // ── Navegação por teclado ────────────────────────────────────────────────
   useEffect(() => {
@@ -1124,6 +1443,9 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
                     alt={selectedChannel.name}
                     className="h-12 object-contain brightness-200"
                     referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.currentTarget.src = LOCAL_CHANNEL_PLACEHOLDER;
+                    }}
                   />
                 )}
                 <span className="text-2xl font-black text-white/80 uppercase tracking-tighter">
@@ -1230,7 +1552,7 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
                 {isGenreExpanded && (
                   <PitoChannelGrid
                     channels={filteredChannels}
-                    onSelectChannel={handleSelectChannel}
+                    onSelectChannel={openLiveChannel}
                     activeCategoryName={activeCategoryName}
                     selectedChannelId={selectedChannel?.id}
                     focusedIndex={focusedChannelIndex}

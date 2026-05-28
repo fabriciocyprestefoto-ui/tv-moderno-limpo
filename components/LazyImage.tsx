@@ -111,7 +111,17 @@ const LazyImage: React.FC<LazyImageProps> = React.memo(
         { rootMargin: isTVBox() ? '400px 0px' : '200px 0px' }
       );
       observer.observe(host);
-      return () => observer.disconnect();
+      // Rede de seguranca: em alguns WebView de TV o IntersectionObserver nao dispara de forma
+      // confiavel para cards dentro de carrosseis virtualizados -> o poster ficava preso no
+      // skeleton (so o logo aparecia). Forca o load apos um curto periodo. As linhas ja sao
+      // virtualizadas, entao isto afeta apenas os cards montados/visiveis.
+      const fallbackTimer = isTVBox()
+        ? window.setTimeout(() => setShouldLoad(true), 800)
+        : null;
+      return () => {
+        observer.disconnect();
+        if (fallbackTimer) window.clearTimeout(fallbackTimer);
+      };
     }, [eager, isValid, shouldLoad]);
 
     // Timeout: se a imagem não carregar, tentar URL original antes de desistir

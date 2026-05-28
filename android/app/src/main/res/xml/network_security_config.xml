@@ -35,7 +35,6 @@
         Adicione aqui cada domínio de provedor que use HTTP (não HTTPS).
     -->
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">newoneblue.site</domain>
         <domain includeSubdomains="true">fontez.cc</domain>
         <domain includeSubdomains="true">tmsimg.com</domain>
         <trust-anchors>
