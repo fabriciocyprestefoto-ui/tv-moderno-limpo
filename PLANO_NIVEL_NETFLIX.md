@@ -32,12 +32,12 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - [ ] **BLOQUEADO (source no servidor):** `supabase functions download tmdb-proxy` e `verify-admin-password` → versionar source real. (Resolve junto o rate-limit das chaves da Fase 0.)
 **Pronto (parcial):** docs/scaffold prontos; falta o dono rodar `db pull` + `functions download` (credenciais Supabase) para fechar a reprodutibilidade fiel.
 
-## Fase 2 — Robustez de stream/erros · Erros 6→8 · STATUS: PENDENTE
-- [ ] Auto-skip para próximo canal vivo quando stream falha (LiveTV + Adulto).
-- [ ] Remover overlay debug de produção: `pages/LiveTV.tsx:1314`.
-- [ ] Telas de erro padronizadas (retry elegante).
-- [ ] Agendar prune de streams mortos (`scripts/prune-dead-adult-streams.cjs`).
-**Pronto:** item morto nunca trava a tela.
+## Fase 2 — Robustez de stream/erros · Erros 6→8 · STATUS: PARCIAL
+- [x] **Removido overlay debug cru** de produção em `pages/LiveTV.tsx` (bloco `fontFamily:sans-serif` inalcançável/feio). Estados vazio/erro já têm UI glass+retry (`LiveTV.tsx:~1254`).
+- [x] **Botão "Próximo canal"** no overlay "Canal indisponível" (`LiveTV.tsx:~1447`) → skip MANUAL seguro via `selectAdjacentLiveChannel(1)` (sem loop).
+- [ ] **DIFERIDO (precisa teste on-device):** auto-skip AUTOMÁTICO ao falhar. Motivo: `playNative` resolve só quando a Activity fecha → auto-cycle relança Activities repetidamente; sem validação no device há risco de loop/flash na área protegida (Canais). Design: budget bounded (MAX ~4) + reset em seleção do usuário + pular canais com falha recente (`getRecentChannelFailure`). Implementar quando puder validar via remote na TV.
+- [ ] **MANUAL/infra:** agendar prune de streams mortos (`scripts/prune-dead-adult-streams.cjs`) via cron/Supabase scheduled — fora do código do app.
+**Pronto (parcial):** sem overlay debug; erro de stream tem retry + próximo canal. Falta auto-skip automático (diferido por segurança) + agendamento do prune.
 
 ## Fase 3 — Performance · Perf 7→9 · STATUS: PENDENTE
 - [ ] Fila única de fetch TMDB (cap concorrência, só no foco): `components/MediaCard.tsx:304`, `components/MovieRow.tsx:121`.
@@ -76,4 +76,5 @@ Média **6,4**. Notas: TV mode 8 · UX 8 · Performance 7 · Android 7 · Erros 
 - _início_ — arquivo criado. Linha de base registrada. Iniciando Fase 0.
 - **Fase 0 (código)** — `MainActivity.java`: `AppValidator.validate(this)` reativado só em release (`!BuildConfig.DEBUG`). `capacitor.config.json`: `webContentsDebuggingEnabled` → false. Build debug instalado na TCL → app abre (pid vivo) e CDP ativo (Chrome 148): **debug não brickou**. Falta: keystore release + EXPECTED_SIGNATURE + rate-limit das chaves (bloqueados por infra/edge fn).
 - **Fase 1 (docs)** — Criados `README.md` (setup completo), `supabase/README.md` (schema observado + comandos `db pull`/`functions download` + RLS). `.env.example` completado com chaves de build/target/streams faltantes. **Bloqueado:** `supabase db pull` (precisa login+senha DB) e `functions download` (source no servidor) — só o dono do projeto consegue. Esses fecham migrations fiéis + source das edge functions + rate-limit das chaves.
-- **Próximo:** Fase 2 (robustez de stream): auto-skip de canal morto + remover overlay debug de produção + telas de erro padronizadas. (Não depende de credenciais — executável.)
+- **Fase 2 (parcial)** — Removido overlay debug cru do LiveTV. Adicionado botão "Próximo canal" no overlay de erro de stream (skip manual seguro). Auto-skip AUTOMÁTICO **diferido** (risco de loop no player nativo sem teste on-device). tsc+eslint limpos.
+- **Próximo:** validar Fase 2 no device (happy path canais intacto) e seguir Fase 3 (performance: fila única de fetch TMDB + unificar componentes de imagem). Auto-skip automático quando houver janela de teste na TV.

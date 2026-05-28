@@ -1372,57 +1372,9 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     );
   }
 
-  // ── Debug overlay (sem ADB, único feedback visual) ───────────────────────
-  if (isLoading || channelLoadError || allChannels.length === 0) {
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          background: '#000',
-          color: '#fff',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: 24,
-          fontFamily: 'sans-serif',
-          textAlign: 'center',
-          gap: 12,
-          zIndex: 99999,
-        }}
-      >
-        <p style={{ fontSize: 16, fontWeight: 700 }}>
-          {isLoading ? 'Carregando canais…' : channelLoadError ? 'Erro' : 'Sem canais'}
-        </p>
-        {channelLoadError && (
-          <p style={{ fontSize: 12, opacity: 0.7, maxWidth: 600 }}>{channelLoadError}</p>
-        )}
-        {!isLoading && !channelLoadError && (
-          <p style={{ fontSize: 12, opacity: 0.7 }}>
-            Lista de canais retornou vazia. Verifique permissões no Supabase ou
-            conexão de rede da TV.
-          </p>
-        )}
-        <button
-          type="button"
-          onClick={() => window.history.back()}
-          style={{
-            marginTop: 12,
-            padding: '10px 22px',
-            background: '#A855F7',
-            color: '#fff',
-            border: 0,
-            borderRadius: 10,
-            fontWeight: 700,
-            cursor: 'pointer',
-          }}
-        >
-          Voltar
-        </button>
-      </div>
-    );
-  }
+  // Estados de loading / vazio / erro já tratados acima com UI estilizada (glass + retry).
+  // Erro transitório COM canais presentes: mantém a grade renderizada; o overlay por-stream
+  // cuida de falha de reprodução (sem tomar a tela inteira com debug cru).
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
@@ -1492,18 +1444,31 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
               <p className="text-white/85 text-lg font-black mb-6">
                 {liveStreamError}
               </p>
-              <button
-                type="button"
-                autoFocus
-                onClick={retryLiveStream}
-                onKeyDown={(e) => {
-                  const k = normalizeRemoteKey(e as unknown as KeyboardEvent);
-                  if (k === 'Enter') retryLiveStream();
-                }}
-                className="px-6 py-3 rounded-xl bg-red-600 text-white text-xs font-black uppercase tracking-[0.18em] outline-none focus-visible:ring-2 focus-visible:ring-white/80"
-              >
-                Tentar novamente
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  autoFocus
+                  onClick={retryLiveStream}
+                  onKeyDown={(e) => {
+                    const k = normalizeRemoteKey(e as unknown as KeyboardEvent);
+                    if (k === 'Enter') retryLiveStream();
+                  }}
+                  className="px-6 py-3 rounded-xl bg-red-600 text-white text-xs font-black uppercase tracking-[0.18em] outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+                >
+                  Tentar novamente
+                </button>
+                <button
+                  type="button"
+                  onClick={() => selectAdjacentLiveChannel(1)}
+                  onKeyDown={(e) => {
+                    const k = normalizeRemoteKey(e as unknown as KeyboardEvent);
+                    if (k === 'Enter') selectAdjacentLiveChannel(1);
+                  }}
+                  className="px-6 py-3 rounded-xl bg-white/12 border border-white/25 text-white text-xs font-black uppercase tracking-[0.18em] outline-none focus-visible:ring-2 focus-visible:ring-purple-400/70 hover:bg-white/18 transition-colors"
+                >
+                  Próximo canal
+                </button>
+              </div>
             </div>
           </div>
         )}
