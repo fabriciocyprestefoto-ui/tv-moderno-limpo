@@ -26,15 +26,14 @@ const MAX_WIDTHS: Record<string, number> = {
 };
 
 /**
- * Converte qualquer URL image.tmdb.org para WebP via wsrv.nl no tamanho alvo.
- * TMDB serve só JPEG/PNG; WebP corta ~40% do byte → carrega mais rápido na TV.
- * Fallback (wsrv offline → TMDB JPEG original) já é tratado em LazyImage.handleError.
+ * Normaliza a URL TMDB para a largura alvo e serve DIRETO da CDN do TMDB (sem wsrv).
+ * Motivo: wsrv.nl é host único (limite ~6 conexões no WebView) → no scroll de grades
+ * grandes a fila estoura e imagens "param de carregar". A CDN do TMDB distribui a carga
+ * e é confiável. Custo: JPEG (~40% maior que WebP), mas w342 é pequeno e nunca fica em
+ * branco. wsrv permanece só p/ origens http inseguras (mixed-content) e como fallback.
  */
-function tmdbToWebp(url: string, width: number): string {
-  // URL completa (com https://) — mesmo padrão de LazyImage handleError já testado.
-  // Mantém o protocolo p/ que extractOriginalUrl / onError do HeroBanner reconstruam o
-  // fallback TMDB corretamente se o wsrv falhar.
-  return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&output=webp&q=${WEBP_QUALITY}`;
+function sizeTmdbDirect(url: string, width: number): string {
+  return url.replace(/\/t\/p\/(?:original|w\d+|h\d+)\//i, `/t/p/w${width}/`);
 }
 
 /**
@@ -76,11 +75,11 @@ export function toWebP(
     return `https://wsrv.nl/?url=${encodeURIComponent(cleanUrl)}&w=${width}&output=webp&q=${WEBP_QUALITY}`;
   }
 
-  // TMDB https (poster/backdrop) -> WebP via wsrv.nl. TMDB não serve WebP nativo; converter
-  // corta ~40% do byte e acelera a grade na TV. LazyImage tem fallback p/ JPEG se wsrv falhar.
+  // TMDB https (poster/backdrop) -> DIRETO da CDN TMDB no tamanho alvo (sem wsrv).
+  // Evita o gargalo de host único do wsrv que travava o carregamento no scroll.
   if (url.includes('image.tmdb.org')) {
     const width = MAX_WIDTHS[imageType] || MAX_WIDTHS.poster;
-    return tmdbToWebp(url, width);
+    return sizeTmdbDirect(url, width);
   }
 
   // Demais https -> direto (sem proxy de terceiro).
@@ -145,12 +144,11 @@ const RESPONSIVE_WIDTHS: Record<ResponsiveImageType, number[]> = {
   backdrop: [780, 1280],
 };
 
-/** Reescreve TMDB para o tamanho alvo e serve WebP via wsrv (mesma origem do src). */
+/** Reescreve TMDB para o tamanho alvo, servindo DIRETO da CDN (alinhado ao src). */
 function resizeTmdbImageUrl(url: string, width: number): string | null {
   const original = extractOriginalUrl(url);
   if (!original || !original.includes('image.tmdb.org/t/p/')) return null;
-  const sized = original.replace(/\/t\/p\/(?:original|w\d+|h\d+)\//i, `/t/p/w${width}/`);
-  return tmdbToWebp(sized, width);
+  return sizeTmdbDirect(original, width);
 }
 
 /**
