@@ -107,7 +107,10 @@ const FutebolJogosComponent: React.FC<FutebolJogosProps> = ({
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div
+      className="grid gap-4"
+      style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))' }}
+    >
       {jogosView.map(({ jogo, weekday, time }, idx) => {
         const jogoId = (jogo as { idEvent?: string }).idEvent ?? String(idx);
         const rawBroadcast =

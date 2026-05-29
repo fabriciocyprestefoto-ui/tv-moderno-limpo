@@ -575,7 +575,10 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
                   {resultadosRecentes.length} jogos
                 </span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div
+                className="grid gap-4"
+                style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))' }}
+              >
                 {resultadosRecentes.map((jogo, idx) => {
                   const ts = jogo.dateEvent
                     ? Date.parse(
