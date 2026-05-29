@@ -25,7 +25,7 @@ import {
 } from '../utils/dpadDebounce';
 import { clearFocusRetry } from './useSpatialNavigation';
 import { normalizeRemoteKey } from './useRemoteControl';
-import { addPageTransitionStyles } from '../components/PageTransition';
+import { addPageTransitionStyles } from '../utils/pageTransitionStyles';
 import { getSignal } from '../utils/appSignals';
 import { isTVBox } from '../utils/tvBoxDetector';
 
@@ -397,12 +397,15 @@ export function useRemoteNavigation() {
       const isBack = key === 'Escape' || key === 'Backspace';
 
       if (!isArrow && !isEnter && !isBack) return;
+      const target = event.target as HTMLElement | null;
 
       // ── Guards de prioridade — NÃO alterar a ordem ──────────────────────
       // 0. Modal trap: foco preso em modal — não interferir com navegação global
       if ((window.__modalTrapDepth ?? 0) > 0 || getSignal('modalKeyTrap')) return;
       // 1. Spatial navigation ativa → useSpatialNavigation gerencia tudo
       if (isSpatialNavActive()) return;
+      // 1.5. Evento originado no sidebar → o Sidebar gerencia as setas.
+      if (target?.closest?.('[data-nav-sidebar]')) return;
       // 2. Sidebar em foco → não interferir
       if (window.__sidebarFocused) return;
       // 3. Player ativo → apenas Back passa (Player gerencia suas próprias setas)
@@ -416,7 +419,6 @@ export function useRemoteNavigation() {
       if (window.__whoIsWatchingActive && !isBack) return;
 
       // Inputs de texto: ignorar setas/enter (exceto Back)
-      const target = event.target as HTMLElement | null;
       const isTextInput =
         target &&
         (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);

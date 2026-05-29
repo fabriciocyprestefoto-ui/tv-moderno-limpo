@@ -11,7 +11,7 @@ import {
 } from '../mediaUtils';
 import type { Media } from '../../types';
 
-const media = (partial: Partial<Media>): Media => partial as Media;
+const media = (partial: Record<string, unknown>): Media => partial as unknown as Media;
 
 describe('isValidImageUrl', () => {
   it('aceita URLs válidas', () => {
@@ -44,7 +44,7 @@ describe('isValidMedia', () => {
   it('rejeita faltando campos ou type inválido', () => {
     expect(isValidMedia(media({ title: 'X', type: 'movie' }))).toBe(false); // sem id
     expect(isValidMedia(media({ id: '1', title: '  ', type: 'movie' }))).toBe(false); // title vazio
-    expect(isValidMedia(media({ id: '1', title: 'X', type: 'kids' } as Partial<Media>))).toBe(false);
+    expect(isValidMedia(media({ id: '1', title: 'X', type: 'kids' }))).toBe(false);
   });
 });
 

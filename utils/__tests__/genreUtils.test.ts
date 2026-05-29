@@ -2,8 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { genreToPtBr, isKidsContent, filterKidsContent } from '../genreUtils';
 import type { Media } from '../../types';
 
-/** Constrói um Media mínimo só com os campos lidos por isKidsContent. */
-const media = (partial: Partial<Media>): Media => partial as Media;
+/** Constrói um Media mínimo só com os campos lidos por isKidsContent.
+ *  Aceita shape solto (ex.: rating como string do DB, flag adult) via cast controlado. */
+const media = (partial: Record<string, unknown>): Media => partial as unknown as Media;
 
 describe('genreToPtBr', () => {
   it('mapeia gêneros conhecidos en→pt-BR', () => {
@@ -34,7 +35,7 @@ describe('isKidsContent', () => {
   it('bloqueia rating 18+ ou adult', () => {
     expect(isKidsContent(media({ rating: '18', genre: ['Animação'] }))).toBe(false);
     expect(isKidsContent(media({ rating: 'L18', genre: ['Animation'] }))).toBe(false);
-    expect(isKidsContent(media({ adult: true, genre: ['Family'] } as Partial<Media>))).toBe(false);
+    expect(isKidsContent(media({ adult: true, genre: ['Family'] }))).toBe(false);
   });
 
   it('genre_ids: ID bloqueante (27 terror) → false mesmo com ID kids', () => {
