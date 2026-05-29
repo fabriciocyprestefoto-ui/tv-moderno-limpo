@@ -590,14 +590,25 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
                         .toUpperCase()
                     : '---';
                   const dateLine = jogo.dateEvent || '---';
+                  // Campos crus TheSportsDB ausentes na tipagem do jogo (cores/liga/venue/ids).
+                  const extra = jogo as typeof jogo & {
+                    strHomeTeamColor1?: string | null;
+                    strHomeTeamColor2?: string | null;
+                    strAwayTeamColor1?: string | null;
+                    strAwayTeamColor2?: string | null;
+                    strLeague?: string | null;
+                    strVenue?: string | null;
+                    idHomeTeam?: string | null;
+                    idAwayTeam?: string | null;
+                  };
                   const homeColor =
                     getTeamColor(jogo.strHomeTeam) ||
-                    (jogo as any).strHomeTeamColor1 ||
-                    (jogo as any).strHomeTeamColor2;
+                    extra.strHomeTeamColor1 ||
+                    extra.strHomeTeamColor2;
                   const awayColor =
                     getTeamColor(jogo.strAwayTeam) ||
-                    (jogo as any).strAwayTeamColor1 ||
-                    (jogo as any).strAwayTeamColor2;
+                    extra.strAwayTeamColor1 ||
+                    extra.strAwayTeamColor2;
                   return (
                     <FutebolMatchCard
                       key={String(jogo.idEvent || idx)}
@@ -612,13 +623,13 @@ const FutebolPage: React.FC<FutebolPageProps> = ({ onBack }) => {
                       awayScore={jogo.intAwayScore ?? '-'}
                       homeColor={homeColor}
                       awayColor={awayColor}
-                      competition={(jogo as any).strLeague ?? null}
-                      venue={(jogo as any).strVenue ?? null}
+                      competition={extra.strLeague ?? null}
+                      venue={extra.strVenue ?? null}
                       onSelectHome={() =>
-                        onSelectCardTeam(jogo.strHomeTeam, (jogo as any).idHomeTeam)
+                        onSelectCardTeam(jogo.strHomeTeam, extra.idHomeTeam)
                       }
                       onSelectAway={() =>
-                        onSelectCardTeam(jogo.strAwayTeam, (jogo as any).idAwayTeam)
+                        onSelectCardTeam(jogo.strAwayTeam, extra.idAwayTeam)
                       }
                       navRow="7"
                       navColBase={idx * 2}
