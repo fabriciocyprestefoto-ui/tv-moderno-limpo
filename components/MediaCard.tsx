@@ -501,6 +501,9 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
     const titleSafe = (media.title || 'Conteúdo').trim() || 'Conteúdo';
     const kindLabel =
       media.type === 'series' ? 'Série' : media.type === 'movie' ? 'Filme' : 'Título';
+    const cardActionHint = buttonMode
+      ? 'Use esquerda e direita para escolher uma ação. Pressione Enter para confirmar ou Voltar para sair das ações.'
+      : 'Pressione Enter para abrir as ações.';
 
     return (
       <div
@@ -516,7 +519,8 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
         }}
         tabIndex={0}
         role="button"
-        aria-label={`${kindLabel}: ${titleSafe}. Pressione Enter para abrir.`}
+        aria-label={`${kindLabel}: ${titleSafe}. ${cardActionHint}`}
+        aria-expanded={isActive}
         data-testid="media-card"
         data-nav-item
         data-nav-media-card
@@ -649,7 +653,12 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
                       loading="lazy"
                       decoding="async"
                       referrerPolicy="no-referrer"
-                      className="max-h-8 max-w-[55%] object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]"
+                      className="max-h-8 max-w-[55%] object-contain"
+                      style={{
+                        // Sombra 3D sólida + contorno claro: relevo e visibilidade de logos escuras.
+                        filter:
+                          'drop-shadow(0 0 1px rgba(255,255,255,1)) drop-shadow(0 0 2px rgba(255,255,255,1)) drop-shadow(2px 2px 0 rgba(0,0,0,1)) drop-shadow(0 5px 6px rgba(0,0,0,1))',
+                      }}
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
@@ -667,6 +676,7 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
                   <button
                     onClick={goToWatch}
                     tabIndex={-1}
+                    aria-label={`Assistir ${titleSafe}`}
                     className={`py-1.5 px-3 rounded-lg text-white font-bold uppercase tracking-wider text-[9px]
                       flex items-center gap-1.5
                       transition-[background-color,border-color,transform] duration-150 ease-out
@@ -689,6 +699,7 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
                   <button
                     onClick={goToDetails}
                     tabIndex={-1}
+                    aria-label={`Ver detalhes de ${titleSafe}`}
                     className={`py-1.5 px-2.5 rounded-lg text-white font-bold uppercase tracking-wider text-[9px]
                       flex items-center gap-1
                       transition-[background-color,border-color,transform] duration-150 ease-out
@@ -712,6 +723,8 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
                   <button
                     onClick={handleToggleWatchlist}
                     tabIndex={-1}
+                    aria-label={inWatchlist ? `Remover ${titleSafe} da minha lista` : `Adicionar ${titleSafe} à minha lista`}
+                    aria-pressed={inWatchlist}
                     className={`py-1.5 px-2.5 rounded-lg font-bold uppercase tracking-wider text-[9px]
                       flex items-center gap-1
                       transition-[background-color,border-color,transform] duration-150 ease-out
@@ -743,6 +756,8 @@ const MediaCard: React.FC<MediaCardProps> = React.memo(
                   <button
                     onClick={handleToggleWatchLater}
                     tabIndex={-1}
+                    aria-label={inWatchLater ? `Remover ${titleSafe} de assistir depois` : `Salvar ${titleSafe} para assistir depois`}
+                    aria-pressed={inWatchLater}
                     className={`py-1.5 px-2.5 rounded-lg font-bold uppercase tracking-wider text-[9px]
                       flex items-center gap-1
                       transition-[background-color,border-color,transform] duration-150 ease-out

@@ -580,7 +580,11 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
                         <img
                           src={logoUrl}
                           alt={movie.title}
-                          className="max-h-[36px] max-w-[166px] w-auto object-contain object-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]"
+                          className="max-h-[36px] max-w-[166px] w-auto object-contain object-left"
+                          style={{
+                            filter:
+                              'drop-shadow(0 0 1px rgba(255,255,255,1)) drop-shadow(0 0 2px rgba(255,255,255,1)) drop-shadow(2px 2px 0 rgba(0,0,0,1)) drop-shadow(0 5px 6px rgba(0,0,0,1))',
+                          }}
                           loading="eager"
                           decoding="async"
                           referrerPolicy="no-referrer"
@@ -663,7 +667,11 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
                     <img
                       src={logoUrl}
                       alt={movie.title}
-                      className="max-h-[48px] max-w-[220px] w-auto object-contain drop-shadow-[0_2px_16px_rgba(0,0,0,0.8)]"
+                      className="max-h-[48px] max-w-[220px] w-auto object-contain"
+                      style={{
+                        filter:
+                          'drop-shadow(0 0 1px rgba(255,255,255,1)) drop-shadow(0 0 2px rgba(255,255,255,1)) drop-shadow(2px 2px 0 rgba(0,0,0,1)) drop-shadow(0 5px 6px rgba(0,0,0,1))',
+                      }}
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                         setLogoError(true);

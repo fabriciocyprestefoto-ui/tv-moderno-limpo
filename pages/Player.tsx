@@ -1418,12 +1418,17 @@ const PlayerImpl: React.FC<PlayerProps> = ({
               <img
                 src={logoUrl} alt={media.title}
                 className="h-8 max-h-10 w-auto max-w-[min(240px,42vw)] object-contain object-left"
-                style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.8))' }}
+                style={{
+                  // Sombra 3D sólida (alpha 1, sem opacidade) + contorno claro: dá relevo
+                  // e garante que logos escuras/pretas apareçam sobre a imagem do título.
+                  filter:
+                    'drop-shadow(0 0 1px rgba(255,255,255,1)) drop-shadow(0 0 2px rgba(255,255,255,1)) drop-shadow(2px 2px 0 rgba(0,0,0,1)) drop-shadow(0 5px 6px rgba(0,0,0,1))',
+                }}
               />
             ) : (
-              <h1 style={{ fontSize: 15, fontWeight: 900, color: G.textPrimary, letterSpacing: '-0.01em', maxWidth: 200, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                {media.title}
-              </h1>
+              // Sem fallback de texto: evita o flash do nome antes da logo TMDB carregar.
+              // Título fica só p/ leitores de tela (a11y), sem texto visível.
+              <span className="sr-only">{media.title}</span>
             )}
             <span className="vision-hud-meta" style={{ flexShrink: 0 }}>
               {isSeries
