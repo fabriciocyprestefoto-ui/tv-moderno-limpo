@@ -12,6 +12,16 @@ export const PLACEHOLDER_POSTER = '';
 const TMDB_IMAGE_HOST = 'image.tmdb.org';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p';
 
+/** Campos de imagem que podem existir numa linha de catálogo (TMDB ou banco). */
+type MediaImageSource = {
+  tmdb_id?: string | number | null;
+  poster?: string | null;
+  backdrop?: string | null;
+  poster_path?: string | null;
+  backdrop_path?: string | null;
+  logo_url?: string | null;
+};
+
 /** Verifica se uma URL de imagem é válida (não corrompida) */
 export function isValidImageUrl(url: string | null | undefined): boolean {
   if (!url || typeof url !== 'string') return false;
@@ -76,11 +86,12 @@ function isArtworkReusedAsLogo(
   const logoKey = getAssetFileKey(rawLogo);
   if (!logoKey) return false;
 
-  const posterPath = (media as any).poster_path;
-  const backdropPath = (media as any).backdrop_path;
+  const src = media as MediaImageSource;
+  const posterPath = src.poster_path;
+  const backdropPath = src.backdrop_path;
   const candidates = [
-    (media as any).poster,
-    (media as any).backdrop,
+    src.poster,
+    src.backdrop,
     typeof posterPath === 'string' && posterPath.startsWith('/')
       ? `${IMAGE_BASE}/original${posterPath}`
       : null,
@@ -100,16 +111,17 @@ function getOfficialTmdbPosterUrl(media: {
   poster?: string | null;
   poster_path?: string | null;
 }): string {
-  const tmdbId = Number((media as any).tmdb_id);
+  const src = media as MediaImageSource;
+  const tmdbId = Number(src.tmdb_id);
 
   if (Number.isFinite(tmdbId) && tmdbId > 0) {
-    const posterPath = (media as any).poster_path;
+    const posterPath = src.poster_path;
     if (posterPath && typeof posterPath === 'string' && posterPath.startsWith('/')) {
       return toWebP(`${IMAGE_BASE}/w500${posterPath}`, 'poster');
     }
   }
 
-  return normalizeOfficialTmdbImageUrl((media as any).poster);
+  return normalizeOfficialTmdbImageUrl(src.poster);
 }
 
 /**
@@ -136,12 +148,13 @@ export function getPosterUrl(
         backdrop_path?: string | null;
       }
 ): string {
-  const tmdbId = Number((media as any).tmdb_id);
+  const src = media as MediaImageSource;
+  const tmdbId = Number(src.tmdb_id);
 
   // 1. Se tem tmdb_id e poster_path TMDB, construir URL oficial (w500 para proxy)
   // Nunca usar backdrop_path aqui — essa função é para cards portrait (2:3)
   if (Number.isFinite(tmdbId) && tmdbId > 0) {
-    const posterPath = (media as any).poster_path;
+    const posterPath = src.poster_path;
     if (posterPath && typeof posterPath === 'string' && posterPath.startsWith('/')) {
       return toWebP(`${IMAGE_BASE}/w500${posterPath}`, 'poster');
     }
@@ -150,7 +163,7 @@ export function getPosterUrl(
   // 2. Fallback para URLs já oficiais do TMDB salvas no banco ou via proxy
   // APENAS poster — NUNCA usar backdrop em cards portrait (2:3) para evitar imagem cortada
   // Preservar URLs do proxy (evita CORS ao desfazer)
-  const posterUrl = (media as any).poster;
+  const posterUrl = src.poster;
   if (posterUrl && isProxyUrl(posterUrl)) return posterUrl;
   // URLs TMDB do banco já têm tamanho correto (w500) — usar diretamente via WebP proxy
   // sem normalizar para 'original' (causava barra dupla e download de imagem full-res desnecessário)
@@ -180,7 +193,7 @@ export function getMediaBackdrop(media: Media): string {
   // 1. backdrop_path TMDB — NUNCA usar poster_path como fallback aqui.
   // Esta função é exclusiva para imagens horizontais (16:9).
   if (Number.isFinite(tmdbId) && tmdbId > 0) {
-    const path = (media as any).backdrop_path;
+    const path = (media as MediaImageSource).backdrop_path;
     if (path && typeof path === 'string' && path.startsWith('/')) {
       return toWebP(`${IMAGE_BASE}/w1280${path}`, 'backdrop');
     }
@@ -213,7 +226,7 @@ export function getMediaLogo(
         backdrop_path?: string | null;
       }
 ): string {
-  const rawLogo = sanitizeImageUrl((media as any).logo_url);
+  const rawLogo = sanitizeImageUrl((media as MediaImageSource).logo_url);
   if (!rawLogo) return '';
   if (isArtworkReusedAsLogo(media, rawLogo)) return '';
   if (rawLogo.startsWith('/')) return rawLogo;
@@ -264,10 +277,11 @@ export function hasRequiredTmdbCatalogPoster(
         poster_path?: string | null;
       }
 ): boolean {
-  const tmdbId = Number((media as any).tmdb_id);
+  const src = media as MediaImageSource;
+  const tmdbId = Number(src.tmdb_id);
   // Catálogo VOD só pode exibir conteúdo com correspondência TMDB real e poster oficial.
   if (!Number.isFinite(tmdbId) || tmdbId <= 0) return false;
-  return Boolean(getOfficialTmdbPosterUrl(media as any));
+  return Boolean(getOfficialTmdbPosterUrl(src));
 }
 
 export function filterMediaWithRequiredTmdbPoster<T extends Media>(items: T[]): T[] {
