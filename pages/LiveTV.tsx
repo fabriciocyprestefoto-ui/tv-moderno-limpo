@@ -942,17 +942,13 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     // Limpa o overlay de erro do canal anterior ao trocar de gênero — senão o
     // erro de um canal com edge morto fica "preso" sobre o menu enquanto navega.
     resetLivePlaybackState();
-    // Sinaliza primeiro canal do genero como "selecionado" para o info card refletir
-    // o genero atual.
-    // IMPORTANTE (TCL/nativo): NÃO atualizar selectedChannel aqui. O efeito de launch
-    // nativo dispara em selectedChannel?.id e abriria a ExoPlayerActivity a cada troca
-    // de gênero (bug: "ao mudar o gênero o player abre/sai"). No build nativo o launch
-    // fica exclusivo de OK / auto-zap na grade (handleSelectChannel). Na web o preview
-    // não lança Activity (efeito de launch tem guard !useNativeLivePlayer), então mantém.
-    if (!useNativeLivePlayer) {
-      const firstChannel = allChannels.find((c) => c.category === cat.id);
-      if (firstChannel) setSelectedChannel(firstChannel);
-    }
+    // NÃO trocar selectedChannel ao focar um gênero — em NENHUM ambiente.
+    // Antes, no path não-nativo (web/desktop/Firestick) isto setava selectedChannel,
+    // e o efeito de HLS (dep selectedChannel?.id) tocava o 1º canal do gênero só ao
+    // navegar pelo menu lateral — bug: "trocar o gênero já mudava o canal".
+    // Fluxo IPTV correto (igual ao nativo): focar gênero apenas FILTRA a grade; o
+    // canal só muda ao entrar na grade (auto-zap 600ms) ou via OK (handleSelectChannel).
+    // O info card mantém o canal em reprodução enquanto o usuário navega o guia.
   }, [focusedCategoryIndex, focusedSection]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-zap: ao parar sobre um canal na grade por 600ms, abre o player nativo
