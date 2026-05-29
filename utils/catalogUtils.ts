@@ -38,7 +38,7 @@ export const removeDuplicates = (mediaList: Media[]): Media[] => {
       ? `tmdb:${m.type}:${m.tmdb_id}`
       : `fallback:${m.type}:${normalizeTitle(m.title)}:${m.year || 0}`;
 
-    const posterFile = extractPosterFile((m as any).poster);
+    const posterFile = extractPosterFile(m.poster);
     const posterKey = posterFile ? `poster:${posterFile}` : null;
 
     if (seen.has(primaryKey) || (posterKey && seen.has(posterKey))) return false;

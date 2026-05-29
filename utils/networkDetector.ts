@@ -22,12 +22,13 @@ interface NetworkInfoAPI {
 
 function getConnectionAPI(): NetworkInfoAPI | null {
   if (typeof navigator === 'undefined') return null;
-  return (
-    (navigator as any).connection ??
-    (navigator as any).mozConnection ??
-    (navigator as any).webkitConnection ??
-    null
-  );
+  // Network Information API ausente na tipagem padrão do DOM.
+  const nav = navigator as Navigator & {
+    connection?: NetworkInfoAPI;
+    mozConnection?: NetworkInfoAPI;
+    webkitConnection?: NetworkInfoAPI;
+  };
+  return nav.connection ?? nav.mozConnection ?? nav.webkitConnection ?? null;
 }
 
 /**

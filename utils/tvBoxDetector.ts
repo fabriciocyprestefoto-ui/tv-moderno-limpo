@@ -48,7 +48,7 @@ function detectDevice(): DeviceProfile {
   const isCapacitorTV = isWebView && (noTouch || isRedflixNative);
 
   // Memória: navigator.deviceMemory (Chrome/Edge) — undefined em outros browsers
-  const deviceMemory = (navigator as any).deviceMemory || 8;
+  const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory || 8;
   const lowMemory = deviceMemory <= 2;
 
   // Hardware concurrency (CPU cores)

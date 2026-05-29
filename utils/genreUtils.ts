@@ -100,7 +100,7 @@ export function isKidsContent(media: Media): boolean {
 
   // 2. Bloqueio por idade indicativa (TMDB adult ou rating 18+)
   const ratingStr = String(media.rating || '').toUpperCase();
-  if (ratingStr.includes('18') || (media as any).adult === true) return false;
+  if (ratingStr.includes('18') || (media as { adult?: boolean }).adult === true) return false;
 
   const genreIds = Array.isArray(media.genre_ids)
     ? media.genre_ids.map((id) => Number(id)).filter((id) => Number.isFinite(id))
@@ -111,11 +111,13 @@ export function isKidsContent(media: Media): boolean {
   // 3. Verificação de ID de Gêneros TMDB (Priorizando exclusão)
   if (genreIds.length > 0) {
     // Se tiver QUALQUER gênero bloqueante por ID, descarta imediatamente
-    const hasForbiddenId = genreIds.some((id) => TMDB_NON_KIDS_GENRE_IDS.includes(id as any));
+    const hasForbiddenId = genreIds.some((id) =>
+      (TMDB_NON_KIDS_GENRE_IDS as readonly number[]).includes(id)
+    );
     if (hasForbiddenId) return false;
 
     // Se tiver gênero kids por ID (Animation/Family/Kids), aceita
-    const hasKidsId = genreIds.some((id) => TMDB_KIDS_GENRE_IDS.includes(id as any));
+    const hasKidsId = genreIds.some((id) => (TMDB_KIDS_GENRE_IDS as readonly number[]).includes(id));
     if (hasKidsId) return true;
   }
 

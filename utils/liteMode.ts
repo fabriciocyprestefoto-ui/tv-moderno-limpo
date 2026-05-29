@@ -55,7 +55,7 @@ export function applyLiteMode(enable: boolean, reason = 'device/network'): void 
   if (enable) {
     // Herda todas as otimizações já existentes no CSS + as novas regras de .lite-mode
     html.classList.add(LITE_CLASS, 'tv-box', 'tv-box-mode', 'low-power');
-    if (typeof window !== 'undefined') (window as any)[WINDOW_KEY] = true;
+    if (typeof window !== 'undefined') (window as unknown as Record<string, unknown>)[WINDOW_KEY] = true;
 
     if (!_loggedOnce) {
       _loggedOnce = true;
@@ -64,7 +64,7 @@ export function applyLiteMode(enable: boolean, reason = 'device/network'): void 
     }
   } else {
     html.classList.remove(LITE_CLASS);
-    if (typeof window !== 'undefined') (window as any)[WINDOW_KEY] = false;
+    if (typeof window !== 'undefined') (window as unknown as Record<string, unknown>)[WINDOW_KEY] = false;
   }
 
   window.dispatchEvent(
@@ -76,8 +76,8 @@ export function applyLiteMode(enable: boolean, reason = 'device/network'): void 
 
 /** Leitura síncrona — segura de chamar antes do React montar. */
 export function isLiteMode(): boolean {
-  if (typeof window !== 'undefined' && (window as any)[WINDOW_KEY] !== undefined) {
-    return !!(window as any)[WINDOW_KEY];
+  if (typeof window !== 'undefined' && (window as unknown as Record<string, unknown>)[WINDOW_KEY] !== undefined) {
+    return !!(window as unknown as Record<string, unknown>)[WINDOW_KEY];
   }
   if (typeof document === 'undefined') return false;
   return document.documentElement.classList.contains(LITE_CLASS);
