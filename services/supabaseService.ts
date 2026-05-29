@@ -30,10 +30,14 @@ const nonBlockingAuthLock = async <T>(
 ): Promise<T> => fn();
 
 function patchSupabaseAuthLock(client: SupabaseClient): void {
-  const authAny = (client as any)?.auth;
-  if (!authAny || typeof authAny !== 'object') return;
-  authAny.lock = nonBlockingAuthLock;
-  authAny.lockAcquireTimeout = 0;
+  // GoTrue expõe `lock`/`lockAcquireTimeout` como API interna (não pública na tipagem).
+  const authInternal = client.auth as unknown as {
+    lock?: unknown;
+    lockAcquireTimeout?: number;
+  } | null;
+  if (!authInternal || typeof authInternal !== 'object') return;
+  authInternal.lock = nonBlockingAuthLock;
+  authInternal.lockAcquireTimeout = 0;
 }
 /* ---------- Singleton (HMR-safe) ---------- */
 declare global {
@@ -45,12 +49,12 @@ declare global {
 }
 
 const getSupabaseClient = (): SupabaseClient => {
-  if (typeof globalThis !== 'undefined' && (globalThis as any).__supabase_client__) {
-    const existing = (globalThis as any).__supabase_client__ as SupabaseClient;
+  if (typeof globalThis !== 'undefined' && globalThis.__supabase_client__) {
+    const existing = globalThis.__supabase_client__;
 
     patchSupabaseAuthLock(existing);
 
-    if ((globalThis as any).__supabase_client_version__ === SUPABASE_CLIENT_VERSION) {
+    if (globalThis.__supabase_client_version__ === SUPABASE_CLIENT_VERSION) {
       return existing;
     }
   }
@@ -72,9 +76,9 @@ const getSupabaseClient = (): SupabaseClient => {
   patchSupabaseAuthLock(client);
 
   if (typeof globalThis !== 'undefined') {
-    (globalThis as any).__supabase_client__ = client;
+    globalThis.__supabase_client__ = client;
 
-    (globalThis as any).__supabase_client_version__ = SUPABASE_CLIENT_VERSION;
+    globalThis.__supabase_client_version__ = SUPABASE_CLIENT_VERSION;
   }
 
   return client;
@@ -387,7 +391,7 @@ async function fetchAllRows<T>(
       .select('*')
       .order(orderCol, { ascending: false })
       .range(from, from + PAGE - 1)
-      .abortSignal(signal as any); // Tipagem explicita se necessario
+      .abortSignal(signal as AbortSignal); // Tipagem explicita se necessario
     if (error) throw error;
     if (!data || data.length === 0) break;
     all.push(...(data as T[]));
@@ -529,7 +533,7 @@ export async function getChannelsPage(
   const runPagedQuery = async () => {
     let query = supabase.from('channels').select('*');
     if (orderCol) query = query.order(orderCol, { ascending: true });
-    return query.range(from, from + safeLimit - 1).abortSignal(signal as any);
+    return query.range(from, from + safeLimit - 1).abortSignal(signal as AbortSignal);
   };
 
   let { data, error } = await runPagedQuery();
@@ -993,7 +997,8 @@ export async function uploadImage(
   file: File,
   bucket: 'posters' | 'backdrops' | 'logos' = 'posters'
 ): Promise<string | null> {
-  if (typeof window === 'undefined' && !(file instanceof (globalThis as any).File)) {
+  const FileCtor = (globalThis as { File?: typeof File }).File;
+  if (typeof window === 'undefined' && !(FileCtor && file instanceof FileCtor)) {
     throw new Error(
       'uploadImage deve ser chamado do cliente com um objeto File (browser). Para uploads server-side use uma API route/Edge Function com SERVICE_ROLE.'
     );
@@ -1157,10 +1162,10 @@ export async function getBannersFromCatalog(): Promise<Media[]> {
 
     // Filtrar apenas itens cujo banner_url é WebP (evita JPEG/PNG do TMDB no banner principal)
     const m = (movies || [])
-      .filter((x) => isWebpBannerUrl((x as any).banner_url))
+      .filter((x) => isWebpBannerUrl((x as { banner_url?: string | null }).banner_url))
       .map((x) => ({ ...x, type: 'movie' as const }));
     const s = (series || [])
-      .filter((x) => isWebpBannerUrl((x as any).banner_url))
+      .filter((x) => isWebpBannerUrl((x as { banner_url?: string | null }).banner_url))
       .map((x) => ({ ...x, type: 'series' as const }));
 
     return [...m, ...s] as Media[];
@@ -1215,7 +1220,7 @@ export default {
 
   // Batch Operations
   bulkInsertMovies: async (movies: Partial<Movie>[]) => {
-    const sanitized = movies.map((m) => stripUnknownCols(m as any, MOVIE_COLS));
+    const sanitized = movies.map((m) => stripUnknownCols(m, MOVIE_COLS));
     const { data, error } = await supabase
       .from('movies')
       .upsert(sanitized, { onConflict: 'tmdb_id', ignoreDuplicates: true })
@@ -1225,7 +1230,7 @@ export default {
   },
 
   bulkInsertSeries: async (series: Partial<Series>[]) => {
-    const sanitized = series.map((s) => stripUnknownCols(s as any, SERIES_COLS));
+    const sanitized = series.map((s) => stripUnknownCols(s, SERIES_COLS));
     const { data, error } = await supabase
       .from('series')
       .upsert(sanitized, { onConflict: 'tmdb_id', ignoreDuplicates: true })
@@ -1331,7 +1336,7 @@ export async function getMoviesPaginated(
   let query = supabase
     .from('movies')
     .select('*')
-    .abortSignal(signal as any);
+    .abortSignal(signal as AbortSignal);
 
   // Aplicar filtros
   if (filters?.minYear) {
@@ -1381,7 +1386,7 @@ export async function getSeriesPaginated(
     .select('*')
     .not('tmdb_id', 'is', null)
     .not('poster', 'is', null)
-    .abortSignal(signal as any);
+    .abortSignal(signal as AbortSignal);
 
   // Aplicar filtros
   if (filters?.minYear) {
@@ -1458,7 +1463,8 @@ export async function getSeriesIdsWithPlayableEpisodes(): Promise<Set<string>> {
 
     for (const row of data) {
       if (!hasCatalogVideoUrl(row)) continue;
-      const seriesId = (row as any)?.seasons?.series_id;
+      const seriesId = (row as { seasons?: { series_id?: string | number } })?.seasons
+        ?.series_id;
       if (seriesId) ids.add(String(seriesId));
     }
 
@@ -1514,11 +1520,11 @@ export async function getCatalogWithFilters(
   const moviesPage1 =
     moviesPage1Result.status === 'fulfilled'
       ? moviesPage1Result.value
-      : { data: [] as any[], page: 1, limit, hasMore: false, total: null, totalPages: null };
+      : { data: [] as Movie[], page: 1, limit, hasMore: false, total: null, totalPages: null };
   const seriesPage1 =
     seriesPage1Result.status === 'fulfilled'
       ? seriesPage1Result.value
-      : { data: [] as any[], page: 1, limit, hasMore: false, total: null, totalPages: null };
+      : { data: [] as Series[], page: 1, limit, hasMore: false, total: null, totalPages: null };
 
   if (moviesPage1Result.status === 'rejected')
     logger.warn('getCatalog: falha página 1 filmes:', moviesPage1Result.reason);
