@@ -233,6 +233,8 @@ const ChannelList: React.FC<ChannelListProps> = ({
                     onClick={() => onSelectChannel(ch)}
                     onMouseEnter={() => setFocusedIndex(absoluteIndex)}
                     onFocus={() => setFocusedIndex(absoluteIndex)}
+                    aria-label={`Canal ${absoluteIndex + 1}, ${ch.name}${programme ? `, agora: ${programme.title}` : ch.category ? `, categoria ${ch.category}` : ''}`}
+                    aria-current={isSelected ? 'true' : undefined}
                     className={`w-full group flex items-center gap-3 rounded-2xl outline-none transition-all duration-200 relative focus:outline-none bg-white/5 border border-transparent ${isFocused ? 'z-2 bg-[#371960] shadow-[0_0_15px_rgba(109,40,217,0.5)] border-[#9370db]' : isSelected ? 'z-1 bg-[#371960] border-[#9370db]' : 'z-1'}`}
                     style={{
                       padding: '8px 10px',

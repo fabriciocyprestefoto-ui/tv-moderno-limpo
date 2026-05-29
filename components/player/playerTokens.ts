@@ -58,7 +58,7 @@ export const PLAYER_CSS = `
   color:rgba(255,255,255,0.90);
   outline:none;cursor:pointer;flex-shrink:0;
 }
-.vision-btn.v-active,.vision-btn:focus-visible {
+.vision-btn.v-active,.vision-btn:focus-visible,.vision-btn:focus,[data-player-control][aria-current='true'] {
   background:linear-gradient(135deg,rgba(109,40,217,0.46),rgba(168,85,247,0.34));
   box-shadow:0 0 0 2px rgba(216,180,254,0.58),0 0 22px rgba(168,85,247,0.38);
   transform:scale(1.08);
@@ -72,7 +72,7 @@ export const PLAYER_CSS = `
   transition:all 200ms;cursor:pointer;outline:none;
   color:rgba(255,255,255,0.95);flex-shrink:0;
 }
-.vision-play-btn.v-active,.vision-play-btn:focus-visible {
+.vision-play-btn.v-active,.vision-play-btn:focus-visible,.vision-play-btn:focus,[data-player-control='play'][aria-current='true'] {
   background:linear-gradient(135deg,rgba(109,40,217,0.68),rgba(168,85,247,0.52),rgba(236,72,153,0.34));
   box-shadow:0 0 0 2px rgba(216,180,254,0.72),0 8px 32px rgba(0,0,0,0.55),0 0 26px rgba(168,85,247,0.42);
   transform:scale(1.10);
@@ -82,7 +82,7 @@ export const PLAYER_CSS = `
   background:rgba(255,255,255,0.18);
   cursor:pointer;overflow:visible;
 }
-.vision-progress-bar:hover { height:6px; }
+.vision-progress-bar:hover,.vision-progress-bar:focus { height:6px;box-shadow:0 0 0 2px rgba(216,180,254,0.42); }
 .vision-progress-fill {
   height:100%;border-radius:4px;
   background:linear-gradient(90deg,#6d28d9,#a855f7,#ec4899);
@@ -96,7 +96,7 @@ export const PLAYER_CSS = `
   box-shadow:0 2px 8px rgba(0,0,0,0.70),0 0 14px rgba(168,85,247,0.60);
   transition:transform 150ms;pointer-events:none;
 }
-.vision-progress-bar:hover .vision-progress-thumb { transform:translate(50%,-50%) scale(1); }
+.vision-progress-bar:hover .vision-progress-thumb,.vision-progress-bar:focus .vision-progress-thumb { transform:translate(50%,-50%) scale(1); }
 .vision-speed-panel {
   position:absolute;bottom:calc(100% + 10px);left:50%;
   transform:translateX(-50%);

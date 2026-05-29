@@ -62,6 +62,7 @@ const Top10Row: React.FC<Top10RowProps> = React.memo(
           {top10Items.map((media, idx) => {
             const poster = getMediaPoster(media);
             const isFocused = focusedIndex === idx;
+            const titleSafe = (media.title || 'Conteúdo').trim() || 'Conteúdo';
 
             return (
               <button
@@ -69,6 +70,7 @@ const Top10Row: React.FC<Top10RowProps> = React.memo(
                 type="button"
                 data-nav-item
                 data-nav-col={idx}
+                aria-label={`Top ${idx + 1}: ${titleSafe}. Pressione Enter para abrir.`}
                 className="relative flex-shrink-0 outline-none group"
                 style={{
                   width: `${CARD_WIDTH + 60}px`,

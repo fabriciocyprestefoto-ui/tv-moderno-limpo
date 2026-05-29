@@ -188,7 +188,7 @@ const StreamingPlatforms: React.FC<StreamingPlatformsProps> = ({ onSelectPlatfor
                   onKeyDown={(e) => handleKeyDown(e, index)}
                   tabIndex={0}
                   role="button"
-                  aria-label={platform.name}
+                  aria-label={`Filtrar catálogo por ${platform.name}`}
                   data-nav-item=""
                   data-platform-item={index}
                   data-nav-col={index}
@@ -205,8 +205,11 @@ const StreamingPlatforms: React.FC<StreamingPlatformsProps> = ({ onSelectPlatfor
                   ) : (
                     <img
                       src={platform.logo}
-                      alt={platform.name}
+                      alt=""
+                      aria-hidden
                       loading={index < 4 ? 'eager' : 'lazy'}
+                      width={128}
+                      height={56}
                       className="platform-logo-img w-full h-full object-contain transition-opacity duration-300"
                       style={{
                         filter: 'brightness(0) invert(1)',

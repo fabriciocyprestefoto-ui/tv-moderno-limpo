@@ -17,6 +17,7 @@ import { playSelectSound, playNavigateSound } from '../utils/soundEffects';
 import type { User } from '@supabase/supabase-js';
 import { useLocation } from 'react-router-dom';
 import { normalizeRemoteKey } from '../hooks/useRemoteControl';
+import { runtimeFlags } from '../config/runtimeFlags';
 
 const PAGE_TO_PATH: Record<string, string> = {
   HOME: '/',
@@ -262,35 +263,37 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Footer */}
       <div className="sidebar-footer">
-        {/* Adulto */}
-        <button
-          className={`sidebar-nav-btn${
-            (expanded && focusedPage === Page.ADULTO) ||
-            (!focusedPage && (location.pathname === '/adulto' || currentPage === Page.ADULTO))
-              ? ' active'
-              : ''
-          }`}
-          onClick={() => {
-            playSelectSound();
-            setExpanded(false);
-            setFocusedPage(null);
-            (document.activeElement as HTMLElement)?.blur();
-            onNavigate(Page.ADULTO);
-          }}
-          onFocus={() => setFocusedPage(Page.ADULTO)}
-          tabIndex={0}
-          data-nav-item
-          aria-label="Adulto"
-        >
-          {((expanded && focusedPage === Page.ADULTO) ||
-            (!focusedPage && (location.pathname === '/adulto' || currentPage === Page.ADULTO))) && (
-            <span className="sidebar-active-bar" />
-          )}
-          <span className="sidebar-icon-cell">
-            <Lock size={17} />
-          </span>
-          <span className="sidebar-label-text">Adulto</span>
-        </button>
+        {/* Adulto — removido de builds store-safe */}
+        {runtimeFlags.adultContentEnabled && (
+          <button
+            className={`sidebar-nav-btn${
+              (expanded && focusedPage === Page.ADULTO) ||
+              (!focusedPage && (location.pathname === '/adulto' || currentPage === Page.ADULTO))
+                ? ' active'
+                : ''
+            }`}
+            onClick={() => {
+              playSelectSound();
+              setExpanded(false);
+              setFocusedPage(null);
+              (document.activeElement as HTMLElement)?.blur();
+              onNavigate(Page.ADULTO);
+            }}
+            onFocus={() => setFocusedPage(Page.ADULTO)}
+            tabIndex={0}
+            data-nav-item
+            aria-label="Adulto"
+          >
+            {((expanded && focusedPage === Page.ADULTO) ||
+              (!focusedPage && (location.pathname === '/adulto' || currentPage === Page.ADULTO))) && (
+              <span className="sidebar-active-bar" />
+            )}
+            <span className="sidebar-icon-cell">
+              <Lock size={17} />
+            </span>
+            <span className="sidebar-label-text">Adulto</span>
+          </button>
+        )}
 
         {/* Settings */}
         <button

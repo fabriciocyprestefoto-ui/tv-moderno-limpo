@@ -28,6 +28,13 @@ const rawNativeAndroidPlayer = (import.meta.env.VITE_NATIVE_ANDROID_PLAYER as st
 const nativeAndroidPlayerEnabled = rawNativeAndroidPlayer
   ? toBool(rawNativeAndroidPlayer)
   : tvBuildEnabled;
+const storeSafeBuildEnabled = toBool(import.meta.env.VITE_STORE_SAFE_BUILD);
+const rawAdultContentEnabled = (import.meta.env.VITE_ENABLE_ADULT_CONTENT as string | undefined)
+  ?.trim()
+  .toLowerCase();
+const adultContentEnabled = rawAdultContentEnabled
+  ? toBool(rawAdultContentEnabled)
+  : !storeSafeBuildEnabled;
 
 export const runtimeFlags = {
   appBuildTarget,
@@ -36,6 +43,9 @@ export const runtimeFlags = {
   isLegacyBuild: legacyBuildEnabled,
   /** TV moderno usa Media3 por padrão; VITE_NATIVE_ANDROID_PLAYER=false força HTML5. */
   nativeAndroidPlayerEnabled,
+  /** Build de loja sem seção/rota adulta. Use VITE_STORE_SAFE_BUILD=true para Play Store. */
+  storeSafeBuildEnabled,
+  adultContentEnabled,
   officialVodPlayerPipeline: 'NativePlayerPlugin',
   fakeLoginEnabled: import.meta.env.DEV && toBool(import.meta.env.VITE_FAKE_LOGIN),
   adminBypassEnabled: import.meta.env.DEV && toBool(import.meta.env.VITE_ADMIN_BYPASS),

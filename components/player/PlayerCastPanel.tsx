@@ -30,9 +30,13 @@ const PlayerCastPanel: React.FC<PlayerCastPanelProps> = ({
         exit={{ y: 32, opacity: 0 }}
         className="absolute left-6 right-6 z-[205] bottom-[min(46vh,320px)] max-xl:bottom-52"
         style={{ ...VISION_FLOAT_STYLE, padding: '22px 28px 26px', minHeight: 140 }}
+        role="dialog"
+        aria-modal="false"
+        aria-labelledby="player-cast-title"
       >
         <div className="flex items-center justify-between" style={{ marginBottom: 22 }}>
           <h3
+            id="player-cast-title"
             style={{ fontSize: 16, fontWeight: 900, color: G.textPrimary, letterSpacing: '0.06em' }}
           >
             ELENCO
@@ -84,6 +88,8 @@ const PlayerCastPanel: React.FC<PlayerCastPanelProps> = ({
                   key={actor.id}
                   id={`cast-actor-${idx}`}
                   className="flex flex-col items-center text-center min-w-0"
+                  role="listitem"
+                  aria-label={`${actor.name}${actor.character ? ` como ${actor.character}` : ''}`}
                   style={{
                     transform: focused ? 'scale(1.06)' : 'scale(1)',
                     opacity: focusArea === 'cast' ? (focused ? 1 : 0.55) : 0.55,
@@ -150,6 +156,8 @@ const PlayerCastPanel: React.FC<PlayerCastPanelProps> = ({
           ) : (
             <div
               className="col-span-full"
+              role="status"
+              aria-live="polite"
               style={{
                 padding: 32,
                 opacity: 0.25,

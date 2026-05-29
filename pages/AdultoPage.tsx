@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Hls from 'hls.js';
 
 import AdultPinModal, { isAdultUnlocked } from '@/pages/livetv/AdultPinModal';
-import { loadAdultStreamsFromSupabase, type AdultStream } from '@/services/adultoService';
+import { fetchAdultStreamsFromM3U, type AdultStream } from '@/services/adultoService';
 import { sanitizeUrlForLog } from '@/utils/sanitizeUrlForLog';
 import { useTvBackHandler } from '@/hooks/useTvBackHandler';
 import { logger } from '@/utils/logger';
@@ -94,7 +94,8 @@ export default function AdultoPage() {
     };
   }, []);
 
-  // Carregar streams do Supabase (tabela adult_streams), igual à página Canais.
+  // ÚNICA fonte de conteúdo adulto: public/adulto-data.m3u (gerado a partir dos
+  // vídeos locais hospedados no Supabase Storage). Substitui a tabela adult_streams.
   useEffect(() => {
     let cancelled = false;
 
@@ -104,7 +105,7 @@ export default function AdultoPage() {
 
       let list: AdultStream[];
       try {
-        list = await loadAdultStreamsFromSupabase();
+        list = await fetchAdultStreamsFromM3U();
       } catch (err) {
         if (cancelled) return;
         logger.warn('[Adulto] player error reason=load-failed', err);

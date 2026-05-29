@@ -106,6 +106,17 @@ export function setAdultUnlocked(): void {
   void storageSet(STORAGE_KEY, String(exp)).catch(() => {});
 }
 
+export function clearAdultUnlocked(): void {
+  adultUnlockMemoryUntil = 0;
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {}
+  try {
+    sessionStorage.removeItem(STORAGE_KEY);
+  } catch {}
+  void storageRemove(STORAGE_KEY).catch(() => {});
+}
+
 /** Verifica se um canal é adulto pela categoria */
 export function isAdultChannel(category: string): boolean {
   if (!category) return false;

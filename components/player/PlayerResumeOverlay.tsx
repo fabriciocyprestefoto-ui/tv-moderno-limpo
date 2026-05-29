@@ -39,6 +39,10 @@ const PlayerResumeOverlay: React.FC<PlayerResumeOverlayProps> = ({
         exit={{ opacity: 0 }}
         className="absolute inset-0 z-[13000] flex items-center justify-center"
         style={{ background: 'transparent' }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="player-resume-title"
+        aria-describedby="player-resume-description"
       >
         <motion.div
           initial={{ scale: 0.92, opacity: 0 }}
@@ -62,6 +66,7 @@ const PlayerResumeOverlay: React.FC<PlayerResumeOverlayProps> = ({
             <Play size={24} style={{ color: '#a78bfa', marginLeft: 2 }} fill="#a78bfa" />
           </div>
           <h2
+            id="player-resume-title"
             style={{
               fontSize: 20,
               fontWeight: 900,
@@ -72,7 +77,7 @@ const PlayerResumeOverlay: React.FC<PlayerResumeOverlayProps> = ({
           >
             Continuar de onde parou?
           </h2>
-          <p style={{ fontSize: 14, color: 'rgba(210,190,255,0.55)', marginBottom: 28 }}>
+          <p id="player-resume-description" style={{ fontSize: 14, color: 'rgba(210,190,255,0.55)', marginBottom: 28 }}>
             Você parou em <strong style={{ color: '#a78bfa' }}>{formatTime(savedProgress)}</strong>
           </p>
           <div className="flex gap-3 justify-center">
@@ -80,6 +85,7 @@ const PlayerResumeOverlay: React.FC<PlayerResumeOverlayProps> = ({
               id="resume-action-continue"
               autoFocus={focusedAction === 'continue'}
               onClick={onContinue}
+              aria-label={`Continuar reprodução de ${formatTime(savedProgress)}. Seleção automática em ${resumeCountdown} segundos`}
               style={{
                 padding: '12px 24px',
                 borderRadius: '16px',
@@ -108,6 +114,7 @@ const PlayerResumeOverlay: React.FC<PlayerResumeOverlayProps> = ({
             <button
               id="resume-action-restart"
               onClick={onRestart}
+              aria-label="Começar a reprodução do início"
               style={{
                 padding: '12px 24px',
                 borderRadius: '16px',

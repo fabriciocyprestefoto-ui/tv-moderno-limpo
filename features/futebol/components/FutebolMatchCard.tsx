@@ -153,9 +153,18 @@ const FutebolMatchCardComponent: React.FC<FutebolMatchCardProps> = ({
   /* ── clip-path do corte diagonal (50% com inclinação ~8°) ── */
   const homeClip = 'polygon(0 0, 56% 0, 44% 100%, 0 100%)';
   const awayClip = 'polygon(56% 0, 100% 0, 100% 100%, 44% 100%)';
+  const matchupLabel = `${homeName ?? 'Mandante'} contra ${awayName ?? 'Visitante'}`;
+  const statusLabel =
+    mode === 'result'
+      ? `resultado ${homeScore ?? '-'} a ${awayScore ?? '-'}`
+      : `jogo em ${weekday} às ${timeOrSecondary}`;
 
   return (
-    <article className="fut-match-card" style={{ border: `1px solid ${c.homeBorder}` }}>
+    <article
+      className="fut-match-card"
+      style={{ border: `1px solid ${c.homeBorder}` }}
+      aria-label={`${matchupLabel}, ${competition ?? 'campeonato'}, ${statusLabel}`}
+    >
       {/* ══ FUNDO DIAGONAL SÓLIDO ════════════════════════════════════ */}
 
       {/* Metade esquerda — cor do time da casa */}
@@ -221,7 +230,7 @@ const FutebolMatchCardComponent: React.FC<FutebolMatchCardProps> = ({
             data-nav-item
             data-nav-row={navRow}
             data-nav-col={navColBase}
-            aria-label={homeName ?? 'Mandante'}
+            aria-label={`Abrir página de ${homeName ?? 'Mandante'}`}
           >
             {/* Nome do time */}
             <span
@@ -360,7 +369,7 @@ const FutebolMatchCardComponent: React.FC<FutebolMatchCardProps> = ({
             data-nav-item
             data-nav-row={navRow}
             data-nav-col={navColBase + 1}
-            aria-label={awayName ?? 'Visitante'}
+            aria-label={`Abrir página de ${awayName ?? 'Visitante'}`}
           >
             <span
               className="text-[11px] font-black uppercase tracking-wide text-center line-clamp-1 w-full px-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
@@ -472,7 +481,7 @@ const FutebolMatchCardComponent: React.FC<FutebolMatchCardProps> = ({
                 data-nav-item
                 data-nav-row={navRow}
                 data-nav-col={navColBase + 2}
-                aria-label={channelName ?? 'Assistir'}
+                aria-label={`Assistir em ${channelName ?? 'canal'}`}
               >
                 {inner}
               </button>

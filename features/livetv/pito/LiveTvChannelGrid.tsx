@@ -94,7 +94,7 @@ export function LiveTvChannelGrid({
                       style={{ height: cardHeight }}
                       type="button"
                       tabIndex={0}
-                      aria-label={channel.name}
+                      aria-label={`Canal ${channel.number}, ${channel.name}, agora: ${channel.currentProgram.title}`}
                       aria-current={isActive ? 'true' : undefined}
                       className={`flex w-full items-center gap-2 rounded-xl px-3 py-1.5 text-left transition-colors ${
                         isActive ? 'bg-white/12' : 'hover:bg-white/10'

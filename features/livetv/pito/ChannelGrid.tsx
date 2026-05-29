@@ -110,7 +110,7 @@ export const PitoChannelGrid: React.FC<ChannelGridProps> = ({
                       type="button"
                       tabIndex={0}
                       data-nav-item
-                      aria-label={channel.name}
+                      aria-label={`Canal ${channel.number}, ${channel.name}, agora: ${channel.currentProgram.title}`}
                       aria-current={isActive ? 'true' : undefined}
                       className={`livetv-sidebar-row flex w-full items-center gap-2 px-3 py-1.5 text-left ${
                         showActive ? 'livetv-sidebar-row--active' : ''

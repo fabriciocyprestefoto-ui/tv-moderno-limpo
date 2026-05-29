@@ -46,6 +46,9 @@ const PlayerEpisodesPanel: React.FC<PlayerEpisodesPanelProps> = ({
         className="absolute inset-0 z-[20000] flex items-end justify-center px-4 pb-28 md:px-6 md:pb-32 pointer-events-auto"
         style={{ background: 'rgba(8,2,22,0.48)', backdropFilter: 'blur(14px)' }}
         onClick={onClose}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="player-episodes-title"
       >
         <motion.div
           initial={{ y: 32, opacity: 0 }}
@@ -64,6 +67,7 @@ const PlayerEpisodesPanel: React.FC<PlayerEpisodesPanelProps> = ({
         >
           <div className="flex items-center justify-between" style={{ marginBottom: 22 }}>
             <h2
+              id="player-episodes-title"
               style={{
                 fontSize: 16,
                 fontWeight: 900,
@@ -75,6 +79,7 @@ const PlayerEpisodesPanel: React.FC<PlayerEpisodesPanelProps> = ({
             </h2>
             <button
               onClick={onClose}
+              aria-label="Voltar aos controles do player"
               style={{
                 ...vGlass({ borderRadius: '12px', padding: '6px 12px' }),
                 display: 'flex',
@@ -97,6 +102,8 @@ const PlayerEpisodesPanel: React.FC<PlayerEpisodesPanelProps> = ({
             <div
               className="cast-grid-scroll flex-shrink-0 flex flex-col gap-3 overflow-y-auto pr-1"
               style={{ width: 200 }}
+              role="listbox"
+              aria-label="Temporadas"
             >
               {seasons.map((s, idx) => {
                 const seasonFocused = focusedSeasonIdx === idx && focusArea === 'episodes-seasons';
@@ -105,6 +112,9 @@ const PlayerEpisodesPanel: React.FC<PlayerEpisodesPanelProps> = ({
                     key={s.id || idx}
                     onClick={() => onSeasonClick(idx, s.season_number)}
                     onFocus={() => onSeasonFocus(idx, s.season_number)}
+                    role="option"
+                    aria-selected={selectedSeasonNum === s.season_number}
+                    aria-label={s.name || `Temporada ${s.season_number}`}
                     style={{
                       textAlign: 'left',
                       padding: '12px 16px',
@@ -138,6 +148,9 @@ const PlayerEpisodesPanel: React.FC<PlayerEpisodesPanelProps> = ({
                 <div
                   className="flex flex-col items-center justify-center h-full py-12"
                   style={{ opacity: 0.28 }}
+                  role="status"
+                  aria-live="polite"
+                  aria-label="Carregando episódios"
                 >
                   <div
                     className="w-8 h-8 rounded-full animate-spin mb-3"
@@ -168,6 +181,7 @@ const PlayerEpisodesPanel: React.FC<PlayerEpisodesPanelProps> = ({
                       key={ep.id || idx}
                       id={`ep-${idx}`}
                       aria-label={`Episódio ${ep.episode_number}: ${ep.name}`}
+                      aria-current={isActive ? 'true' : undefined}
                       onFocus={() => {}}
                       onClick={() => {
                         if (onSelectEpisode) {

@@ -251,6 +251,7 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
     const featuredBackdrop =
       tmdbBackdrop || (currentSlotMovie ? getMediaBackdrop(currentSlotMovie) : '');
     const featuredLogo = tmdbLogo || (currentSlotMovie ? getLogoFor(currentSlotMovie) : null);
+    const currentSlotTitle = (currentSlotMovie?.title || 'Conteúdo').trim() || 'Conteúdo';
 
     useEffect(() => {
       if (!sectionRef.current) return;
@@ -328,7 +329,7 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
 
     if (loading && validItems.length === 0) {
       return (
-        <section className={styles.rowSection}>
+        <section className={styles.rowSection} role="status" aria-busy="true" aria-label={`Carregando ${title}`}>
           <h2 className={styles.rowTitle}>
             {title}
             <div className={styles.rowTitleLine} />
@@ -417,6 +418,7 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
             data-nav-custom-focus
             data-nav-col={0}
             data-nav-internal="true"
+            aria-label={`${currentSlotTitle}. Destaque da fileira ${title}. Pressione Enter para abrir.`}
             className={`${styles.highlightSlot} ${isSlotExpanded ? styles.highlightSlotOpen : ''}`}
             style={{
               width: `${slotWidth}px`,
@@ -510,6 +512,7 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
                     if (!media) return null;
                     const poster = getMediaPoster(media);
                     const navCol = vi.index + 2;
+                    const mediaTitle = (media.title || 'Conteúdo').trim() || 'Conteúdo';
                     return (
                       <div
                         key={`${media.id}-${vi.index}`}
@@ -533,7 +536,7 @@ const MovieRow: React.FC<MovieRowProps> = React.memo(
                           data-nav-custom-focus
                           data-nav-col={navCol}
                           tabIndex={0}
-                          aria-label={media.title}
+                          aria-label={`${mediaTitle}. Pressione Enter para abrir.`}
                           onMouseEnter={() => activateCard(vi.index)}
                           onFocus={() => {
                             setIsFocused(true);

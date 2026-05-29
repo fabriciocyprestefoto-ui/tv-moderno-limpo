@@ -73,6 +73,9 @@ const ContinueWatchingRow: React.FC<ContinueWatchingRowProps> = ({
         {items.map((item, idx) => {
           const backdrop = getMediaBackdrop(item) || getMediaPoster(item);
           const progress = formatProgress(item);
+          const progressPercent = Math.round(Math.min(100, Math.max(0, item.progressPercent || 0)));
+          const titleSafe = (item.title || 'Conteúdo').trim() || 'Conteúdo';
+          const progressLabel = progress ? `. ${progress}` : '';
 
           return (
             <div
@@ -80,6 +83,8 @@ const ContinueWatchingRow: React.FC<ContinueWatchingRowProps> = ({
               data-nav-item
               data-nav-col={idx}
               tabIndex={0}
+              role="button"
+              aria-label={`Continuar assistindo ${titleSafe}${progressLabel}. Pressione Enter para reproduzir.`}
               onClick={() => {
                 playSelectSound();
                 onPlay(item);
@@ -196,6 +201,11 @@ const ContinueWatchingRow: React.FC<ContinueWatchingRowProps> = ({
                 {/* Progress bar */}
                 {item.progressPercent > 0 && (
                   <div
+                    role="progressbar"
+                    aria-label={`Progresso de ${titleSafe}`}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={progressPercent}
                     style={{
                       height: 3,
                       borderRadius: 999,
@@ -208,7 +218,7 @@ const ContinueWatchingRow: React.FC<ContinueWatchingRowProps> = ({
                       style={{
                         height: '100%',
                         borderRadius: 999,
-                        width: `${item.progressPercent}%`,
+                        width: `${progressPercent}%`,
                         background: 'linear-gradient(90deg, #a855f7, #7c3aed)',
                       }}
                     />

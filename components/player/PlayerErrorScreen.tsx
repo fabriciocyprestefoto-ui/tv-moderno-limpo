@@ -26,6 +26,10 @@ const PlayerErrorScreen: React.FC<PlayerErrorScreenProps> = ({
         exit={{ opacity: 0 }}
         className="absolute inset-0 z-[12000] flex flex-col items-center justify-center gap-8"
         style={{ background: 'transparent' }}
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="player-error-title"
+        aria-describedby="player-error-description"
       >
         <div
           className="w-full max-w-lg rounded-3xl p-8"
@@ -38,10 +42,10 @@ const PlayerErrorScreen: React.FC<PlayerErrorScreenProps> = ({
             <Activity size={36} style={{ color: '#67e8f9' }} />
           </div>
           <div className="text-center">
-            <h2 className="text-2xl font-black text-white mb-2 tracking-tight">
+            <h2 id="player-error-title" className="text-2xl font-black text-white mb-2 tracking-tight">
               Falha na reprodução
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.58)', fontSize: 14 }}>
+            <p id="player-error-description" style={{ color: 'rgba(255,255,255,0.58)', fontSize: 14 }}>
               O stream não pôde ser carregado.
             </p>
           </div>
@@ -49,6 +53,7 @@ const PlayerErrorScreen: React.FC<PlayerErrorScreenProps> = ({
             <button
               autoFocus
               onClick={onRetry}
+              aria-label="Tentar carregar a reprodução novamente"
               className="focus:outline-none transition-all"
               style={{
                 padding: '14px 32px',
@@ -75,6 +80,7 @@ const PlayerErrorScreen: React.FC<PlayerErrorScreenProps> = ({
             <button
               tabIndex={0}
               onClick={onClose}
+              aria-label="Voltar e fechar o player"
               className="focus:outline-none transition-all"
               style={{
                 padding: '14px 32px',
@@ -121,6 +127,9 @@ const PlayerErrorScreen: React.FC<PlayerErrorScreenProps> = ({
         exit={{ opacity: 0 }}
         className="absolute inset-0 z-[12000] flex items-center justify-center"
         style={{ background: 'transparent' }}
+        role="status"
+        aria-live="polite"
+        aria-label="Reconectando reprodução"
       >
         <div className="flex flex-col items-center gap-4">
           <div

@@ -12,7 +12,7 @@ const PREVIEW_WAIT_TIMEOUT_MS = Number(process.env.E2E_PREVIEW_WAIT_TIMEOUT_MS |
 const CYPRESS_BROWSER = String(process.env.E2E_CYPRESS_BROWSER || 'chrome').trim();
 const CYPRESS_SPEC = String(
   process.env.E2E_CYPRESS_SPEC ||
-    'cypress/e2e/smoke-basic.cy.ts,cypress/e2e/shell-navigation.cy.ts'
+    'cypress/e2e/smoke-basic.cy.ts,cypress/e2e/shell-navigation.cy.ts,cypress/e2e/minimum-tv-flow.cy.ts,cypress/e2e/dpad-navigation.cy.ts'
 ).trim();
 const viteBin = path.resolve('node_modules/vite/bin/vite.js');
 const cypressBin = path.resolve('node_modules/cypress/bin/cypress');

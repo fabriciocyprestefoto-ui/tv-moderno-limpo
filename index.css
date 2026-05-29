@@ -507,6 +507,31 @@ textarea:focus-visible:not([data-nav-custom-focus]),
   scroll-margin-bottom: 100px;
 }
 
+[data-nav-item],
+[data-platform-item],
+[data-nav-channel-item],
+[data-nav-livetv-category],
+[data-player-control] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+[data-platform-item]:focus,
+[data-platform-item]:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.92) !important;
+  outline-offset: 3px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 4px rgba(168, 85, 247, 0.28),
+    0 12px 34px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-player-control]:focus,
+[data-player-control]:focus-visible,
+[data-player-control][aria-current='true'] {
+  outline: 2px solid rgba(255, 255, 255, 0.88) !important;
+  outline-offset: 2px !important;
+}
+
 [data-nav-item]:focus-visible:not([data-nav-custom-focus]) {
   transform: scale(var(--focus-scale));
   z-index: 100;
@@ -522,9 +547,12 @@ textarea:focus-visible:not([data-nav-custom-focus]),
 }
 
 /* ── MediaCard: MESMA linha de foco dos demais posters (2px roxo, sem glow) ── */
+/* border-radius alinha a linha de foco ao contorno arredondado do poster (rounded-2xl).
+   Sem isto o outline fica RETANGULAR em WebView de TV (não acompanha os cantos). */
 [data-nav-media-card]:focus-visible {
   outline: 2px solid rgba(139, 92, 246, 0.85) !important;
   outline-offset: 2px !important;
+  border-radius: 1rem !important;
   box-shadow: none !important;
   transform: none !important;
 }
@@ -939,6 +967,7 @@ a:focus:not(:focus-visible),
 /* Shimmer Netflix-level para LazyImage — gradiente suave com highlight central */
 .lazy-shimmer {
   will-change: opacity, background-position; /* GPU layer — evita reflow por animação */
+  contain: paint;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
@@ -974,6 +1003,7 @@ a:focus:not(:focus-visible),
 }
 
 .skeleton-shimmer-netflix {
+  contain: paint;
   background: linear-gradient(
     90deg,
     transparent 0%,
@@ -1246,15 +1276,10 @@ video {
 .tv-box-mode .platform-logo-glass,
 .tv-box .platform-filter-logo-glass,
 .tv-box-mode .platform-filter-logo-glass {
-  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
-  backdrop-filter: blur(18px) saturate(160%) !important;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.14) 0%,
-    rgba(255, 255, 255, 0.04) 45%,
-    rgba(255, 255, 255, 0.08) 100%
-  ) !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  -webkit-backdrop-filter: var(--exit-glass-blur) !important;
+  backdrop-filter: var(--exit-glass-blur) !important;
+  background: var(--exit-glass-bg) !important;
+  border: 1px solid var(--exit-glass-border) !important;
   box-shadow:
     0 10px 36px rgba(0, 0, 0, 0.38),
     inset 0 1px 0 rgba(255, 255, 255, 0.26),
@@ -1364,6 +1389,15 @@ video {
 /* Acessibilidade: usuários que preferem movimento reduzido (vestibular, epilepsia)
    — desativa shimmer e pulso para toda a aplicação */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
   .animate-shimmer,
   .lazy-shimmer,
   .skeleton-shimmer-netflix {
@@ -1373,7 +1407,8 @@ video {
 
   .animate-pulse,
   .animate-pulse-slow,
-  .animate-pulse-red {
+  .animate-pulse-red,
+  .animate-spin {
     animation: none !important;
   }
 }
@@ -2623,18 +2658,13 @@ select:focus:not(:focus-visible) {
     padding: 10px;
     cursor: pointer;
     outline: none;
-    background: linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.14) 0%,
-      rgba(255, 255, 255, 0.05) 45%,
-      rgba(255, 255, 255, 0.08) 100%
-    );
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--exit-glass-bg);
+    border: 1px solid var(--exit-glass-border);
     box-shadow:
       0 6px 28px rgba(0, 0, 0, 0.35),
       inset 0 1px 0 rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(20px) saturate(165%);
-    -webkit-backdrop-filter: blur(20px) saturate(165%);
+    backdrop-filter: var(--exit-glass-blur);
+    -webkit-backdrop-filter: var(--exit-glass-blur);
     transition:
       background 220ms ease-out,
       border-color 220ms ease-out,
@@ -3329,7 +3359,8 @@ select:focus:not(:focus-visible) {
 .lite-mode .platform-filter-logo-glass {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
-  background: rgba(28, 28, 38, 0.92) !important;
+  background: var(--exit-glass-bg) !important;
+  border: 1px solid var(--exit-glass-border) !important;
 }
 
 /* 13 — LiveTV Pito: sidebar e overlays sem blur */

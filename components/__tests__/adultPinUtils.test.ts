@@ -39,6 +39,7 @@ import {
   isAdultChannel,
   isAdultUnlocked,
   setAdultUnlocked,
+  clearAdultUnlocked,
 } from '../../pages/livetv/AdultPinModal';
 
 describe('isAdultChannel', () => {
@@ -79,6 +80,8 @@ describe('isAdultChannel', () => {
 
 describe('isAdultUnlocked / setAdultUnlocked', () => {
   beforeEach(() => {
+    clearAdultUnlocked();
+    localStorage.clear();
     sessionStorage.clear();
   });
 

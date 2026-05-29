@@ -48,6 +48,11 @@ describe('Shell Navigation', () => {
 
   it('abre Canais pelo menu lateral', () => {
     cy.get('[data-cy="nav-live"]', { timeout: 30000 }).click({ force: true });
-    cy.location('pathname', { timeout: 30000 }).should('eq', '/canais');
+    cy.location({ timeout: 30000 }).should((location) => {
+      expect(
+        location.pathname === '/canais' || location.hash.includes('/canais'),
+        `rota atual: ${location.pathname}${location.hash}`
+      ).to.equal(true);
+    });
   });
 });

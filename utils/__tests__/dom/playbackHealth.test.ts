@@ -2,7 +2,7 @@
  * utils/__tests__/dom/playbackHealth.test.ts
  *
  * Testa o sistema de rastreamento de saúde de URLs de reprodução:
- * - Normalização de URL (query params removidos)
+ * - Normalização de URL (query params preservados, hash removido)
  * - TTL: falha=12h, sucesso=24h
  * - Pruning ao atingir MAX_ENTRIES
  * - set/get round-trip
@@ -63,19 +63,20 @@ describe('markPlaybackUrlsHealthy / getPlaybackHealth — round-trip', () => {
   });
 });
 
-describe('normalização de URL — query params e hash removidos', () => {
+describe('normalização de URL — query params preservados e hash removido', () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
-  it('URLs com tokens diferentes mapeiam para a mesma entrada', async () => {
+  it('URLs com tokens diferentes não mapeiam para a mesma entrada', async () => {
     const { markPlaybackUrlsHealthy, getPlaybackHealth } = await freshModule();
 
     markPlaybackUrlsHealthy('https://cdn.example.com/stream.m3u8?token=abc123');
-    const entry = getPlaybackHealth('https://cdn.example.com/stream.m3u8?token=xyz789');
+    const sameToken = getPlaybackHealth('https://cdn.example.com/stream.m3u8?token=abc123');
+    const otherToken = getPlaybackHealth('https://cdn.example.com/stream.m3u8?token=xyz789');
 
-    expect(entry).not.toBeNull();
-    expect(entry?.status).toBe('healthy');
+    expect(sameToken?.status).toBe('healthy');
+    expect(otherToken).toBeNull();
   });
 
   it('hash é removido: URLs com fragment diferente são a mesma entrada', async () => {
@@ -87,7 +88,7 @@ describe('normalização de URL — query params e hash removidos', () => {
     expect(entry?.status).toBe('failed');
   });
 
-  it('aceita array de URLs: todas apontam para a mesma entrada', async () => {
+  it('aceita array de URLs: cada token preserva sua própria entrada', async () => {
     const { markPlaybackUrlsHealthy, getPlaybackHealth } = await freshModule();
 
     markPlaybackUrlsHealthy([
@@ -96,10 +97,12 @@ describe('normalização de URL — query params e hash removidos', () => {
     ]);
 
     const entryA = getPlaybackHealth('https://cdn.example.com/stream.m3u8?token=a');
-    const entryB = getPlaybackHealth('https://cdn.example.com/stream.m3u8');
+    const entryB = getPlaybackHealth('https://cdn.example.com/stream.m3u8?token=b');
+    const withoutToken = getPlaybackHealth('https://cdn.example.com/stream.m3u8');
 
     expect(entryA?.status).toBe('healthy');
     expect(entryB?.status).toBe('healthy');
+    expect(withoutToken).toBeNull();
   });
 });
 
@@ -160,7 +163,7 @@ describe('pruning — MAX_ENTRIES limitado', () => {
       markPlaybackUrlsHealthy(`https://cdn.example.com/stream-${i}.m3u8`);
     }
 
-    const stored = localStorage.getItem('redx-playback-health-v1');
+    const stored = localStorage.getItem('redx-playback-health-v2');
     const parsed = stored ? JSON.parse(stored) : {};
     expect(Object.keys(parsed).length).toBeLessThanOrEqual(400);
   });

@@ -1,0 +1,619 @@
+05-27 22:05:47.300 D/ConnectivityService(  806): requestNetwork for uid/pid:10165/2466 NetworkRequest [ TRACK_DEFAULT id=111, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 22:06:04.662 I/ActivityTaskManager(  806): START u0 {flg=0x10000 cmp=com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity (has extras)} from uid 10165
+05-27 22:06:04.916 D/ResourceManagerService(  806): onResumeTopActivity com.redflix.tvmoderno, Intent { flg=0x10000 cmp=com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity (has extras) }, ComponentInfo{com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity}
+05-27 22:06:06.309 P/Quality ( 2466): 09 03 info 1779930366308 procName:com.redflix.tvmoderno 2 what:159,obj:android.app.servertransaction.ClientTransaction@5b81b861,target:android.app.ActivityThread$H $ latencyTime:0,WallTime:1339 android.os.MessageQueue.nativePollOnce:-2,android.os.MessageQueue.next:335,android.os.Looper.loop:200,android.app.ActivityThread.main:7848,java.lang.reflect.Method.invoke:-2,com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run:592,com.android.internal.os.ZygoteInit.main:1070, allocWait:0,ionwait:0,dstate:0,sched:0,iowait:0 $ com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity
+05-27 22:06:11.364 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.420 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.456 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.511 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.546 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.600 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.638 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.691 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.728 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.781 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.817 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.872 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.908 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.963 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:11.999 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.054 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.090 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.144 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.181 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.234 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.271 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.325 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.361 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.417 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.454 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.507 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.543 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.598 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.635 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.687 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.724 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.777 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.812 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 22:06:12.815 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.818 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 22:06:12.818 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 22:06:12.869 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.905 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.960 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:12.997 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.050 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.088 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.139 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.178 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.230 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.266 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 57
+05-27 22:06:13.266 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:13.266 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 57
+05-27 22:06:13.266 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -74 txSpeed 117
+05-27 22:06:13.266 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:13.266 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:13.266 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:13.266 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:13.271 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.274 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=8, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=9, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=15, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=18, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=19, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=20, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=24, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10043 AdministratorUids: [] RequestorUid: 10043 RequestorPackageName: com.google.android.apps.mediashell] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=27, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:13.275 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=30, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:13.276 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=58, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:13.276 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=73, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:13.276 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=74, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:13.276 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=84, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10054 AdministratorUids: [] RequestorUid: 10054 RequestorPackageName: com.google.android.videos] ]
+05-27 22:06:13.276 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=93, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:13.276 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=108, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: com.tcl.ttvs] ]
+05-27 22:06:13.276 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=111, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 22:06:13.321 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.360 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.412 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.450 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.502 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.540 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.595 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.631 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.683 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.720 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.774 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.810 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.866 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.902 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.956 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:13.994 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.047 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.083 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.140 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.173 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.226 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.264 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.318 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.355 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.409 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.446 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.499 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.537 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.591 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.628 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.680 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.719 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.772 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.809 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.861 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.899 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.952 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:14.989 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.042 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.080 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.133 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.169 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.225 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.260 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.315 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.351 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.403 E/RHWC2   (  376): fox1 func=hwc2_func_validate_display line=1291 
+05-27 22:06:15.403 E/RHWC2   (  376): fox1 func=hwc2_func_validate_display line=1411 
+05-27 22:06:15.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1507 ]
+05-27 22:06:15.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.404 E/RHWC2   (  376): fox 1 [rtk_gdma_post 1531] HAS_FLAG=0
+05-27 22:06:15.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1565 ]
+05-27 22:06:15.442 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.495 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.532 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.585 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.622 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.677 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.713 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.768 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.803 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.858 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.893 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.949 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:15.985 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.038 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.074 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.129 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.164 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.219 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.254 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.276 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 58
+05-27 22:06:16.276 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:16.276 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 58
+05-27 22:06:16.276 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:16.277 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -73 txSpeed 117
+05-27 22:06:16.277 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:16.277 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:16.277 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:16.283 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:16.283 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=8, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:16.283 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=9, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:16.283 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=15, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=18, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=19, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=20, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=24, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10043 AdministratorUids: [] RequestorUid: 10043 RequestorPackageName: com.google.android.apps.mediashell] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=27, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=30, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=58, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:16.284 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=73, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:16.285 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=74, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:16.285 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=84, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10054 AdministratorUids: [] RequestorUid: 10054 RequestorPackageName: com.google.android.videos] ]
+05-27 22:06:16.285 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=93, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:16.285 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=108, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: com.tcl.ttvs] ]
+05-27 22:06:16.285 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=111, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 22:06:16.310 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.345 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.401 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.436 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.491 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.526 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.583 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.618 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.671 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.708 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.763 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.799 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.852 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.889 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.942 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:16.981 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.032 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.070 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.123 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.163 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.213 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.252 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.304 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.343 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.394 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.435 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.484 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.523 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.574 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.613 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.667 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.705 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.756 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.796 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.839 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 22:06:17.842 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 22:06:17.842 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 22:06:17.847 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.886 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.937 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:17.976 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.026 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.067 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.117 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.157 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.208 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.248 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.297 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.338 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.387 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.428 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.477 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.518 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.568 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.608 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.658 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.698 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.750 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.789 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.839 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.880 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.930 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:18.971 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.020 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.060 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.111 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.151 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.202 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.241 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.286 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 59
+05-27 22:06:19.286 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:19.286 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 59
+05-27 22:06:19.286 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:19.287 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -73 txSpeed 117
+05-27 22:06:19.287 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:19.287 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:19.287 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:19.296 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.300 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:19.300 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=8, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:19.300 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=9, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:19.300 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:19.300 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=15, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=18, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=19, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=20, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=24, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10043 AdministratorUids: [] RequestorUid: 10043 RequestorPackageName: com.google.android.apps.mediashell] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=27, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=30, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=58, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=73, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=74, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:19.301 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=84, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10054 AdministratorUids: [] RequestorUid: 10054 RequestorPackageName: com.google.android.videos] ]
+05-27 22:06:19.302 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=93, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:19.302 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=108, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: com.tcl.ttvs] ]
+05-27 22:06:19.302 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=111, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 22:06:19.333 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.384 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.427 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.475 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.514 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.566 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.606 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.657 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.696 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.747 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.786 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.837 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.876 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.927 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:19.966 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.018 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.058 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.110 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.149 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.201 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.240 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.290 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.330 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.381 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.420 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.472 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.510 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.563 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.600 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.655 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.693 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.745 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.781 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.834 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.871 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.924 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:20.962 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.013 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.052 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.103 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.145 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.194 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.234 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.284 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.326 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.376 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.414 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.465 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.503 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.555 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.595 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.648 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.685 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.737 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.774 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.827 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.865 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.917 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:21.956 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.007 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.047 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.097 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.137 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.187 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.227 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.278 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.300 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -74 txSpeed 117
+05-27 22:06:22.300 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:22.300 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:22.300 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:22.317 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.369 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.409 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.460 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.498 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.550 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.589 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.641 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.680 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.731 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.770 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.822 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.860 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.862 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 22:06:22.866 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 22:06:22.866 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 22:06:22.912 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:22.950 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.003 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.041 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.093 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.132 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.184 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.221 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.274 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.311 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.363 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.401 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.455 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.492 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.545 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.582 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.635 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.671 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.725 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.762 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.815 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.852 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.905 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.943 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:23.996 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.033 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.086 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.123 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.177 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.214 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.235 W/RED-X-Player( 2466): Main stream travado em BUFFERING apos 18000ms
+05-27 22:06:24.236 E/RED-X-Player( 2466): TIMEOUT: Buffer travado por mais de 18000ms. Encerrando.
+05-27 22:06:24.239 I/RED-X-Player( 2466): [RED_EXOPLAYER] onPlayWhenReadyChanged: playWhenReady=false reason=1
+05-27 22:06:24.286 I/RED-X-Player( 2466): [RED_EXOPLAYER] onPause
+05-27 22:06:24.287 I/RED-X-Player( 2466): onPause
+05-27 22:06:24.289 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.310 D/Capacitor( 2466): Sending plugin error: {"save":false,"callbackId":"9916765","pluginId":"NativePlayer","methodName":"play","success":false,"error":{"message":"Canal indisponível ou servidor não respondeu."}}
+05-27 22:06:24.314 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.322 D/RED-X   ( 2466): setMediaPlaybackRequiresUserGesture(false) aplicado
+05-27 22:06:24.323 D/RED-X   ( 2466): setLayerType: usando padrão do sistema (manifest hardwareAccelerated=true)
+05-27 22:06:24.329 E/Capacitor/Console( 2466): File:  - Line 330 - Msg: [object Object]
+05-27 22:06:24.331 E/Capacitor/Console( 2466): File: https://localhost/canais - Line 451 - Msg: [NativePlayer] erro Error: Canal indisponível ou servidor não respondeu.
+05-27 22:06:24.332 E/Capacitor/Console( 2466): File: https://localhost/canais - Line 391 - Msg: [LiveTV] Native live player failed: Error: Canal indisponível ou servidor não respondeu.
+05-27 22:06:24.333 W/Capacitor/Console( 2466): File: https://localhost/canais - Line 391 - Msg: [LiveTV] canal indisponível [object Object]
+05-27 22:06:24.348 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.363 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.429 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.447 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.465 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.480 I/Capacitor/Console( 2466): File:  - Line 1 - Msg: RED-X Device Info Injected: [object Object]
+05-27 22:06:24.482 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 22:06:24.489 D/RED-X   ( 2466): setMediaPlaybackRequiresUserGesture(false) aplicado
+05-27 22:06:24.489 D/RED-X   ( 2466): setLayerType: usando padrão do sistema (manifest hardwareAccelerated=true)
+05-27 22:06:24.499 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.515 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.533 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.548 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.565 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.582 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.598 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.615 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.631 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.648 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.665 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.681 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.698 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.715 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.731 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.748 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.765 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.782 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.798 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.815 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.831 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.848 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.865 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.881 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 22:06:24.937 I/RED-X-Player( 2466): [RED_EXOPLAYER] onStop
+05-27 22:06:24.939 I/RED-X-Player( 2466): [RED_EXOPLAYER] onDestroy
+05-27 22:06:24.939 I/RED-X-Player( 2466): onDestroy
+05-27 22:06:24.939 I/ExoPlayerImpl( 2466): Release fe4727e [AndroidXMedia3/1.2.0] [G07, Smart TV, TCL, 30] [media3.common, media3.ui, media3.exoplayer, media3.decoder, media3.exoplayer.hls, media3.datasource]
+05-27 22:06:24.967 E/BufferQueueProducer(  417): [com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0](id:1a1000000c2,api:0,p:-1,c:417) disconnect: not connected (req=1)
+05-27 22:06:25.309 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -74 txSpeed 117
+05-27 22:06:25.309 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:25.309 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:25.309 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:27.887 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 22:06:27.890 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 22:06:27.890 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 22:06:28.321 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -74 txSpeed 104
+05-27 22:06:28.321 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:28.321 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:28.321 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:31.332 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -74 txSpeed 104
+05-27 22:06:31.332 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:31.332 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:31.332 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:32.910 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 22:06:32.914 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 22:06:32.914 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 22:06:34.345 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -74 txSpeed 104
+05-27 22:06:34.345 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:34.345 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:34.345 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:37.356 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 58
+05-27 22:06:37.356 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:37.356 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 58
+05-27 22:06:37.356 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:37.357 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -76 txSpeed 104
+05-27 22:06:37.357 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:37.357 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:37.357 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:37.361 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:37.361 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=8, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:37.361 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=9, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:37.361 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:37.361 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=15, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:37.362 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=18, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:37.362 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=19, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:37.362 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=20, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:37.362 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:37.362 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=24, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10043 AdministratorUids: [] RequestorUid: 10043 RequestorPackageName: com.google.android.apps.mediashell] ]
+05-27 22:06:37.362 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=27, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:37.363 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=30, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:37.363 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=58, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:37.363 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=73, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:37.363 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=74, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:37.363 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=84, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10054 AdministratorUids: [] RequestorUid: 10054 RequestorPackageName: com.google.android.videos] ]
+05-27 22:06:37.363 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=93, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:37.363 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=108, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: com.tcl.ttvs] ]
+05-27 22:06:37.363 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=111, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 22:06:37.934 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 22:06:37.939 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 22:06:37.939 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 22:06:40.369 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -75 txSpeed 104
+05-27 22:06:40.369 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:40.369 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:40.369 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:42.959 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 22:06:42.963 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 22:06:42.963 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 22:06:43.379 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 56
+05-27 22:06:43.379 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:43.379 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 56
+05-27 22:06:43.380 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:43.380 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -77 txSpeed 104
+05-27 22:06:43.380 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:43.380 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:43.380 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:43.383 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:43.383 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=8, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:43.384 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=9, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:43.384 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:43.384 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=15, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:43.384 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=18, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:43.384 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=19, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:43.384 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=20, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=24, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10043 AdministratorUids: [] RequestorUid: 10043 RequestorPackageName: com.google.android.apps.mediashell] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=27, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=30, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=58, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=73, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=74, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=84, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10054 AdministratorUids: [] RequestorUid: 10054 RequestorPackageName: com.google.android.videos] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=93, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=108, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: com.tcl.ttvs] ]
+05-27 22:06:43.385 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=111, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 22:06:46.392 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 57
+05-27 22:06:46.392 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:46.392 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 57
+05-27 22:06:46.392 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:46.393 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -74 txSpeed 78
+05-27 22:06:46.393 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:46.393 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:46.393 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:46.397 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:46.397 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=8, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:46.397 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=9, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=15, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=18, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=19, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=20, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=24, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10043 AdministratorUids: [] RequestorUid: 10043 RequestorPackageName: com.google.android.apps.mediashell] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=27, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=30, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=58, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:46.398 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=73, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:46.399 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=74, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:46.399 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=84, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10054 AdministratorUids: [] RequestorUid: 10054 RequestorPackageName: com.google.android.videos] ]
+05-27 22:06:46.399 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=93, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:46.399 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=108, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: com.tcl.ttvs] ]
+05-27 22:06:46.399 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=111, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 22:06:47.983 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 22:06:47.986 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 22:06:47.986 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 22:06:49.403 D/WifiClientModeImpl(  806): fetchRssiLinkSpeedAndFrequencyNative rssi=-74 TxLinkspeed=104 freq=2417 RxLinkSpeed=0
+05-27 22:06:49.403 V/WifiConfigManager(  806): Updating scan detail cache freq=2417 BSSID=f8:2d:c0:24:9e:d2 RSSI=-74 for "BOLSONARO2018"WPA_PSK
+05-27 22:06:49.404 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 58
+05-27 22:06:49.404 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:49.404 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 58
+05-27 22:06:49.404 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:49.404 D/WifiScoreReport(  806): report new wifi score 58
+05-27 22:06:49.404 D/WifiThroughputPredictor(  806):  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-27 22:06:49.404 D/WifiThroughputPredictor(  806):  utilization (BssLoad) -1 utilization (LLStats) 80 isBluetoothConnected: false final utilization: 80
+05-27 22:06:49.405 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -74 txSpeed 104
+05-27 22:06:49.405 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:49.405 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:49.405 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:49.408 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:49.408 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=8, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:49.408 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=9, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:49.408 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=15, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=18, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=19, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=20, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=24, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10043 AdministratorUids: [] RequestorUid: 10043 RequestorPackageName: com.google.android.apps.mediashell] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=27, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=30, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=58, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=73, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:49.409 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=74, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:49.410 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=84, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10054 AdministratorUids: [] RequestorUid: 10054 RequestorPackageName: com.google.android.videos] ]
+05-27 22:06:49.410 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=93, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:49.410 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=108, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: com.tcl.ttvs] ]
+05-27 22:06:49.410 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=111, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 22:06:49.403 D/ConnectivityService(  806): NetReassign [no changes]
+05-27 22:06:52.417 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 56
+05-27 22:06:52.417 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:52.417 D/EthernetNetworkFactory(  806): acceptRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], score: 56
+05-27 22:06:52.417 I/EthernetNetworkFactory(  806): networkForRequest, request: NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ], network: null
+05-27 22:06:52.418 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -77 txSpeed 104
+05-27 22:06:52.418 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 22:06:52.418 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 22:06:52.418 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 22:06:52.423 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:52.423 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=8, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:52.423 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=9, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:52.423 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ REQUEST id=11, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: android] ]
+05-27 22:06:52.423 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=15, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:52.423 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=18, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:52.423 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=19, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:52.423 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=20, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:52.423 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10042 AdministratorUids: [] RequestorUid: 10042 RequestorPackageName: com.google.android.apps.tv.launcherx] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=24, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10043 AdministratorUids: [] RequestorUid: 10043 RequestorPackageName: com.google.android.apps.mediashell] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=27, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10037 AdministratorUids: [] RequestorUid: 10037 RequestorPackageName: com.google.android.gms] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=30, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=58, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=73, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=74, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10045 AdministratorUids: [] RequestorUid: 10045 RequestorPackageName: com.android.vending] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=84, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10054 AdministratorUids: [] RequestorUid: 10054 RequestorPackageName: com.google.android.videos] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=93, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10040 AdministratorUids: [] RequestorUid: 10040 RequestorPackageName: com.google.android.apps.tv.dreamx] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=108, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 1000 AdministratorUids: [] RequestorUid: 1000 RequestorPackageName: com.tcl.ttvs] ]
+05-27 22:06:52.424 V/WifiNetworkFactory(  806): Accepted network request NetworkRequest [ TRACK_DEFAULT id=111, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 22:06:53.006 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 22:06:53.010 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 22:06:53.010 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec

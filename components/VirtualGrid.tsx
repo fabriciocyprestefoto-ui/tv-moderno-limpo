@@ -107,6 +107,10 @@ const VirtualGrid: React.FC<VirtualGridProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const titleId = useMemo(
+    () => `virtual-grid-${(title || emptyMessage || 'conteudo').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+    [title, emptyMessage]
+  );
   // Audit fix: cache offsetTop para evitar browser reflow em cada scroll
   const cachedOffsetTopRef = useRef<number>(0);
   const rafRef = useRef<number | null>(null);
@@ -262,9 +266,17 @@ const VirtualGrid: React.FC<VirtualGridProps> = ({
   // ═══════════════════════════════════════════════════════
   if (isLoading) {
     return (
-      <div ref={containerRef} className="px-8 md:px-12">
+      <div
+        ref={containerRef}
+        className="px-8 md:px-12"
+        role="status"
+        aria-busy="true"
+        aria-live="polite"
+        aria-labelledby={title ? titleId : undefined}
+        aria-label={title ? undefined : 'Carregando conteúdos'}
+      >
         {title && (
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-4">
+          <h2 id={titleId} className="text-2xl font-bold mb-6 flex items-center gap-4">
             {title}
             <div className="h-px flex-1 bg-linear-to-r from-white/20 to-transparent" />
           </h2>
@@ -289,9 +301,16 @@ const VirtualGrid: React.FC<VirtualGridProps> = ({
   // ═══════════════════════════════════════════════════════
   if (!isLoading && items.length === 0) {
     return (
-      <div ref={containerRef} className="px-8 md:px-12">
+      <div
+        ref={containerRef}
+        className="px-8 md:px-12"
+        role="status"
+        aria-live="polite"
+        aria-labelledby={title ? titleId : undefined}
+        aria-label={title ? undefined : emptyMessage}
+      >
         {title && (
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-4">
+          <h2 id={titleId} className="text-2xl font-bold mb-6 flex items-center gap-4">
             {title}
             <div className="h-px flex-1 bg-linear-to-r from-white/20 to-transparent" />
           </h2>
@@ -313,10 +332,14 @@ const VirtualGrid: React.FC<VirtualGridProps> = ({
   // RENDER — VIRTUAL GRID
   // ═══════════════════════════════════════════════════════
   return (
-    <div ref={containerRef} className="px-8 md:px-12">
+    <div
+      ref={containerRef}
+      className="px-8 md:px-12"
+      aria-labelledby={title ? titleId : undefined}
+    >
       {/* Título */}
       {title && (
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-4">
+        <h2 id={titleId} className="text-2xl font-bold mb-6 flex items-center gap-4">
           {title}
           <span className="text-xs text-white/20 font-normal">{items.length} itens</span>
           <div className="h-px flex-1 bg-linear-to-r from-white/20 to-transparent" />
@@ -364,7 +387,12 @@ const VirtualGrid: React.FC<VirtualGridProps> = ({
 
       {/* ── Loading more indicator ── */}
       {isLoadingMore && (
-        <div className="flex items-center justify-center py-8 gap-3">
+        <div
+          className="flex items-center justify-center py-8 gap-3"
+          role="status"
+          aria-live="polite"
+          aria-label="Carregando mais conteúdos"
+        >
           <div className="w-6 h-6 border-2 border-[#A855F7] border-t-transparent rounded-full animate-spin" />
           <span className="text-white/30 text-xs uppercase tracking-widest font-bold">
             Carregando...

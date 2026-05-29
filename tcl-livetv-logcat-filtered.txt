@@ -1,0 +1,450 @@
+05-27 21:58:29.165 D/ConnectivityService(  806): requestNetwork for uid/pid:10165/1713 NetworkRequest [ TRACK_DEFAULT id=109, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10165 AdministratorUids: [] RequestorUid: 10165 RequestorPackageName: com.redflix.tvmoderno] ]
+05-27 21:58:38.822 I/ActivityTaskManager(  806): START u0 {flg=0x10000 cmp=com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity (has extras)} from uid 10165
+05-27 21:58:38.868 D/ResourceManagerService(  806): onResumeTopActivity com.redflix.tvmoderno, Intent { flg=0x10000 cmp=com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity (has extras) }, ComponentInfo{com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity}
+05-27 21:58:40.087 P/Quality ( 1713): 09 03 info 1779929920086 procName:com.redflix.tvmoderno 2 what:159,obj:android.app.servertransaction.ClientTransaction@bfaa34d7,target:android.app.ActivityThread$H $ latencyTime:14,WallTime:1143 android.os.MessageQueue.nativePollOnce:-2,android.os.MessageQueue.next:335,android.os.Looper.loop:200,android.app.ActivityThread.main:7848,java.lang.reflect.Method.invoke:-2,com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run:592,com.android.internal.os.ZygoteInit.main:1070, allocWait:0,ionwait:0,dstate:0,sched:0,iowait:0 $ com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity
+05-27 21:58:41.508 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:41.575 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:41.675 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:41.774 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:41.875 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:41.975 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.075 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.175 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.276 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.374 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.476 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.508 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.575 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.660 D/wpa_supplicant( 1207): wlan_traffic_statistics rx_byte = 918840426 rx rate = 41 Kb/s
+05-27 21:58:42.675 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.776 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.875 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:42.975 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.075 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.178 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.275 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.375 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.475 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.508 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.575 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.674 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.775 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.875 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:43.975 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.074 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.174 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.275 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.375 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.478 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -71 txSpeed 78
+05-27 21:58:44.478 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:58:44.478 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:58:44.478 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:58:44.508 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.574 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.675 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.775 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.875 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:44.974 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.074 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.176 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.275 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.374 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.425 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 21:58:45.452 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 21:58:45.452 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 21:58:45.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.491 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.507 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.523 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.541 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.556 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.574 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.587 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.604 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.621 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.637 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.654 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.671 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.687 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.704 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.721 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.737 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.754 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.771 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.787 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.804 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.821 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.837 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.854 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.871 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.887 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.904 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.920 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.937 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.954 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.971 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:45.987 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.004 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.021 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.037 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.054 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.071 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.087 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.104 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.121 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.137 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.154 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.171 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.187 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.204 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.221 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.237 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.254 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.271 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.287 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.304 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.321 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.337 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.354 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.371 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.387 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1507 ]
+05-27 21:58:46.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.404 E/RHWC2   (  376): fox 1 [rtk_gdma_post 1531] HAS_FLAG=0
+05-27 21:58:46.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = #0 num_of_layers=2
+05-27 21:58:46.404 E/RHWC2   (  376): fox 1 [rtk_gdma_post 1531] HAS_FLAG=0
+05-27 21:58:46.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1565 ]
+05-27 21:58:46.421 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.437 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.454 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.471 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.487 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.504 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.521 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.537 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.554 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.571 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.588 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.604 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.621 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.637 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.654 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.671 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.687 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.704 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.721 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.737 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.754 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.771 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.787 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.804 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.821 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.837 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.854 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.871 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.888 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.904 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.921 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.937 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.954 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.971 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:46.987 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.004 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.021 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.037 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.054 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.072 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.088 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.104 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.121 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.137 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.154 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.172 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.188 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.204 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.221 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.238 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.254 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.271 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.287 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.304 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.321 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.337 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.354 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.371 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.388 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1507 ]
+05-27 21:58:47.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.404 E/RHWC2   (  376): fox 1 [rtk_gdma_post 1531] HAS_FLAG=0
+05-27 21:58:47.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = #0 num_of_layers=2
+05-27 21:58:47.404 E/RHWC2   (  376): fox 1 [rtk_gdma_post 1531] HAS_FLAG=0
+05-27 21:58:47.404 E/RHWC2   (  376): fox1 [rtk_gdma_post 1565 ]
+05-27 21:58:47.421 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.437 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.454 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.471 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.488 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.490 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -71 txSpeed 65
+05-27 21:58:47.490 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:58:47.490 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:58:47.490 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:58:47.504 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.521 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.538 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.554 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.572 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.588 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.604 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.621 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.637 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.654 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.671 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.688 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.706 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.738 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.755 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.772 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.779 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.805 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.821 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.838 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.854 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.871 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.889 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.904 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.921 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.936 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.953 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.969 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.978 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:47.989 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.004 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.074 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.175 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.275 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.375 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.475 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.574 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.675 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.774 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.874 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:48.975 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.075 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.175 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.275 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.376 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.575 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.674 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.774 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.873 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:49.975 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.075 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.174 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.274 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.374 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.472 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 21:58:50.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.482 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 21:58:50.482 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 21:58:50.500 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -70 txSpeed 78
+05-27 21:58:50.501 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:58:50.501 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:58:50.501 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:58:50.574 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.674 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.774 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.874 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:50.975 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.075 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.174 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.274 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.373 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.573 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.673 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.773 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.876 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:51.973 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.077 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.175 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.274 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.375 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.575 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.674 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.774 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.873 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:52.974 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.074 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.174 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.276 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.375 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.512 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -71 txSpeed 78
+05-27 21:58:53.512 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:58:53.512 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:58:53.512 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:58:53.574 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.675 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.773 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.873 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:53.975 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.075 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.173 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.274 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.373 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.473 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.573 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.675 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.775 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.874 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:54.974 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.075 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.173 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.273 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.374 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.503 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 21:58:55.506 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 21:58:55.506 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 21:58:55.574 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.674 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.773 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.875 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:55.973 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.073 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.173 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.275 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.373 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.524 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -70 txSpeed 117
+05-27 21:58:56.524 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:58:56.524 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:58:56.524 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:58:56.577 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.674 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.774 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.873 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:56.974 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.074 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.173 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.273 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.374 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.474 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.574 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.675 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.773 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.874 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:57.973 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.046 W/RED-X-Player( 1713): Main stream travado em BUFFERING apos 18000ms
+05-27 21:58:58.046 E/RED-X-Player( 1713): TIMEOUT: Buffer travado por mais de 18000ms. Encerrando.
+05-27 21:58:58.052 I/RED-X-Player( 1713): [RED_EXOPLAYER] onPlayWhenReadyChanged: playWhenReady=false reason=1
+05-27 21:58:58.105 I/RED-X-Player( 1713): [RED_EXOPLAYER] onPause
+05-27 21:58:58.108 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.122 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.138 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.144 D/Capacitor( 1713): Sending plugin error: {"save":false,"callbackId":"67620183","pluginId":"NativePlayer","methodName":"play","success":false,"error":{"message":"Canal indisponível ou servidor não respondeu."}}
+05-27 21:58:58.153 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.166 E/Capacitor/Console( 1713): File: https://localhost/canais - Line 451 - Msg: [NativePlayer] erro Error: Canal indisponível ou servidor não respondeu.
+05-27 21:58:58.167 E/Capacitor/Console( 1713): File: https://localhost/canais - Line 391 - Msg: [LiveTV] Native live player failed: Error: Canal indisponível ou servidor não respondeu.
+05-27 21:58:58.186 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.203 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.286 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.303 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.320 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.337 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=1
+05-27 21:58:58.347 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.357 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.372 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.389 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.405 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.421 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.438 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.454 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.471 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.487 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.504 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.521 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.538 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.554 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.571 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.587 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.605 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.621 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.638 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.654 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.671 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.688 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.704 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.721 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.738 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0 num_of_layers=2
+05-27 21:58:58.796 P/Quality ( 1713): 09 03 info 1779929938795 procName:com.redflix.tvmoderno 2 callback:android.view.Choreographer$FrameDisplayEventReceiver,target:android.view.Choreographer$FrameHandler $ latencyTime:18,WallTime:393 android.os.MessageQueue.nativePollOnce:-2,android.os.MessageQueue.next:335,android.os.Looper.loop:200,android.app.ActivityThread.main:7848,java.lang.reflect.Method.invoke:-2,com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run:592,com.android.internal.os.ZygoteInit.main:1070, allocWait:0,ionwait:0,dstate:0,sched:0,iowait:0 viewTitle:com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity $
+05-27 21:58:58.830 I/RED-X-Player( 1713): [RED_EXOPLAYER] onStop
+05-27 21:58:58.833 I/RED-X-Player( 1713): [RED_EXOPLAYER] onDestroy
+05-27 21:58:58.835 I/ExoPlayerImpl( 1713): Release 6828064 [AndroidXMedia3/1.2.0] [G07, Smart TV, TCL, 30] [media3.common, media3.ui, media3.exoplayer, media3.decoder, media3.exoplayer.hls, media3.datasource]
+05-27 21:58:58.858 E/BufferQueueProducer(  417): [com.redflix.tvmoderno/com.redx.tvbox.ExoPlayerActivity#0](id:1a1000000bc,api:0,p:-1,c:417) disconnect: not connected (req=1)
+05-27 21:58:59.537 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -71 txSpeed 104
+05-27 21:58:59.537 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:58:59.537 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:58:59.537 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:59:00.527 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 21:59:00.531 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 21:59:00.531 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 21:59:02.513 I/cast_shell( 2612): [metrics_stat_logger] Cast.Network.CheckIn=1
+05-27 21:59:02.546 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -71 txSpeed 130
+05-27 21:59:02.546 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:59:02.546 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:59:02.546 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:59:05.552 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 21:59:05.555 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 21:59:05.555 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 21:59:05.561 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -74 txSpeed 130
+05-27 21:59:05.562 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:59:05.562 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:59:05.562 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:59:08.573 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -72 txSpeed 104
+05-27 21:59:08.573 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:59:08.573 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:59:08.573 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:59:10.403 E/RHWC2   (  376): fox1 [rtk_gdma_post 1507 ]
+05-27 21:59:10.403 E/RHWC2   (  376): fox1 [rtk_gdma_post 1530 ]name_of_layer = com.redflix.tvmoderno/com.redx.tvbox.MainActivity#0 num_of_layers=1
+05-27 21:59:10.403 E/RHWC2   (  376): fox 1 [rtk_gdma_post 1531] HAS_FLAG=0
+05-27 21:59:10.403 E/RHWC2   (  376): fox1 [rtk_gdma_post 1565 ]
+05-27 21:59:10.575 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 21:59:10.579 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 21:59:10.579 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 21:59:11.585 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -72 txSpeed 130
+05-27 21:59:11.585 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:59:11.585 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:59:11.585 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:59:14.596 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -72 txSpeed 130
+05-27 21:59:14.596 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:59:14.596 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:59:14.596 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:59:15.599 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 21:59:15.603 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 21:59:15.603 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 21:59:17.608 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -71 txSpeed 117
+05-27 21:59:17.609 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:59:17.609 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:59:17.609 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:59:20.623 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 21:59:20.625 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -72 txSpeed 130
+05-27 21:59:20.625 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:59:20.625 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:59:20.625 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:59:20.629 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 21:59:20.629 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 21:59:23.637 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -72 txSpeed 130
+05-27 21:59:23.637 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:59:23.637 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:59:23.637 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0
+05-27 21:59:25.650 D/wpa_supplicant( 1207): P2P: Timeout (state=LISTEN_ONLY)
+05-27 21:59:25.673 D/wpa_supplicant( 1207): P2P: Starting Listen timeout(5,0) on freq=2417 based on callback
+05-27 21:59:25.673 D/wpa_supplicant( 1207): P2P: Set timeout (state=LISTEN_ONLY): 5.020000 sec
+05-27 21:59:26.649 D/WifiScoreCard(  806): network update SIGNAL_POLL "BOLSONARO2018" ID: 976476524 RSSI -71 txSpeed 130
+05-27 21:59:26.649 D/WifiScoreCard(  806):  StatsRecent:  ConnectAttempt: 4 ConnectFailure: 0 ConnectDurSec: 6372708 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 6 DisconnectNonlocal: 7 Disconnect: 13 ConsecutiveConnectFailure: 0
+05-27 21:59:26.649 D/WifiScoreCard(  806):  StatsCurr:  ConnectAttempt: 54 ConnectFailure: 0 ConnectDurSec: 759544 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 39 DisconnectNonlocal: 53 Disconnect: 73 ConsecutiveConnectFailure: 0
+05-27 21:59:26.649 D/WifiScoreCard(  806):  StatsPrev:  ConnectAttempt: 15 ConnectFailure: 0 ConnectDurSec: 211923 AssocRej: 0 AssocTimeout: 0 AuthFailure: 0 ShortDiscNonlocal: 10 DisconnectNonlocal: 19 Disconnect: 32 ConsecutiveConnectFailure: 0

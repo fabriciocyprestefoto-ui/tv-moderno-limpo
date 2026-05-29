@@ -19,7 +19,13 @@ const HomeSkeleton: React.FC = () => {
   );
 
   return (
-    <div className="w-full space-y-4 pb-20 animate-fade-in">
+    <div
+      className="w-full space-y-4 pb-20 animate-fade-in"
+      role="status"
+      aria-busy="true"
+      aria-live="polite"
+      aria-label="Carregando catálogo"
+    >
       {/* Hero placeholder */}
       <div
         className="mt-0 w-full relative overflow-hidden"

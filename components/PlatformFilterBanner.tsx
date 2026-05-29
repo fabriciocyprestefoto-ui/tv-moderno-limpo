@@ -48,9 +48,10 @@ const PlatformFilterBanner: React.FC<PlatformFilterBannerProps> = ({
   }, [bannerCandidates.length]);
 
   return (
-    /* Mesmas dimensoes exatas do HeroBanner na Home */
+    /* Banner de plataforma como HEADER (~58vh): não ocupa a tela toda, deixando os
+       resultados filtrados visíveis logo abaixo ao selecionar a plataforma. */
     <div
-      className={`mt-0 relative z-0 w-full flex flex-col ${embedded ? 'h-full' : 'h-screen min-h-screen'}`}
+      className={`mt-0 relative z-0 w-full flex flex-col ${embedded ? 'h-full' : 'h-[58vh] min-h-[58vh]'}`}
       style={{
         marginLeft: embedded ? undefined : 'calc(-1 * var(--sidebar-w))',
         width: embedded ? '100%' : 'calc(100% + var(--sidebar-w))',

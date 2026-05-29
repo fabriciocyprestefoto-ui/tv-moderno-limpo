@@ -287,6 +287,7 @@ const Login: React.FC<{ onLogin: () => void; onAdminAccess?: () => void }> = ({
                       onFocus={() => setPosition(1, 0)}
                       onKeyDown={(e) => e.stopPropagation()}
                       placeholder={modeCopy.placeholder}
+                      aria-label={modeCopy.label}
                       autoFocus
                       className="w-full rounded-[22px] border border-white/10 bg-white/5 py-4.5 pl-14 pr-5 text-[13px] font-bold uppercase tracking-[0.16em] text-white placeholder-white/10 outline-none transition-all duration-300 focus:border-sky-300/40 focus:ring-2 focus:ring-purple-500/50"
                       data-nav-item

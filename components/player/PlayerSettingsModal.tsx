@@ -47,6 +47,9 @@ const PlayerSettingsModal: React.FC<PlayerSettingsModalProps> = ({
           className="absolute inset-0 z-[150] flex items-center justify-center"
           style={{ background: 'rgba(55,10,100,0.50)', backdropFilter: 'blur(18px)' }}
           onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="player-quality-title"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
@@ -55,6 +58,7 @@ const PlayerSettingsModal: React.FC<PlayerSettingsModalProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             <h2
+              id="player-quality-title"
               style={{
                 fontSize: 13,
                 fontWeight: 900,
@@ -72,6 +76,8 @@ const PlayerSettingsModal: React.FC<PlayerSettingsModalProps> = ({
                 <button
                   key={idx}
                   onClick={() => handleSelect(idx)}
+                  aria-label={`Selecionar qualidade ${label(item, idx)}`}
+                  aria-selected={isSelected(idx)}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
