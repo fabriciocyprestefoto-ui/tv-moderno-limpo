@@ -281,6 +281,9 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     !isFireTV() &&
     isNativePlatform();
   const nativeLiveLaunchRef = useRef(0);
+  // Auto-zap só dispara após navegação real do usuário na grade. Trocar de gênero
+  // desarma; ArrowUp/Down na grade arma. Evita tocar o 1º canal ao só filtrar gênero.
+  const autoZapArmedRef = useRef(false);
   // Chave do último launch nativo (id|url|nonce) — torna o efeito idempotente e
   // evita duplo loadSource quando o efeito re-roda por troca de identidade de callback.
   const lastNativeLaunchKeyRef = useRef('');
@@ -882,11 +885,12 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     setIsInfoOverlayVisible(false);
     setIsMenuVisible(true);
     setActiveCategory(id);
-    const firstChannel = allChannels.find((c) => c.category === id);
-    if (firstChannel) {
-      setSelectedChannel(firstChannel);
-    }
+    // NÃO trocar selectedChannel ao escolher categoria — isso tocava o 1º canal do
+    // gênero imediatamente (bug universal "trocar gênero já muda o canal"). Escolher
+    // categoria apenas FILTRA a grade; o canal em reprodução continua. O canal só muda
+    // quando o usuário seleciona um canal na grade (OK / handleSelectChannel).
     setFocusedChannelIndex(0);
+    autoZapArmedRef.current = false; // entrar na grade por troca de gênero não auto-zapa
     setFocusedSection('grid');
     setIsSidebarExpanded(false);
     setIsGenreExpanded(true);
@@ -938,6 +942,7 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
     if (!cat || cat.id === activeCategory) return;
     setActiveCategory(cat.id);
     setFocusedChannelIndex(0);
+    autoZapArmedRef.current = false; // navegar gênero na sidebar não auto-zapa
     setIsGenreExpanded(true);
     // Limpa o overlay de erro do canal anterior ao trocar de gênero — senão o
     // erro de um canal com edge morto fica "preso" sobre o menu enquanto navega.
@@ -954,8 +959,12 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
   // Auto-zap: ao parar sobre um canal na grade por 600ms, abre o player nativo
   // automaticamente. Substitui necessidade de OK e replica comportamento de
   // zapping de IPTV. Debounce evita lancar Activity a cada tick do D-pad.
+  // Só dispara após navegação REAL do usuário na grade (autoZapArmedRef). Entrar na
+  // grade por troca de gênero NÃO arma — senão o 1º canal do gênero tocava sozinho
+  // ("trocar gênero já muda o canal"). O canal só muda em navegação real ou OK.
   useEffect(() => {
     if (focusedSection !== 'grid') return;
+    if (!autoZapArmedRef.current) return;
     if (liveStreamError) return;
     if (focusedChannelIndex < 0) return;
     const ch = filteredChannels[focusedChannelIndex];
@@ -1025,6 +1034,7 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
           if (focusedSection === 'sidebar') {
             setFocusedCategoryIndex((p) => (p <= -1 ? categories.length - 1 : p - 1));
           } else if (focusedSection === 'grid') {
+            autoZapArmedRef.current = true; // navegação real do usuário → permite auto-zap
             setFocusedChannelIndex((p) => Math.max(0, p - 1));
           } else if (focusedSection === 'states' || focusedSection === 'qualities') {
             setFocusedSection('grid');
@@ -1035,6 +1045,7 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
           if (focusedSection === 'sidebar') {
             setFocusedCategoryIndex((p) => (p >= categories.length - 1 ? 0 : p + 1));
           } else if (focusedSection === 'grid') {
+            autoZapArmedRef.current = true; // navegação real do usuário → permite auto-zap
             setFocusedChannelIndex((p) => Math.min(filteredChannels.length - 1, p + 1));
           } else if (focusedSection === 'states' || focusedSection === 'qualities') {
             setFocusedSection('grid');
