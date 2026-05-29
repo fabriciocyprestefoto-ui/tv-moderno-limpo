@@ -519,10 +519,13 @@ const Home: React.FC<HomeProps> = ({
     setEnabled(true);
   }, [showAllContent, setEnabled]);
 
+  // Foco inicial SÓ ao entrar em "ver todo conteúdo". Sem visibleFullCatalogContent.length
+  // nas deps: o scroll infinito incrementa o length e re-disparava o setPosition,
+  // jogando o foco de volta ao 1º card ("pulando conteúdo").
   useEffect(() => {
     if (!showAllContent) return;
     requestAnimationFrame(() => setPosition(ALL_CONTENT_BASE_ROW, 0));
-  }, [showAllContent, setPosition, visibleFullCatalogContent.length]);
+  }, [showAllContent, setPosition]);
 
   useEffect(() => {
     if (!showAllContent) return;
@@ -581,7 +584,9 @@ const Home: React.FC<HomeProps> = ({
       }
     }, 80);
     return () => window.clearInterval(timer);
-  }, [showAllContent, visibleFullCatalogContent.length, showAllCols, setPosition]);
+    // Sem visibleFullCatalogContent.length: o retry de foco não deve re-disparar a
+    // cada lote do scroll infinito (roubava o foco para o 1º card).
+  }, [showAllContent, showAllCols, setPosition]);
 
   useEffect(() => {
     if (!showAllContent) return;
@@ -960,7 +965,7 @@ const Home: React.FC<HomeProps> = ({
                         onPlay={onPlayMedia ? () => onPlayMedia(item) : undefined}
                         disableHover
                         colIndex={colIndex}
-                        eagerPoster={idx < showAllCols}
+                        eagerPoster={idx < showAllCols * 4}
                       />
                     </div>
                   );

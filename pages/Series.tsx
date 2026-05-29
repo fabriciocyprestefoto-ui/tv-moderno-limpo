@@ -311,10 +311,12 @@ const Series: React.FC<SeriesProps> = ({
     };
   }, [showAllSeries]);
 
+  // Foco inicial SÓ ao entrar em "ver todos" — sem visibleCount/showAllCols nas
+  // deps, senão o scroll infinito reseta o foco ao 1º card ("pulando conteúdo").
   useEffect(() => {
     if (!showAllSeries) return;
     requestAnimationFrame(() => setPosition(ALL_CATALOG_BASE_ROW, 0));
-  }, [showAllSeries, showAllCols, visibleCount, setPosition]);
+  }, [showAllSeries, setPosition]);
 
   useEffect(() => {
     if (showAllSeries) return;
@@ -357,7 +359,7 @@ const Series: React.FC<SeriesProps> = ({
       }
     }, 80);
     return () => window.clearInterval(timer);
-  }, [showAllSeries, visibleCount, showAllCols, setPosition]);
+  }, [showAllSeries, setPosition]);
 
   useEffect(() => {
     if (!showAllSeries) return;
@@ -570,6 +572,7 @@ const Series: React.FC<SeriesProps> = ({
                         onPlay={onPlayMedia ? () => onPlayMedia(s) : undefined}
                         colIndex={colInRow}
                         disableHover
+                        eagerPoster={rowIndex < (isTVBox() ? 3 : 5)}
                       />
                     </div>
                   );

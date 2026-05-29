@@ -282,10 +282,13 @@ const Movies: React.FC<MoviesProps> = ({
     };
   }, [showAllMovies]);
 
+  // Foco inicial do grid SÓ ao entrar em "ver todos" — NÃO re-disparar quando
+  // visibleCount/showAllCols mudam (scroll infinito), senão o foco salta de volta
+  // ao 1º card a cada lote carregado ("pulando conteúdo").
   useEffect(() => {
     if (!showAllMovies) return;
     requestAnimationFrame(() => setPosition(ALL_CATALOG_BASE_ROW, 0));
-  }, [showAllMovies, showAllCols, visibleCount, setPosition]);
+  }, [showAllMovies, setPosition]);
 
   useEffect(() => {
     if (showAllMovies) return;
@@ -308,6 +311,8 @@ const Movies: React.FC<MoviesProps> = ({
       window.removeEventListener('keydown', focusVerTudoFromPlatforms, { capture: true });
   }, [showAllMovies, setPosition]);
 
+  // Retry de foco do 1º card (lazy render) — só ao entrar em "ver todos".
+  // Sem visibleCount/showAllCols nas deps: re-disparar a cada lote roubava o foco.
   useEffect(() => {
     if (!showAllMovies) return;
     let attempts = 0;
@@ -328,7 +333,7 @@ const Movies: React.FC<MoviesProps> = ({
       }
     }, 80);
     return () => window.clearInterval(timer);
-  }, [showAllMovies, visibleCount, showAllCols, setPosition]);
+  }, [showAllMovies, setPosition]);
 
   useEffect(() => {
     if (!showAllMovies) return;
@@ -507,6 +512,7 @@ const Movies: React.FC<MoviesProps> = ({
                         onPlay={onPlayMedia ? () => onPlayMedia(m) : undefined}
                         colIndex={colInRow}
                         disableHover
+                        eagerPoster={rowIndex < (isTVBox() ? 3 : 5)}
                       />
                     </div>
                   );
