@@ -16,6 +16,7 @@ import { PitoChannelInfoOverlay } from '@/features/livetv/pito/ChannelInfoOverla
 import AdultPinModal, {
   setAdultUnlocked as markAdultUnlocked,
   isAdultUnlocked,
+  isAdultChannel,
 } from '@/pages/livetv/AdultPinModal';
 
 import { setSignal } from '@/utils/appSignals';
@@ -689,10 +690,13 @@ export default function LiveTV({ onBack, initialChannel, initialCategory }: Live
       channel.category === 'adultos' ||
       channel.category === 'adulto' ||
       channel.category === 'hot';
-    if (isAdultCategory && !runtimeFlags.adultContentEnabled) {
-      // Build de loja: adulto desativado — bloqueia sem expor PIN.
-      selectingChannelRef.current = false;
-      return;
+    if (!runtimeFlags.adultContentEnabled) {
+      // Build de loja: bloqueia QUALQUER categoria adulta (inclui keywords
+      // +18/xxx/adult via isAdultChannel canônico), sem expor PIN.
+      if (isAdultCategory || isAdultChannel(channel.category ?? '')) {
+        selectingChannelRef.current = false;
+        return;
+      }
     }
     if (isAdultCategory && !adultUnlocked) {
       selectingChannelRef.current = false;
