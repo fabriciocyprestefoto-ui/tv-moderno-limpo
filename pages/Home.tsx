@@ -435,11 +435,9 @@ const Home: React.FC<HomeProps> = ({
       const catalogSeries = seriesMap.get(String(item.tmdb_id));
       if (!catalogSeries) continue;
       const progressEp = item.episodeNumber || 0;
-      const totalEps =
-        (catalogSeries as any).episode_count ||
-        (catalogSeries as any).total_episodes ||
-        (catalogSeries as any).seasons ||
-        0;
+      // episode_count/total_episodes são colunas do DB ausentes na tipagem Media.
+      const cs = catalogSeries as { episode_count?: number; total_episodes?: number; seasons?: number };
+      const totalEps = cs.episode_count || cs.total_episodes || cs.seasons || 0;
       if (totalEps > 0 && progressEp > 0 && progressEp < totalEps) {
         setNewEpToast({
           seriesName: item.title,
@@ -602,7 +600,7 @@ const Home: React.FC<HomeProps> = ({
       first.focus({ preventScroll: true });
     };
     const normalizeKey = (event: KeyboardEvent) => {
-      const code = event.keyCode || (event as any).which || 0;
+      const code = event.keyCode || (event as KeyboardEvent & { which?: number }).which || 0;
       if (event.key === 'OK' || event.key === 'Select' || code === 23 || code === 66)
         return 'Enter';
       if (event.key === 'Left' || code === 21) return 'ArrowLeft';
@@ -651,7 +649,7 @@ const Home: React.FC<HomeProps> = ({
     if (!showAllContent) return;
 
     const onConfirmFocusedPoster = (event: KeyboardEvent) => {
-      const code = event.keyCode || (event as any).which || 0;
+      const code = event.keyCode || (event as KeyboardEvent & { which?: number }).which || 0;
       const isConfirm =
         event.key === 'Enter' ||
         event.key === 'OK' ||

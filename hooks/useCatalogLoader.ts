@@ -170,7 +170,7 @@ const sanitizeCatalogLoose = (items: Media[]): Media[] =>
       return {
         ...item,
         stream_url,
-        video_url: (item as any).video_url || undefined,
+        video_url: item.video_url || undefined,
         poster: item.poster || '',
         backdrop: item.backdrop || '',
         description: item.description || '',
@@ -333,15 +333,16 @@ export function useCatalogLoader({
         ...m,
         type: 'movie' as const,
       })) as Media[];
-      let dbSeriesTyped = (dbSeries || []).map((s) => ({
-        ...s,
-        type: 'series' as const,
-        seasons:
-          Number.isFinite(Number((s as any).seasons ?? (s as any).seasons_count)) &&
-          Number((s as any).seasons ?? (s as any).seasons_count) > 0
-            ? Number((s as any).seasons ?? (s as any).seasons_count)
-            : undefined,
-      })) as Media[];
+      let dbSeriesTyped = (dbSeries || []).map((s) => {
+        // seasons_count é coluna do DB ausente na tipagem Media; seasons é tipado.
+        const sx = s as Media & { seasons_count?: number };
+        const seasonsRaw = Number(sx.seasons ?? sx.seasons_count);
+        return {
+          ...s,
+          type: 'series' as const,
+          seasons: Number.isFinite(seasonsRaw) && seasonsRaw > 0 ? seasonsRaw : undefined,
+        };
+      }) as Media[];
 
       // Sempre aplicar filtro de ano mínimo (2020+ por padrão)
       dbMoviesTyped = dbMoviesTyped.filter((m) => (m.year ? m.year >= minYear : true));
@@ -542,7 +543,7 @@ export function useCatalogLoader({
         }
         const kidsItems = [...fullMovies, ...fullSeries].filter(
           (m) =>
-            (m as any).kids === true ||
+            (m as { kids?: boolean }).kids === true ||
             m.genre?.some((g) => {
               const low = String(g).toLowerCase();
               return (
