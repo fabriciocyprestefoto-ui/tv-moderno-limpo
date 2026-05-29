@@ -12,6 +12,7 @@ import { userService } from '../services/userService';
 import { logger } from '../utils/logger';
 import { setSignal } from '../utils/appSignals';
 import { getMediaBackdrop, getMediaLogo, getMediaPoster } from '../utils/mediaUtils';
+import { getLocalizedLogoSync, rememberLocalizedLogo } from '../services/logoService';
 import { PLAYER_INTRO_TIMEOUT_MS } from '../config/playerDefaults';
 import { useHlsEngine } from './player/useHlsEngine';
 import { type ResumeAction } from '../utils/playerTvControls';
@@ -617,7 +618,9 @@ const PlayerImpl: React.FC<PlayerProps> = ({
   // ── TMDB Logo (HUD): mesma escolha pt/en que getLogo; não usar poster como logo ──
   useEffect(() => {
     let cancelled = false;
-    setLogoUrl(null);
+    // Cache-first: exibe logo instantânea do cache (logo-cache) e refina via API depois.
+    const cachedLogo = getLocalizedLogoSync(media);
+    setLogoUrl(cachedLogo || null);
     const tmdbAssetFileId = (url: string): string | null => {
       if (!url || !url.includes('image.tmdb.org')) return null;
       const m = url.match(/\/t\/p\/[^/]+\/([^/?#]+)/i);
@@ -630,6 +633,7 @@ const PlayerImpl: React.FC<PlayerProps> = ({
           const apiLogo = await getLogo(id, isSeries ? 'series' : 'movie');
           if (!cancelled && apiLogo) {
             setLogoUrl(apiLogo);
+            rememberLocalizedLogo(media, apiLogo); // persiste p/ próxima abertura ser instantânea
             return;
           }
         } catch (err) {
