@@ -221,6 +221,8 @@ export default defineConfig(({ mode }) => {
   const isLegacyBuild = appBuildTarget === 'legacy' || isEnabled(env.VITE_LEGACY_BUILD);
   const isTvBuild = appBuildTarget === 'tv' || isEnabled(env.VITE_TV_BUILD) || isCapacitorBuild;
   const isWebBuild = appBuildTarget === 'web' || isEnabled(env.VITE_WEB_BUILD);
+  const storeSafeBuildEnabled = isEnabled(env.VITE_STORE_SAFE_BUILD);
+  const adultContentExplicitlyEnabled = isEnabled(env.VITE_ENABLE_ADULT_CONTENT);
   /** Com login de teste na TV, canal por omissão = testing (senão ficava "production" e o código 000000 não ativava no APK). */
   const defaultBuildChannel = isProductionBuild
     ? tvTestLoginEnabled
@@ -228,6 +230,13 @@ export default defineConfig(({ mode }) => {
       : 'production'
     : mode;
   const buildChannel = String(env.VITE_BUILD_CHANNEL?.trim() || defaultBuildChannel).trim();
+
+  if (storeSafeBuildEnabled && adultContentExplicitlyEnabled) {
+    throw new Error(
+      '\n\n🚫 BUILD INVÁLIDO: VITE_STORE_SAFE_BUILD=true não pode ser combinado com VITE_ENABLE_ADULT_CONTENT=true.\n' +
+        'Para Play Store use VITE_STORE_SAFE_BUILD=true e VITE_ENABLE_ADULT_CONTENT=false.\n'
+    );
+  }
 
   // SECURITY GUARD: FAKE_LOGIN nunca deve chegar em produção
   if (isProductionBuild && isEnabled(env.VITE_FAKE_LOGIN)) {
@@ -484,6 +493,10 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.VITE_TV_BUILD': JSON.stringify(isTvBuild ? '1' : ''),
       'import.meta.env.VITE_WEB_BUILD': JSON.stringify(isWebBuild ? '1' : ''),
       'import.meta.env.VITE_LEGACY_BUILD': JSON.stringify(isLegacyBuild ? '1' : ''),
+      'import.meta.env.VITE_STORE_SAFE_BUILD': JSON.stringify(env.VITE_STORE_SAFE_BUILD || ''),
+      'import.meta.env.VITE_ENABLE_ADULT_CONTENT': JSON.stringify(
+        env.VITE_ENABLE_ADULT_CONTENT || ''
+      ),
     },
     resolve: {
       alias: {
@@ -555,8 +568,11 @@ export default defineConfig(({ mode }) => {
             if (id.includes('/services/') || id.includes('/utils/') || id.includes('/contexts/'))
               return 'app-core';
 
-            // Hooks + componentes no mesmo chunk — evita "Circular chunk" quando features
-            // misturam pastas (ex.: features/.../hooks importadas por features/.../components).
+            // Hooks + componentes no mesmo chunk. Tentativa de split (app-hooks/app-ui)
+            // na Fase 3 ainda emitiu "Circular chunk: app-ui -> app-hooks -> app-ui" no
+            // Rollup — há aresta de chunk além da única hooks->components já removida
+            // (parte 1), não trivial de isolar. Ciclo de chunk = risco de runtime em SPA;
+            // o merge é intencional e seguro. Mantido até untangling completo do grafo.
             if (id.includes('/hooks/') || id.includes('/components/')) return 'app-ui-hooks';
 
             // Player (página pesada) — chunk próprio
