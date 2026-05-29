@@ -177,6 +177,8 @@ const VideoCard: React.FC<VideoCardProps> = React.memo(
     );
 
     const isActive = isHovered; // Foco via controle remoto usa borda branca, não escala/glow
+    const titleSafe = (media.title || 'Conteúdo').trim() || 'Conteúdo';
+    const kindLabel = media.type === 'series' ? 'Série' : 'Filme';
 
     // Animação staggered fade-in
     const enterDelay = Math.min(index * 40, 600);
@@ -197,7 +199,11 @@ const VideoCard: React.FC<VideoCardProps> = React.memo(
           data-nav-col={colIndex}
           {...(rowIndex !== undefined ? { 'data-nav-row': rowIndex } : {})}
           onClick={(e) => {
-            if ((e.nativeEvent as any).pointerType === '' && e.clientX === 0 && e.clientY === 0)
+            if (
+              (e.nativeEvent as { pointerType?: string }).pointerType === '' &&
+              e.clientX === 0 &&
+              e.clientY === 0
+            )
               return;
             onClick();
           }}
@@ -207,7 +213,7 @@ const VideoCard: React.FC<VideoCardProps> = React.memo(
           onMouseLeave={handleMouseLeave}
           onKeyDown={handleKeyDown}
           role="button"
-          aria-label={`${media.title} — ${media.type === 'series' ? 'Série' : 'Filme'}`}
+          aria-label={`${kindLabel}: ${titleSafe}. Pressione Enter para abrir.`}
         >
           {/* ═══ CARD BODY ═══ */}
           <div
@@ -323,6 +329,7 @@ const VideoCard: React.FC<VideoCardProps> = React.memo(
               >
                 <button
                   onClick={handlePlayClick}
+                  aria-label={`Assistir ${titleSafe}`}
                   className="flex-1 py-1.5 px-3 rounded-xl bg-white/90 text-black text-[11px] font-bold
                   flex items-center justify-center gap-1.5
                   hover:bg-white active:scale-95 transition-all duration-200
@@ -338,6 +345,7 @@ const VideoCard: React.FC<VideoCardProps> = React.memo(
                     e.stopPropagation();
                     onClick();
                   }}
+                  aria-label={`Ver detalhes de ${titleSafe}`}
                   className="w-8 h-8 rounded-full bg-white/10 border border-white/20
                   flex items-center justify-center
                   hover:bg-white/25 active:scale-90 transition-all duration-200
@@ -352,6 +360,8 @@ const VideoCard: React.FC<VideoCardProps> = React.memo(
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
+                  aria-label={inWatchlist ? `Remover ${titleSafe} da minha lista` : `Adicionar ${titleSafe} à minha lista`}
+                  aria-pressed={inWatchlist}
                   className={`w-8 h-8 rounded-full border flex items-center justify-center
                   active:scale-90 transition-all duration-200
                   focus:outline-none focus:ring-[0.5px] focus:ring-white focus:ring-offset-0
@@ -383,7 +393,14 @@ const VideoCard: React.FC<VideoCardProps> = React.memo(
 
             {/* ═══ PROGRESS BAR ═══ */}
             {progress !== undefined && progress > 0 && (
-              <div className="absolute bottom-0 inset-x-0 h-1 bg-white/10 z-30">
+              <div
+                className="absolute bottom-0 inset-x-0 h-1 bg-white/10 z-30"
+                role="progressbar"
+                aria-label={`Progresso de ${titleSafe}`}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(Math.min(100, progress * 100))}
+              >
                 <div
                   className="h-full bg-[#A855F7] rounded-r-full transition-all duration-500"
                   style={{ width: `${Math.min(100, progress * 100)}%` }}

@@ -451,7 +451,8 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
   const imageSrcSet = getResponsiveImageSrcSet(imageUrl, 'backdrop');
   const releaseLabel = getReleaseLabel(movie);
   const bannerSynopsis =
-    String(movie.description || (movie as any).overview || '').trim() || 'Sem sinopse disponível.';
+    String(movie.description || (movie as { overview?: string }).overview || '').trim() ||
+    'Sem sinopse disponível.';
 
   const handleClick = () => {
     playSelectSound();

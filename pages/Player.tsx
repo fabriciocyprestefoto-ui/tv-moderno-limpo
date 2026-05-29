@@ -745,8 +745,12 @@ const PlayerImpl: React.FC<PlayerProps> = ({
     if (el.requestFullscreen && !document.fullscreenElement) {
       el.requestFullscreen().catch(() => {});
     }
-    if ((screen.orientation as any)?.lock) {
-      (screen.orientation as any).lock('landscape').catch(() => {});
+    // ScreenOrientation.lock é experimental, ausente na tipagem padrão.
+    const orientation = screen.orientation as ScreenOrientation & {
+      lock?: (o: string) => Promise<void>;
+    };
+    if (orientation?.lock) {
+      orientation.lock('landscape').catch(() => {});
     }
     return () => { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); };
   }, []);
@@ -1126,6 +1130,10 @@ const PlayerImpl: React.FC<PlayerProps> = ({
 
   // ── Helpers for btn classes ───────────────────────────────────────────────
   const vBtn = (id: string) => `vision-btn${currentControl === id ? ' v-active' : ''}`;
+  const playerControlAttrs = (id: string) => ({
+    'data-player-control': id,
+    'aria-current': currentControl === id ? true : undefined,
+  });
 
   // ─────────────────────────────────────────────────────────────────────────
   // RENDER
@@ -1447,6 +1455,12 @@ const PlayerImpl: React.FC<PlayerProps> = ({
             onMouseMove={handleProgressMouseMove}
             onMouseLeave={() => setProgressTooltip(null)}
             style={{ position: 'relative' }}
+            role="slider"
+            aria-label="Progresso da reprodução"
+            aria-valuemin={0}
+            aria-valuemax={Math.max(0, Math.round(duration || 0))}
+            aria-valuenow={Math.max(0, Math.round(currentTime || 0))}
+            aria-valuetext={`${formatTime(currentTime)} de ${formatTime(duration)}`}
           >
             <div
               className="vision-progress-fill"
@@ -1479,17 +1493,20 @@ const PlayerImpl: React.FC<PlayerProps> = ({
           {/* Left group */}
           <div className="flex items-center gap-2">
             {/* Back */}
-            <button className={vBtn('back')} onClick={onClose} title="Voltar">
+            <button className={vBtn('back')} {...playerControlAttrs('back')} onClick={onClose} title="Voltar" aria-label="Voltar e fechar o player">
               <ArrowLeft size={20} />
             </button>
             {/* Rewind */}
-            <button className={vBtn('rewind')} onClick={() => seek(-SEEK_STEP)} title="-30s">
+            <button className={vBtn('rewind')} {...playerControlAttrs('rewind')} onClick={() => seek(-SEEK_STEP)} title="-30s" aria-label={`Voltar ${SEEK_STEP} segundos`}>
               <Rewind size={18} />
             </button>
             {/* Play/Pause */}
             <button
               className={`vision-play-btn${currentControl === 'play' ? ' v-active' : ''}`}
+              {...playerControlAttrs('play')}
               onClick={togglePlay}
+              aria-label={isPlaying ? 'Pausar reprodução' : 'Reproduzir'}
+              aria-pressed={isPlaying}
             >
               {isPlaying
                 ? <Pause size={26} fill="currentColor" />
@@ -1497,7 +1514,7 @@ const PlayerImpl: React.FC<PlayerProps> = ({
               }
             </button>
             {/* Forward */}
-            <button className={vBtn('forward')} onClick={() => seek(SEEK_STEP)} title="+30s">
+            <button className={vBtn('forward')} {...playerControlAttrs('forward')} onClick={() => seek(SEEK_STEP)} title="+30s" aria-label={`Avançar ${SEEK_STEP} segundos`}>
               <FastForward size={18} />
             </button>
           </div>
@@ -1507,19 +1524,25 @@ const PlayerImpl: React.FC<PlayerProps> = ({
             {canBrowseEpisodes && (
               <button
                 className={vBtn('episodes')}
+                {...playerControlAttrs('episodes')}
                 onClick={() => { setShowEpisodes(true); setFocusArea('episodes-seasons'); videoRef.current?.pause(); }}
                 title="Episódios"
+                aria-label="Abrir temporadas e episódios"
+                aria-expanded={showEpisodes}
               >
                 <List size={18} />
               </button>
             )}
             <button
               className={vBtn('cast')}
+              {...playerControlAttrs('cast')}
               onClick={() => {
                 if (showCast) { setShowCast(false); setFocusArea('controls'); videoRef.current?.play(); }
                 else { setShowCast(true); setFocusArea('cast'); setFocusedCastIdx(0); videoRef.current?.pause(); }
               }}
               title="Elenco"
+              aria-label={showCast ? 'Fechar elenco' : 'Abrir elenco'}
+              aria-expanded={showCast}
             >
               <Users size={18} />
             </button>
@@ -1533,6 +1556,8 @@ const PlayerImpl: React.FC<PlayerProps> = ({
                       className={`vision-speed-opt${playbackRate === rate ? ' sel' : ''}${focusArea === 'speed' && focusedSpeedIdx === idx ? ' sel' : ''}`}
                       style={focusArea === 'speed' && focusedSpeedIdx === idx ? { background: 'rgba(255,255,255,0.28)', color: '#fff', boxShadow: '0 0 0 2px rgba(255,255,255,0.55)' } : undefined}
                       onClick={() => { applySpeed(rate); setFocusArea('controls'); }}
+                      aria-label={`Velocidade ${rate === 1 ? 'normal' : `${rate} vezes`}`}
+                      aria-pressed={playbackRate === rate}
                     >
                       {rate === 1 ? '1×' : `${rate}×`}
                       {playbackRate === rate && <Check size={10} style={{ display: 'inline', marginLeft: 4 }} />}
@@ -1542,8 +1567,11 @@ const PlayerImpl: React.FC<PlayerProps> = ({
               )}
               <button
                 className={vBtn('speed')}
+                {...playerControlAttrs('speed')}
                 onClick={() => setShowSpeedPanel(p => !p)}
                 title="Velocidade"
+                aria-label={`Velocidade atual ${playbackRate === 1 ? 'normal' : `${playbackRate} vezes`}`}
+                aria-expanded={showSpeedPanel}
                 style={{ fontSize: 11, fontWeight: 900, letterSpacing: '-0.02em', width: 44, height: 44 }}
               >
                 {playbackRate === 1 ? '1×' : `${playbackRate}×`}
@@ -1572,18 +1600,21 @@ const PlayerImpl: React.FC<PlayerProps> = ({
               )}
               <button
                 className={vBtn('volume')}
+                {...playerControlAttrs('volume')}
                 onClick={() => {
                   const newMuted = !isMuted;
                   setIsMuted(newMuted);
                   if (videoRef.current) { videoRef.current.muted = newMuted; if (!newMuted && volume === 0) { setVolume(0.5); videoRef.current.volume = 0.5; } }
                 }}
+                aria-label={isMuted || volume === 0 ? 'Ativar som' : 'Silenciar'}
+                aria-pressed={isMuted || volume === 0}
               >
                 {isMuted || volume === 0 ? <VolumeX size={18} style={{ color: 'rgba(255,255,255,0.45)' }} /> : volume < 0.5 ? <Volume1 size={18} /> : <Volume2 size={18} />}
               </button>
             </div>
 
             {nextEpisode && hasEpisodeContext && (
-              <button className={vBtn('next')} onClick={onPlayNext}>
+              <button className={vBtn('next')} {...playerControlAttrs('next')} onClick={onPlayNext} aria-label="Reproduzir próximo episódio">
                 <SkipForward size={18} />
               </button>
             )}

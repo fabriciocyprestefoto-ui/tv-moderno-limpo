@@ -349,7 +349,7 @@ const Movies: React.FC<MoviesProps> = ({
       first.focus({ preventScroll: true });
     };
     const normalizeKey = (event: KeyboardEvent) => {
-      const code = event.keyCode || (event as any).which || 0;
+      const code = event.keyCode || (event as KeyboardEvent & { which?: number }).which || 0;
       if (event.key === 'OK' || event.key === 'Select' || code === 23 || code === 66)
         return 'Enter';
       if (event.key === 'Left' || code === 21) return 'ArrowLeft';

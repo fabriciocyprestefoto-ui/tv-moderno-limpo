@@ -403,8 +403,13 @@ const Details: React.FC<DetailsProps> = ({ media, onPlay, onBack, onSelectMedia 
             const finalLogo = getMediaLogo({
               ...media,
               logo_url: logo || enriched?.logo || media.logo_url || null,
-              poster_path: det?.poster_path || (enriched as any)?.poster_path,
-              backdrop_path: det?.backdrop_path || (enriched as any)?.backdrop_path,
+              poster_path:
+                det?.poster_path ||
+                (enriched as { poster_path?: string; backdrop_path?: string } | null)?.poster_path,
+              backdrop_path:
+                det?.backdrop_path ||
+                (enriched as { poster_path?: string; backdrop_path?: string } | null)
+                  ?.backdrop_path,
             }) || null;
             setLogoUrl(finalLogo);
             if (logo) rememberLocalizedLogo(media, finalLogo);
